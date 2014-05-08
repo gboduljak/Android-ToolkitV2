@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>eazfuscator.net</id>
+    <version>3.3</version>
+    <title>Eazfuscator.NET</title>
+    <authors>Oleksiy Gapotchenko</authors>
+    <owners>Oleksiy Gapotchenko</owners>
+    <projectUrl>http://www.foss.kharkov.ua/g1/projects/eazfuscator/dotnet/Default.aspx</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Eazfuscator.NET is a free obfuscator for .NET platform. The main purpose of obfuscator is to protect intellectual property of the software.</description>
+    <summary>Eazfuscator.NET is a free obfuscator for .NET platform. The main purpose of obfuscator is to protect intellectual property of the software.</summary>
+    <releaseNotes>Version 3.3 released on March 5, 2012
+
+- Code optimizer. Delivers great speed to your apps
+- Control and data flow analysis. Delivers better reflection support
+- Greatly improved support of self-hosted WCF services
+- XNA 4 support
+- Silverlight 5 support
+- Windows SDK 8.0 support
+- Visual Studio 11 support
+- Neutral mode is the default one for assembly loader now. This solves architecture dependency issues, and now it is possible to obfuscate 64 bit assemblies on 32 bit machines
+- Fixed template method signature lookup issue
+- Fixed bug in template constraints rewriting
+- Fixed own satellite assemblies embedding issue introduced in 3.2
+- Fixed a reflection analysis issue for Windows Phone apps introduced in 3.2
+- Fixed issues with overloaded methods in XML Documentation Filter</releaseNotes>
+    <tags>obfuscator Eazfuscator.NET</tags>
+  </metadata>
+</package>

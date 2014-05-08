@@ -1,0 +1,115 @@
+﻿<metroControls:MetroWindow x:Class="AndroidToolkit.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:AndroidToolkit.Wpf.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:Behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+        xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:controls="clr-namespace:AndroidToolkit.Wpf.Presentation.Controls;assembly=AndroidToolkit.Wpf.Presentation"
+        Title="Android Toolkit - Home" Height="400" Width="775" MinHeight="350" MinWidth="525" MaxHeight="550" MaxWidth="1100" ShowMinButton="True" ShowInTaskbar="True" ResizeMode="CanResizeWithGrip" WindowTransitionsEnabled="True" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Text.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <i:Interaction.Behaviors>
+        <Behaviours:BorderlessWindowBehavior ResizeWithGrip="False" />
+    </i:Interaction.Behaviors>
+  
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+    <metroControls:MetroContentControl>
+        <Grid x:Name="LayoutRoot">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.3*"/>
+                <ColumnDefinition Width="0.7*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.3*"/>
+                <RowDefinition Height="0.7*"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer CanContentScroll="True" Width="{Binding}" Height="{Binding}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="2">
+                <controls:MainLogo x:Name="Logo" Width="{Binding}" Height="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top"  MinWidth="775" />
+           </ScrollViewer>
+            <ScrollViewer Grid.Column="0" Grid.Row="1" CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <Rectangle Width="200" Height="220"  Fill="{StaticResource FlatButtonBackgroundBrush}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{StaticResource appbar_os_android}"></VisualBrush>
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <Rectangle Width="85" Height="85" Margin="58,38,58,10" Fill="#FF706D6D">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{StaticResource appbar_cog}"></VisualBrush>
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Grid>
+            </ScrollViewer>
+            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="1">
+                <Grid >
+                    <TabControl>
+                        <TabItem Header="TOOLS">
+                            <metroControls:FlipView IsBannerEnabled="False" Margin="10,5">
+                                <metroControls:Tile Width="470" Height="180" Title="ADB" TitleFontSize="24" Command="{Binding ShowAdbCommand}">
+                                    <Rectangle Width="120" Height="120" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_settings}" Stretch="Fill"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                                <metroControls:Tile Width="470" Height="180" Title="fastboot" TitleFontSize="24">
+                                    <Rectangle Width="120" Height="120" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_settings}" Stretch="Fill"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                                <metroControls:Tile Width="470" Height="180" Title="advanced" TitleFontSize="24">
+                                    <Rectangle Width="120" Height="120" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_settings}" Stretch="Fill"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                                <metroControls:Tile Width="470" Height="180" Title="recovery master" TitleFontSize="24">
+                                    <Rectangle Width="90" Height="120" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_iphone}" Stretch="Fill"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                                <metroControls:Tile Width="470" Height="180" Title="device restore" TitleFontSize="24">
+                                    <Rectangle Width="120" Height="120" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_reset}" Stretch="Fill"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                                <metroControls:Tile Width="470" Height="180" Title="zip flasher" TitleFontSize="24">
+                                    <Rectangle Width="120" Height="120" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_lightning}" Stretch="Fill"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                            </metroControls:FlipView>
+                        </TabItem>
+                        <TabItem Header="DEVICES"></TabItem>
+                        <TabItem Header="INFO"></TabItem>
+                    </TabControl>
+                </Grid>
+            </ScrollViewer>
+          
+        </Grid>
+    </metroControls:MetroContentControl>
+</metroControls:MetroWindow>

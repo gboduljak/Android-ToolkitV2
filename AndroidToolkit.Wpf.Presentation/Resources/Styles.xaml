@@ -1,0 +1,212 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Icons.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Text.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/CustomButtonStyle.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="{x:Type TextBox}"
+       x:Key="ExecuteCommandTextBox"
+       BasedOn="{StaticResource ButtonCommandMetroTextBox}">
+        <Setter Property="controls:TextboxHelper.ButtonTemplate">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid x:Name="contentPresenter"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        Margin="{TemplateBinding Padding}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                        Opacity="0.75">
+                            <Canvas Width="15"
+                            Height="15"
+                            Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0">
+                                <Path Width="15.7781"
+                                Height="15.7781"
+                                Stretch="Fill"
+                                Fill="{TemplateBinding Foreground}"
+                                Data="F1 M 23.7501,33.25L 34.8334,44.3333L 52.2499,22.1668L 56.9999,26.9168L 34.8334,53.8333L 19.0001,38L 23.7501,33.25 Z " />
+                            </Canvas>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TextBoxOpenStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource ButtonCommandMetroTextBox}">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip"
+                Value="{Binding RelativeSource={RelativeSource Self}, 
+                       Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="controls:TextboxHelper.ButtonTemplate">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid x:Name="contentPresenter"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        Margin="{TemplateBinding Padding}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                        Opacity="0.75">
+                            <Canvas Width="15"
+                            Height="15"
+                            Clip="F1 M 0,0L 48,0L 48,48L 0,48L 0,0">
+                                <Path Width="15.7781"
+                                Height="15.7781"
+                                Stretch="Fill"
+                                Fill="{TemplateBinding Foreground}"
+                                Data="F1 M 19,50L 28,34L 63,34L 54,50L 19,50 Z M 19,28.0001L 35,28C 36,25 37.4999,24.0001 37.4999,24.0001L 48.75,24C 49.3023,24 50,24.6977 50,25.25L 50,28L 53.9999,28.0001L 53.9999,32L 27,32L 19,46.4L 19,28.0001 Z " />
+                            </Canvas>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="true">
+                        <Border Background="Red" DockPanel.Dock="right" Margin="5,0,0,0" 
+                                Width="20" Height="20" CornerRadius="5"
+                                ToolTip="{Binding ElementName=customAdorner, 
+                                          Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                            <TextBlock Text="!" VerticalAlignment="center" HorizontalAlignment="center" 
+                                   FontWeight="Bold" Foreground="white" />
+                        </Border>
+                        <AdornedElementPlaceholder Name="customAdorner" VerticalAlignment="Center" >
+                            <Border BorderBrush="Red" BorderThickness="1" />
+                        </AdornedElementPlaceholder>
+
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MetroTextBox}">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="true">
+                <Setter Property="ToolTip"
+                Value="{Binding RelativeSource={RelativeSource Self}, 
+                       Path=(Validation.Errors)[0].ErrorContent}"/>
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="true">
+                        <Border Background="Red" DockPanel.Dock="right" Margin="5,0,0,0" 
+                                Width="20" Height="20" CornerRadius="5"
+                                ToolTip="{Binding ElementName=customAdorner, 
+                                          Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                            <TextBlock Text="!" VerticalAlignment="center" HorizontalAlignment="center" 
+                                   FontWeight="Bold" Foreground="white" />
+                        </Border>
+                        <AdornedElementPlaceholder Name="customAdorner" VerticalAlignment="Center" >
+                            <Border BorderBrush="Red" BorderThickness="1" />
+                        </AdornedElementPlaceholder>
+
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MetroTextBlock}">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,2,40,2" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <DockPanel LastChildFill="true">
+                        <Border Background="Red" DockPanel.Dock="right" Margin="5,0,0,0" 
+                                Width="20" Height="20" CornerRadius="5"
+                                ToolTip="{Binding ElementName=customAdorner, 
+                                          Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                            <TextBlock Text="!" VerticalAlignment="center" HorizontalAlignment="center" 
+                                   FontWeight="Bold" Foreground="white" />
+                        </Border>
+                        <AdornedElementPlaceholder Name="customAdorner" VerticalAlignment="Center" >
+                            <Border BorderBrush="red" BorderThickness="1" />
+                        </AdornedElementPlaceholder>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PushButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=PushFile, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=PushLocation, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PullButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=PullFile1, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=PullLocation, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="InstallButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=InstallApp, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="UninstallButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=UninstallApp, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="FooterTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"></Setter>
+        <Setter Property="FontSize" Value="14"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}"></Setter>
+    </Style>
+</ResourceDictionary>

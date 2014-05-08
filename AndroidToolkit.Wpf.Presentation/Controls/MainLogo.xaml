@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="AndroidToolkit.Wpf.Presentation.Controls.MainLogo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="625" MinWidth="625" MinHeight="100">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Text.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.95*"/>
+            <RowDefinition Height="0.05*"/>
+        </Grid.RowDefinitions>
+
+          <DockPanel Grid.Row="0">
+
+            <TextBlock  Style="{StaticResource BigTitle}" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">Android Toolkit</TextBlock>
+            <TextBlock  x:Name="headerSubitle"  Style="{StaticResource BigTitle2}" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center"/>
+        </DockPanel>
+
+    <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="0" Fill="{StaticResource AccentColorBrush}"/>
+            <Rectangle Grid.Column="1"  Fill="#939393"/>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Infrastructure", "AndroidToolkit.Infrastructure\AndroidToolkit.Infrastructure.csproj", "{76B1C57F-47C3-411D-ADB5-3BBBDD15127D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Wpf", "AndroidToolkit.Wpf\AndroidToolkit.Wpf.csproj", "{ADD83656-E5E6-4241-AAED-44E7FBF2DED3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Wpf.Presentation", "AndroidToolkit.Wpf.Presentation\AndroidToolkit.Wpf.Presentation.csproj", "{46354E65-501C-48CA-9DD8-CDB70E56681C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Data", "AndroidToolkit.Data\AndroidToolkit.Data.csproj", "{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DBB619FD-1610-4447-8546-D4DBA804B00A}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76B1C57F-47C3-411D-ADB5-3BBBDD15127D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76B1C57F-47C3-411D-ADB5-3BBBDD15127D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76B1C57F-47C3-411D-ADB5-3BBBDD15127D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76B1C57F-47C3-411D-ADB5-3BBBDD15127D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADD83656-E5E6-4241-AAED-44E7FBF2DED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADD83656-E5E6-4241-AAED-44E7FBF2DED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADD83656-E5E6-4241-AAED-44E7FBF2DED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADD83656-E5E6-4241-AAED-44E7FBF2DED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46354E65-501C-48CA-9DD8-CDB70E56681C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46354E65-501C-48CA-9DD8-CDB70E56681C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46354E65-501C-48CA-9DD8-CDB70E56681C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46354E65-501C-48CA-9DD8-CDB70E56681C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
