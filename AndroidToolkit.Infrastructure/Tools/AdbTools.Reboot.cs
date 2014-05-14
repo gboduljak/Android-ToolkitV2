@@ -11,26 +11,56 @@ namespace AndroidToolkit.Infrastructure.Tools
     {
         public async Task Reboot(bool createNoWindow = true, string target = null)
         {
-            await Context.Dispatcher.InvokeAsync(async () =>
+            if (!string.IsNullOrEmpty(target))
             {
-                await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot -s {0}", target)), Context, createNoWindow));
-            });
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot -s {0}", target)), Context, createNoWindow));
+                });
+            }
+            else
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot")), Context, createNoWindow));
+                });
+            }
         }
 
         public async Task RebootRecovery(bool createNoWindow = true, string target = null)
         {
-            await Context.Dispatcher.InvokeAsync(async () =>
+            if (!string.IsNullOrEmpty(target))
             {
-                await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot recovery -s {0}", target)), Context, createNoWindow));
-            });
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot recovery -s {0}", target)), Context, createNoWindow));
+                });
+            }
+            else
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot recovery")), Context, createNoWindow));
+                });
+            }
         }
 
         public async Task RebootBootloader(bool createNoWindow = true, string target = null)
         {
-            await Context.Dispatcher.InvokeAsync(async () =>
+            if (!string.IsNullOrEmpty(target))
             {
-                await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot bootloader -s {0}", target)), Context, createNoWindow));
-            });
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb reboot bootloader -s {0}", target)), Context, createNoWindow));
+                });
+            }
+            else
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(() => _executor.Execute(new Command("adb reboot bootloader"), Context, createNoWindow));
+                });
+            }
         }
     }
 }

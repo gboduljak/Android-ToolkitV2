@@ -22,7 +22,7 @@ namespace AndroidToolkit.Infrastructure
             get { return _text; }
             set
             {
-                if (value != this.Text)
+                if (value != this._text)
                 {
                     this._text = value;
                     NotifyPropertyChanged();

@@ -27,26 +27,41 @@
             <converters:ThreeTextCommandParametersConverter x:Key="ThreeTextCommandParametersConverter"/>
             <converters:FiveTextCommandParametersConverter x:Key="FiveTextCommandParametersConverter"/>
             <converters:TwoCommandsParametersConverter x:Key="TwoCommandsParametersConverter"/>
+            <Storyboard x:Key="OnLoaded">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontSize)" Storyboard.TargetName="OverviewText">
+                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="20"/>
+                </DoubleAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Rectangle.Height)" Storyboard.TargetName="OverviewRectangle">
+                    <EasingDoubleKeyFrame KeyTime="0:0:1" Value="128"/>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
         </ResourceDictionary>
     </Window.Resources>
+    <metroControls:MetroWindow.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard x:Name="OnLoaded_BeginStoryboard" Storyboard="{StaticResource OnLoaded}"/>
+        </EventTrigger>
+    </metroControls:MetroWindow.Triggers>
 
     <Window.DataContext>
         <local:AdbViewModel/>
     </Window.DataContext>
 
     <i:Interaction.Behaviors>
-        <Behaviours:BorderlessWindowBehavior ResizeWithGrip="False" />
+        <Behaviours:BorderlessWindowBehavior AllowsTransparency="True" AutoSizeToContent="True" EnableDWMDropShadow="True" />
     </i:Interaction.Behaviors>
 
     <metroControls:MetroWindow.Flyouts>
         <metroControls:FlyoutsControl>
-            <metroControls:Flyout Header="SETTINGS" Position="Right" Theme="Adapt" Width="500" IsModal="True">
+            <metroControls:Flyout Name="SettingsFlyout" Header="SETTINGS" Position="Right" Theme="Adapt" Width="500" IsModal="True" IsPinned="True">
                 <StackPanel Margin="10">
                     <metroControls:ToggleSwitch Name="CreateNoWindow" Header="Disable CMD" Margin="20" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.CreateADBWindow}"/>
-                    <TextBox Name="Target" Style="{StaticResource ExecuteCommandTextBox}"></TextBox>
+                    <TextBox Name="Target" Text="{Binding Source={StaticResource Settings}, Path=Default.ADBTarget}" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.IsWaitingForData="True" metroControls:TextboxHelper.Watermark="TARGET DEVICE ID"></TextBox>
+                    <Rectangle Margin="20,5,20,5" Fill="White" Width="{Binding}" Height="1"/>
+                    <metroControls:ToggleSwitch Name="LightTheme" Header="LightTheme" Margin="20"/>
                 </StackPanel>
             </metroControls:Flyout>
-            <metroControls:Flyout Header="REBOOT" Position="Left" Theme="Adapt" Width="250" IsModal="False">
+            <metroControls:Flyout Header="REBOOT" Position="Left" Theme="Adapt" Width="250" IsModal="False" IsPinned="True">
                 <StackPanel Margin="10">
                     <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Rectangle.OpacityMask>
@@ -112,7 +127,7 @@
                     </Button>
                 </StackPanel>
             </metroControls:Flyout>
-            <metroControls:Flyout Header="APPS" Position="Left" Theme="Adapt" Width="250" IsModal="False">
+            <metroControls:Flyout Header="APPS" Position="Left" Theme="Adapt" Width="250" IsModal="False" IsPinned="True">
                 <StackPanel Margin="10">
                     <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Rectangle.OpacityMask>
@@ -140,6 +155,34 @@
 
                 </StackPanel>
             </metroControls:Flyout>
+            <metroControls:Flyout Header="DEVICES" Position="Right" Width="500" Theme="Accent" IsPinned="True">
+                <ScrollViewer CanContentScroll="True">
+                    <StackPanel Margin="20">
+                        <Grid>
+                            <Rectangle Width="80" Height="128" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_iphone}"></VisualBrush>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <Rectangle Width="45" Height="45" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}"></VisualBrush>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Grid>
+                        <Label Style="{StaticResource TileTitleLabel}" Foreground="White">ADB</Label>
+                        <TextBox Name="ADBDevices" Width="{Binding}" Height="128"/>
+
+                        <Rectangle Width="{Binding}" Fill="White" Height="1" Margin="20,10,20,0"/>
+
+                        <Label Style="{StaticResource TileTitleLabel}" Foreground="White">Fastboot</Label>
+                        <TextBox Name="FastbootDevices" Width="{Binding}" Height="128"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </metroControls:Flyout>
+            <metroControls:Flyout Position="Bottom" Header="Working..." Width="{Binding}" Height="90" Theme="Adapt" Background="#9f000000">
+                <metroControls:ProgressRing IsActive="True" IsLarge="True" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            </metroControls:Flyout>
         </metroControls:FlyoutsControl>
     </metroControls:MetroWindow.Flyouts>
 
@@ -157,7 +200,38 @@
             <ScrollViewer Grid.Column="0" Grid.Row="0" CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
                 <controls:Logo Height="{Binding}" Width="{Binding}" Name="Logo"/>
             </ScrollViewer>
-            <TabControl Grid.Column="0" Grid.Row="1" Margin="20,20,20,0" >
+            <TabControl Name="Tools" Grid.Column="0" Grid.Row="1" Margin="20,20,20,0" >
+                <TabItem Header="Overview">
+                    <ScrollViewer>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.3*"/>
+                                <ColumnDefinition Width="0.7*"/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Name="OverviewRectangle" Fill="Gray" Width="128" Height="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Visual="{StaticResource appbar_thumbs_up}"></VisualBrush>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock x:Name="OverviewText" Style="{StaticResource TileTitle}" FontSize="10" TextWrapping="Wrap" Text="Android Debug Bridge (adb) is a versatile command line tool that lets you communicate with an emulator instance or connected Android-powered device. &#x0a;Android Toolkit gives you an opportunity to use GUI (graphical user interface) for every device/emulator operation rather than writing commands in command prompt (cmd)." />
+                                <Button Margin="0,10,0,0" Width="100" Height="40" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                    <Button.Content>
+                                        <DockPanel>
+                                            <Rectangle Fill="Gray" Width="20" Height="20" Margin="0,0,5,0">
+                                                <Rectangle.OpacityMask>
+                                                    <VisualBrush Visual="{StaticResource appbar_question}"></VisualBrush>
+                                                </Rectangle.OpacityMask>
+                                            </Rectangle>
+                                            <TextBlock Foreground="Gray" Text="HELP"/>
+                                        </DockPanel>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+
+                </TabItem>
                 <TabItem Header="Push/Pull">
                     <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Grid>
@@ -189,7 +263,7 @@
                                         </Rectangle>
                                     </Button>
                                     <TextBox Style="{StaticResource TextBoxOpenStyle}" TextWrapping="Wrap" Name="PushFile" Margin="5" Text="{Binding Path=ThreeTextCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenFileCommand}" metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=PushFile}"  metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE FILE" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
-                                    <TextBox Style="{StaticResource TextBoxStyle}" Name="PushLocation" Margin="5" Text="{Binding Path=ThreeTextCommandParameters.Text2, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER PUSH LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
+                                    <TextBox  Name="PushLocation" Margin="5" Text="{Binding Path=ThreeTextCommandParameters.Text2, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER PUSH LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
                                     <Button Margin="5" Name="PushButton" Command="{Binding PushCommand}" Style="{StaticResource PushButtonStyle}">
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource ThreeTextCommandParametersConverter}">
@@ -224,7 +298,7 @@
                                     </Button>
 
                                     <TextBox Style="{StaticResource TextBoxOpenStyle}" TextWrapping="Wrap" Name="PullLocation" Margin="5" Text="{Binding Path=FiveTextCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding SaveFileCommand}" metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=PullLocation}"  metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE LOCATION" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
-                                    <TextBox Style="{StaticResource TextBoxStyle}" TextWrapping="Wrap" Name="PullFile1" Margin="5" Text="{Binding Path=FiveTextCommandParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"  metroControls:TextboxHelper.Watermark="PULL FILE 1 PATH" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"  metroControls:TextboxHelper.ClearTextButton="True"/>
+                                    <TextBox TextWrapping="Wrap" Name="PullFile1" Margin="5" Text="{Binding Path=FiveTextCommandParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"  metroControls:TextboxHelper.Watermark="PULL FILE 1 PATH" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"  metroControls:TextboxHelper.ClearTextButton="True"/>
                                     <Expander Header="PULL MORE FILES">
                                         <StackPanel>
                                             <TextBox Style="{StaticResource TextBoxStyle}" TextWrapping="Wrap" Name="PullFile2" Margin="5" Text="{Binding Path=FiveTextCommandParameters.Text3, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"   metroControls:TextboxHelper.Watermark="PULL FILE 2 PATH" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" metroControls:TextboxHelper.ClearTextButton="True" />
@@ -310,7 +384,7 @@
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
                                 </Button>
-                                <TextBox Style="{StaticResource TextBoxOpenStyle}" TextWrapping="Wrap" Name="InstallApp" Margin="5" Text="{Binding Path=InstallTwoCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenAppCommand}"  metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=InstallApp}"  metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE APP (.apk)" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
+                                <TextBox TextWrapping="Wrap" Name="InstallApp" Margin="5" Text="{Binding Path=InstallTwoCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenAppCommand}"  metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=InstallApp}"  metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE APP (.apk)" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
                                 <Button Margin="5" Name="InstallButton" Command="{Binding InstallCommand}" Style="{StaticResource InstallButtonStyle}">
                                     <Button.CommandParameter>
                                         <MultiBinding Converter="{StaticResource TwoCommandsParametersConverter}">
@@ -337,7 +411,7 @@
                         <GroupBox Header="uninstall" Grid.Column="2">
                             <StackPanel>
                                 <metroControls:ToggleSwitch Name="UninstallSystemApp" Header="System App" IsChecked="{Binding UninstallTwoCommandParameters.Bool}"/>
-                                <TextBox Style="{StaticResource TextBoxStyle}" TextWrapping="Wrap" Name="UninstallApp" Margin="5" Text="{Binding Path=UninstallTwoCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenAppCommand}"  metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=UninstallApp}"  metroControls:TextboxHelper.Watermark="ENTER THE APP NAME OR PATH" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
+                                <TextBox TextWrapping="Wrap" Name="UninstallApp" Margin="5" Text="{Binding Path=UninstallTwoCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenAppCommand}"  metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=UninstallApp}"  metroControls:TextboxHelper.Watermark="ENTER THE APP NAME OR PATH" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
                                 <Button Margin="5" Name="UninstallButton" Command="{Binding UninstallCommand}" Style="{StaticResource UninstallButtonStyle}">
                                     <Button.CommandParameter>
                                         <MultiBinding Converter="{StaticResource TwoCommandsParametersConverter}">
@@ -367,7 +441,7 @@
                 <TabItem Header="Logcat"></TabItem>
                 <TabItem Header="Execute"></TabItem>
             </TabControl>
-            <ScrollViewer Background="{StaticResource FlyoutBackgroundBrush}" Grid.Column="1" Grid.Row="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer Name="RightTop" Background="{StaticResource FlyoutBackgroundBrush}" Grid.Column="1" Grid.Row="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                 <TabControl>
                     <TabItem Header="device">
                         <DockPanel>
@@ -376,7 +450,7 @@
                                     <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_iphone}"></VisualBrush>
                                 </Rectangle.OpacityMask>
                             </Rectangle>
-                            <Button Width="{Binding}" Height="40" Margin="5,10,7,10" Style="{StaticResource FlatMetroAccentButton}">
+                            <Button Name="ShowDevices" Width="{Binding}" Height="40" Margin="5,10,7,10" Style="{StaticResource FlatMetroAccentButton}">
                                 <Button.Content>
                                     <DockPanel>
                                         <Rectangle Width="16" Height="16" Fill="White">
@@ -429,16 +503,25 @@
                     </TabItem>
                 </TabControl>
             </ScrollViewer>
-            <Grid  Background="{StaticResource FlyoutBackgroundBrush}"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+            <Grid Name="Right" Background="{StaticResource FlyoutBackgroundBrush}"  Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
                 <Expander Header="Immediate" Margin="10,0,10,30" >
                     <Grid>
                         <Grid Margin="20">
                             <DockPanel VerticalAlignment="Top">
-
                                 <metroControls:ProgressRing Width="40" Height="40" IsEnabled="True" Foreground="{DynamicResource AccentColorBrush}" IsActive="True"/>
                                 <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Text="IMMEDIATE" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                             </DockPanel>
-                            <TextBox Margin="0,50,0,0" VerticalAlignment="Top" x:Name="ExecuteCmd" Height="20" metroControls:TextboxHelper.Watermark="ENTER COMMAND" Style="{DynamicResource ExecuteCommandTextBox}" />
+                            <TextBox Margin="0,50,0,0" VerticalAlignment="Top" x:Name="ExecuteCmd" Height="20" Text="{Binding Path=ExecuteSingleCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER COMMAND" Style="{DynamicResource ExecuteCommandTextBox}" metroControls:TextboxHelper.ButtonCommand="{Binding ExecuteSingleCommand}">
+                                <metroControls:TextboxHelper.ButtonCommandParameter>
+                                    <MultiBinding Converter="{StaticResource TwoCommandsParametersConverter}">
+                                        <Binding ElementName="Context"/>
+                                        <Binding ElementName="ExecuteCmd" Path="Text"/>
+                                        <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                        <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                        <Binding ElementName="Target" Path="Text"/>
+                                    </MultiBinding>
+                                </metroControls:TextboxHelper.ButtonCommandParameter>
+                            </TextBox>
                             <Button Margin="0,80,0,0" Command="{Binding ClearImmediateCommand}" CommandParameter="{Binding ElementName=Context}" VerticalAlignment="Top"   Style="{StaticResource MetroFlatButton}">
                                 <Button.Content>
                                     <DockPanel>
@@ -480,6 +563,7 @@
                         </Rectangle>
                     </Button.Content>
                 </Button>
+                <Label Name="StatusLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource StatusLabel}" Width="150" MinHeight="22"/>
             </DockPanel>
         </Grid>
     </metroControls:MetroContentControl>

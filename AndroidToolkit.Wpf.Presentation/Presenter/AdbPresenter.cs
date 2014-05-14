@@ -19,13 +19,13 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
     public class AdbPresenter
     {
         public static TextBlock Context { get; set; }
-     
+
         private static AdbTools _adb;
 
         #region UI
 
 
-        public async static void ExecuteClearImmediate(object parameter)
+        public static async void ExecuteClearImmediate(object parameter)
         {
             TextBlock context = (TextBlock)parameter;
             await context.Dispatcher.InvokeAsync(() => context.Text = string.Empty);
@@ -55,27 +55,29 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.DoWork += async (sender, args) =>
             {
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
-                await Task.Run(async () => await _adb.Reboot(parameters.Bool,parameters.Target));
+                await Task.Run(async () => await _adb.Reboot(parameters.Bool, parameters.Target));
             };
             worker.RunWorkerAsync();
         }
 
         public static void ExecuteRebootRecovery(object parameter)
         {
-            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
             Context = parameters.Context;
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += async (sender, args) =>
             {
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
-                await Task.Run(async () => await _adb.RebootRecovery(parameters.Bool,parameters.Target));
+                await Task.Run(async () => await _adb.RebootRecovery(parameters.Bool, parameters.Target));
             };
             worker.RunWorkerAsync();
         }
 
         public static void ExecuteRebootBootloader(object parameter)
         {
-            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
             Context = parameters.Context;
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += async (sender, args) =>
@@ -89,6 +91,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
         #endregion
 
         #region File
+
         public static void OpenFile(object parameter)
         {
             TextBox context = parameter as TextBox;
@@ -114,6 +117,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
         #endregion
 
         #region Apks
+
         public static void ExecuteInstall(object parameter)
         {
             TwoCommandParameters parameters = (TwoCommandParameters)parameter;
@@ -122,7 +126,10 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.DoWork += async (sender, args) =>
             {
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
-                await Task.Run(async () => await _adb.InstallApk(parameters.Text, parameters.Bool, parameters.Bool2, parameters.Target));
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.InstallApk(parameters.Text, parameters.Bool, parameters.Bool2, parameters.Target));
             };
             worker.RunWorkerAsync();
         }
@@ -135,10 +142,14 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.DoWork += async (sender, args) =>
             {
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
-                await Task.Run(async () => await _adb.RemoveApk(parameters.Text, parameters.Bool, parameters.Bool2, parameters.Target));
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.RemoveApk(parameters.Text, parameters.Bool, parameters.Bool2, parameters.Target));
             };
             worker.RunWorkerAsync();
         }
+
         #endregion
 
         public static void ExecutePush(object parameter)
@@ -149,7 +160,10 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.DoWork += async (sender, args) =>
             {
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
-                await Task.Run(async () => await _adb.Push(parameters.Text, parameters.Text2, parameters.Bool, parameters.Target));
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.Push(parameters.Text, parameters.Text2, parameters.Bool, parameters.Target));
             };
             worker.RunWorkerAsync();
         }
@@ -175,6 +189,25 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.RunWorkerAsync();
         }
 
-
+        public static void ExecuteSingleCommand(object parameter)
+        {
+            TwoCommandParameters parameters = parameter as TwoCommandParameters;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        string[] cmds = new string[1];
+                        cmds[0]=parameters.Text;
+                        await _adb.Execute(parameters.Bool, parameters.Target, cmds);
+                    });
+                };
+                worker.RunWorkerAsync();
+            }
+        }
     }
 }

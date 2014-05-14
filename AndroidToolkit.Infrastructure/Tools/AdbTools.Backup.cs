@@ -11,43 +11,90 @@ namespace AndroidToolkit.Infrastructure.Tools
     {
         public async Task Backup(string name, string location, AdbBackupMode mode, bool createNoWindow, string target = null)
         {
-            await Context.Dispatcher.InvokeAsync(async () =>
+            if (!string.IsNullOrEmpty(target))
             {
-                string pathlocation = PathGenerator.Generate(location, name);
-                await Task.Run(async () =>
+                await Context.Dispatcher.InvokeAsync(async () =>
                 {
-                    if (mode == AdbBackupMode.All)
+                    string pathlocation = PathGenerator.Generate(location, name);
+                    await Task.Run(async () =>
                     {
-                        await _executor.Execute(new Command(string.Format("adb -s {1} backup -all -f {0} ", pathlocation, target)), Context, createNoWindow);
-                    }
-                    else if (mode == AdbBackupMode.Apps)
-                    {
-                        await _executor.Execute(new Command(string.Format("adb -s {1} backup -apk -f {0} ", pathlocation, target)), Context, createNoWindow);
-                    }
-                    else if (mode == AdbBackupMode.AppsWithoutSystemApps)
-                    {
-                        await _executor.Execute(new Command(string.Format("adb -s {1} backup -apk -nosystem -f {0} ", pathlocation, target)), Context, createNoWindow);
-                    }
-                    else if (mode == AdbBackupMode.SystemApps)
-                    {
-                        await _executor.Execute(new Command(string.Format("adb -s {1} backup -apk -system -f {0} ", pathlocation, target)), Context, createNoWindow);
-                    }
-                    else
-                    {
-                        await _executor.Execute(new Command(string.Format("adb -s {1} pull /sdcard/ {0} ", location, target)), Context, createNoWindow);
-                    }
+                        if (mode == AdbBackupMode.All)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb -s {1} backup -all -f {0} ", pathlocation, target)), Context, createNoWindow);
+                        }
+                        else if (mode == AdbBackupMode.Apps)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb -s {1} backup -apk -f {0} ", pathlocation, target)), Context, createNoWindow);
+                        }
+                        else if (mode == AdbBackupMode.AppsWithoutSystemApps)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb -s {1} backup -apk -nosystem -f {0} ", pathlocation, target)), Context, createNoWindow);
+                        }
+                        else if (mode == AdbBackupMode.SystemApps)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb -s {1} backup -apk -system -f {0} ", pathlocation, target)), Context, createNoWindow);
+                        }
+                        else
+                        {
+                            await _executor.Execute(new Command(string.Format("adb -s {1} pull /sdcard/ {0} ", location, target)), Context, createNoWindow);
+                        }
+                    });
                 });
-            });
+            }
+            else
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    string pathlocation = PathGenerator.Generate(location, name);
+                    await Task.Run(async () =>
+                    {
+                        if (mode == AdbBackupMode.All)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb backup -all -f {0} ", pathlocation)), Context, createNoWindow);
+                        }
+                        else if (mode == AdbBackupMode.Apps)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb backup -apk -f {0} ", pathlocation)), Context, createNoWindow);
+                        }
+                        else if (mode == AdbBackupMode.AppsWithoutSystemApps)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb backup -apk -nosystem -f {0} ", pathlocation)), Context, createNoWindow);
+                        }
+                        else if (mode == AdbBackupMode.SystemApps)
+                        {
+                            await _executor.Execute(new Command(string.Format("adb backup -apk -system -f {0} ", pathlocation)), Context, createNoWindow);
+                        }
+                        else
+                        {
+                            await _executor.Execute(new Command(string.Format("adb pull /sdcard/ {0} ", location)), Context, createNoWindow);
+                        }
+                    });
+                });
+            }
         }
+
         public async Task Restore(string name, bool createNoWindow, string target = null)
         {
-            await Context.Dispatcher.InvokeAsync(async () =>
+            if (!string.IsNullOrEmpty(target))
             {
-                await Task.Run(async () =>
+                await Context.Dispatcher.InvokeAsync(async () =>
                 {
-                    await _executor.Execute(new Command(string.Format("adb -s {1} restore {0} ", name, target)), Context, createNoWindow);
+                    await Task.Run(async () =>
+                    {
+                        await _executor.Execute(new Command(string.Format("adb -s {1} restore {0} ", name, target)), Context, createNoWindow);
+                    });
                 });
-            });
+            }
+            else
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(async () =>
+                    {
+                        await _executor.Execute(new Command(string.Format("adb restore {0} ", name)), Context, createNoWindow);
+                    });
+                });
+            }
         }
     }
 }

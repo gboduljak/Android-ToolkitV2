@@ -49,7 +49,7 @@ namespace AndroidToolkit.Infrastructure.Tools
                 _cmds = new List<Command>();
                 for (int i = 0; i < cmds.Count(); i++)
                 {
-                    _cmds.Add(new Command(string.Format("-s {1} {0} ", cmds[i], target)));
+                    _cmds.Add(new Command(string.Format("{0} ", cmds[i])));
                 }
                 await _executor.Execute(_cmds, Context, createNoWindow);
             });
@@ -58,15 +58,26 @@ namespace AndroidToolkit.Infrastructure.Tools
         public async Task<bool> CheckRoot(string targetId = null, bool createNoWindow = true, string target = null)
         {
             string output = string.Empty;
-            await Context.Dispatcher.InvokeAsync(() => Parallel.Invoke(async () => { output = await _executor.Execute(new Command(string.Format("adb -s {0} shell su", target)), createNoWindow); }, () =>
+            if (!string.IsNullOrEmpty(target))
             {
-                Thread.Sleep(2000);
-                KillAdb();
-            }));
+                await Context.Dispatcher.InvokeAsync(() => Parallel.Invoke(async () => { output = await _executor.Execute(new Command(string.Format("adb -s {0} shell su", target)), createNoWindow); }, () =>
+                {
+                    Thread.Sleep(2000);
+                    KillAdb();
+                }));
+            }
+            else
+            {
+                await Context.Dispatcher.InvokeAsync(() => Parallel.Invoke(async () => { output = await _executor.Execute(new Command("adb shell su"), createNoWindow); }, () =>
+                {
+                    Thread.Sleep(2000);
+                    KillAdb();
+                }));
+            }
             return output.Contains('#');
         }
 
-        private void KillAdb()
+        private static void KillAdb()
         {
             Process[] processes = Process.GetProcesses();
             for (int i = 0; i < processes.Count(); i++)

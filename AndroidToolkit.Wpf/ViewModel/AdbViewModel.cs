@@ -23,6 +23,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             InstallTwoCommandParameters = new TwoCommandParameters();
             UninstallTwoCommandParameters = new TwoCommandParameters();
             UiParameters = new UIParameters();
+            ExecuteSingleCommandParameters=new TwoCommandParameters();
         }
 
         #region Commands
@@ -191,6 +192,21 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<TwoCommandParameters> _executeSingleCommand;
+
+        public RelayCommand<TwoCommandParameters> ExecuteSingleCommand
+        {
+            get { return _executeSingleCommand ?? (_executeSingleCommand = new RelayCommand<TwoCommandParameters>(AdbPresenter.ExecuteSingleCommand)); }
+            set
+            {
+                if (_executeSingleCommand != value)
+                {
+                    RaisePropertyChanging(() => this.ExecuteSingleCommand);
+                    _executeSingleCommand = value;
+                    RaisePropertyChanged(() => this.ExecuteSingleCommand);
+                }
+            }
+        }
 
 
         #region UICommands
@@ -274,6 +290,8 @@ namespace AndroidToolkit.Wpf.ViewModel
         public TwoCommandParameters InstallTwoCommandParameters { get; set; }
 
         public TwoCommandParameters UninstallTwoCommandParameters { get; set; }
+
+        public TwoCommandParameters ExecuteSingleCommandParameters { get; set; }
 
         #endregion
 

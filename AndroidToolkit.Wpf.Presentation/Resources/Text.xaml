@@ -64,5 +64,10 @@
         <Setter Property="Foreground" Value="Gray" />
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
-
+    <Style x:Key="StatusLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontFamily" Value="Segoe UI Light" />
+        <Setter Property="Foreground" Value="DarkGray" />
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
 </ResourceDictionary>
