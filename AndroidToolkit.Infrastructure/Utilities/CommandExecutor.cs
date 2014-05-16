@@ -86,7 +86,7 @@ namespace AndroidToolkit.Infrastructure.Utilities
                 _process.Start();
                 _process.BeginErrorReadLine();
                 _process.BeginOutputReadLine();
-                foreach (var cmd in cmds.Where(cmd => cmd.Text.Length > 0))
+                foreach (var cmd in cmds.Where(cmd => !string.IsNullOrEmpty(cmd.Text)))
                 {
                     await _process.StandardInput.WriteLineAsync(cmd.Text);
                 }
@@ -114,7 +114,7 @@ namespace AndroidToolkit.Infrastructure.Utilities
 
                 _process.Start();
 
-                foreach (var cmd in cmds.Where(cmd => cmd.Text.Length > 0))
+                foreach (var cmd in cmds.Where(cmd => !string.IsNullOrEmpty(cmd.Text)))
                 {
                     await _process.StandardInput.WriteLineAsync(cmd.Text);
                 }

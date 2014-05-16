@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,16 +29,16 @@ namespace AndroidToolkit.Wpf.View
     /// <summary>
     /// Interaction logic for AdbView.xaml
     /// </summary>
-    public partial class AdbView : MetroWindow
+    public partial class AdbView : MetroWindow, IDisposable
     {
         private readonly AdbViewModel _viewModel;
 
         public AdbView()
         {
             InitializeComponent();
-            Logo.HeaderSubtitle.Text = "ADB";
             _viewModel = new AdbViewModel();
             this.DataContext = _viewModel;
+            Logo.HeaderSubtitle.Text = "ADB";
             AddEvents();
             _FlyoutPresenter = Presentation.Presenter.FlyoutPresenter.Present;
         }
@@ -45,15 +46,19 @@ namespace AndroidToolkit.Wpf.View
         #region AddEvent
         private void AddEvents()
         {
+            this.Closed += delegate
+            {
+                Dispose();
+            };
+
             this.Closing += delegate
             {
-                _viewModel.Cleanup();
-                GC.Collect();
+                Dispose();
             };
 
             this.Deactivated += delegate
             {
-                GC.Collect();
+                Dispose();
             };
 
             this.RebootButton.Click += ButtonClickHandler;
@@ -76,6 +81,7 @@ namespace AndroidToolkit.Wpf.View
                 this.Right.Background = Brushes.White;
                 this.RightTop.Background = Brushes.White;
                 this.LightTheme.IsEnabled = false;
+                this.Context.Foreground = Brushes.Gray;
             };
             this.LightTheme.Unchecked += (sender, args) =>
             {
@@ -90,7 +96,7 @@ namespace AndroidToolkit.Wpf.View
             await this.Dispatcher.InvokeAsync(() =>
             {
                 _FlyoutPresenter.Invoke(this, 4);
-                using (Toast toast = new Toast("Working in background..."))
+                using (Toast toast = new Toast("Working in background...","Android Toolkit - Notification"))
                 {
                     toast.Show();
                 }
@@ -109,5 +115,21 @@ namespace AndroidToolkit.Wpf.View
 
         private readonly FlyoutPresenter _FlyoutPresenter;
         private delegate void FlyoutPresenter(MetroWindow context, int index);
+
+        ~AdbView()
+        {
+            this.Dispose();
+        }
+        [DllImport("kernel32.dll", EntryPoint = "SetProcessWorkingSetSize", ExactSpelling = true, CharSet = CharSet.Ansi, SetLastError = true)]
+        private static extern int SetProcessWorkingSetSize(
+          IntPtr process, int minimumWorkingSetSize, int maximumWorkingSetSize);
+
+        public void Dispose()
+        {
+            _viewModel.Cleanup();
+            GC.Collect();
+            GC.SuppressFinalize(this);
+            SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
+        }
     }
 }

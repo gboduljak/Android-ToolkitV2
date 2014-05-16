@@ -26,7 +26,22 @@ namespace AndroidToolkit.Wpf.View
             this.Top = 0;
             this.Left = SystemParameters.PrimaryScreenWidth - this.Width;
             this.TextBlock.Text = message;
-            var timer = new Timer(4096);
+            var timer = new Timer(7000);
+            timer.Elapsed += (sender, args) =>
+            {
+                this.Dispatcher.Invoke(this.Close);
+                this.Dispatcher.Invoke(timer.Dispose);
+            };
+            timer.Enabled = true;
+        }
+        public Toast(string message, string name)
+        {
+            InitializeComponent();
+            this.Title = name;
+            this.Top = 0;
+            this.Left = SystemParameters.PrimaryScreenWidth - this.Width;
+            this.TextBlock.Text = message;
+            var timer = new Timer(7000);
             timer.Elapsed += (sender, args) =>
             {
                 this.Dispatcher.Invoke(this.Close);
@@ -38,6 +53,11 @@ namespace AndroidToolkit.Wpf.View
         public void Dispose()
         {
             GC.Collect();
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

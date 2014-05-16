@@ -44,6 +44,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<AdbViewModel>();
             SimpleIoc.Default.Register<ICommandExecutor,CommandExecutor>();
             SimpleIoc.Default.Register<ITextBlockAdapter,TextBlockAdapter>();
         }
@@ -55,7 +56,14 @@ namespace AndroidToolkit.Wpf.ViewModel
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
-        
+
+        public AdbViewModel Adb
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AdbViewModel>();
+            }
+        }
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

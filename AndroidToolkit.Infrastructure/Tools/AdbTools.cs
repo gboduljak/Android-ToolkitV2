@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace AndroidToolkit.Infrastructure.Tools
 {
     public partial class AdbTools
     {
-        private readonly ICommandExecutor _executor;
+        private ICommandExecutor _executor;
 
         private Command _cmd;
 
@@ -88,6 +89,16 @@ namespace AndroidToolkit.Infrastructure.Tools
                     return;
                 }
             }
+        }
+
+        ~AdbTools()
+        {
+            this._executor = null;
+            this.Context = null;
+            this._cmd = null;
+            this._cmds.Clear();
+            this._cmds = null;
+            GC.Collect();
         }
 
 

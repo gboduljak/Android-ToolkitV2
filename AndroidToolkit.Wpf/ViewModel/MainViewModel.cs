@@ -1,49 +1,53 @@
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using AndroidToolkit.Infrastructure.Tools;
-using AndroidToolkit.Wpf.Presentation.Presenter;
+using System.Windows;
 using AndroidToolkit.Wpf.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace AndroidToolkit.Wpf.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        public MainViewModel()
-        {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
-            // TODO: Complete member initialization
-        }
 
-        private void ShowAdb()
+        private RelayCommand<MetroWindow> _showAdbCommand;
+        public RelayCommand<MetroWindow> ShowAdbCommand
         {
-            AdbView adb=new AdbView();
-            adb.Show();
-        }
-
-        private RelayCommand _showAdbCommand;
-
-        public RelayCommand ShowAdbCommand
-        {
-            get { return _showAdbCommand ?? (_showAdbCommand = new RelayCommand(ShowAdb)); }
+            get
+            {
+                return _showAdbCommand ?? (_showAdbCommand = new RelayCommand<MetroWindow>(async (window) =>
+                {
+                    if (!IsWindowOpen<AdbView>())
+                    {
+                        new AdbView().Show();
+                    }
+                    else
+                    {
+                      await window.ShowMessageAsync("Notification","ADB is already opened.");
+                    }
+                }));
+            }
             set
             {
-                if (_showAdbCommand != value)
+                if (this._showAdbCommand != value)
                 {
                     RaisePropertyChanging(() => this.ShowAdbCommand);
-                    _showAdbCommand = value;
+                    this._showAdbCommand = value;
                     RaisePropertyChanged(() => this.ShowAdbCommand);
                 }
             }
+        }
+
+        private static bool IsWindowOpen<T>(string name = "") where T : Window
+        {
+            return string.IsNullOrEmpty(name)
+               ? Application.Current.Windows.OfType<T>().Any()
+               : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
         }
     }
 }

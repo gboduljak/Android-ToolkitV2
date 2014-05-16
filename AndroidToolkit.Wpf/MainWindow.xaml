@@ -60,7 +60,7 @@
                     <TabControl>
                         <TabItem Header="TOOLS">
                             <metroControls:FlipView IsBannerEnabled="False" Margin="10,5">
-                                <metroControls:Tile Width="470" Height="180" Title="ADB" TitleFontSize="24" Command="{Binding ShowAdbCommand}">
+                                <metroControls:Tile Width="470" Height="180" Title="ADB" TitleFontSize="24" Command="{Binding ShowAdbCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                                     <Rectangle Width="120" Height="120" Fill="White">
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Visual="{StaticResource appbar_settings}" Stretch="Fill"></VisualBrush>

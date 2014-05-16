@@ -9,19 +9,43 @@ namespace AndroidToolkit.Infrastructure.Helpers
 {
     public static class FileDialog
     {
-        [STAThread]
-        public static string ShowDialog()
+
+        public static string ShowDialog(bool multiselect)
         {
-            OpenFileDialog dialog = new OpenFileDialog {Title = "Choose", Multiselect = false};
+            StringBuilder files = new StringBuilder();
+            OpenFileDialog dialog = new OpenFileDialog { Title = "Choose", Multiselect = multiselect };
             DialogResult result = dialog.ShowDialog();
-            return dialog.FileName;
+            foreach (string file in dialog.FileNames)
+            {
+                if (files.Length == 0)
+                {
+                    files.AppendLine(file.Trim() + ",");
+                }
+                else
+                {
+                    files.AppendLine("\n" + file.Trim() + ",");
+                }
+            }
+            return files.ToString();
         }
 
-        public static string ShowDialog(string filter)
+        public static string ShowDialog(string filter, bool multiselect)
         {
-            OpenFileDialog dialog = new OpenFileDialog {Multiselect = false, Filter = filter, Title = "Choose"};
+            StringBuilder files = new StringBuilder();
+            OpenFileDialog dialog = new OpenFileDialog { Title = "Choose", Multiselect = multiselect, Filter = filter };
             DialogResult result = dialog.ShowDialog();
-            return dialog.FileName;
+            foreach (string file in dialog.FileNames)
+            {
+                if (files.Length == 0)
+                {
+                    files.AppendLine(file.Trim());
+                }
+                else
+                {
+                    files.AppendLine("\n" + file.Trim());
+                }
+            }
+            return files.ToString();
         }
     }
 }

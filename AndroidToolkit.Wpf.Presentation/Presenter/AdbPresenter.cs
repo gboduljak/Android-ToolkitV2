@@ -40,6 +40,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
                 await Task.Run(async () => await _adb.Prepare());
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
@@ -57,6 +58,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
                 await Task.Run(async () => await _adb.Reboot(parameters.Bool, parameters.Target));
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
@@ -71,6 +73,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
                 await Task.Run(async () => await _adb.RebootRecovery(parameters.Bool, parameters.Target));
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
@@ -85,6 +88,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
                 await Task.Run(async () => await _adb.RebootBootloader(parameters.Bool, parameters.Target));
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
@@ -95,14 +99,14 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
         public static void OpenFile(object parameter)
         {
             TextBox context = parameter as TextBox;
-            string file = FileDialog.ShowDialog();
+            string file = FileDialog.ShowDialog(true);
             if (context != null) context.Dispatcher.Invoke(() => { context.Text = file; });
         }
 
         public static void OpenApp(object parameter)
         {
             TextBox context = parameter as TextBox;
-            string file = FileDialog.ShowDialog("APK Android Package File (.apk)|*.apk");
+            string file = FileDialog.ShowDialog("APK Android Package File (.apk)|*.apk", false);
             if (context != null) context.Dispatcher.Invoke(() => { context.Text = file; });
         }
 
@@ -131,6 +135,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                         async () =>
                             await _adb.InstallApk(parameters.Text, parameters.Bool, parameters.Bool2, parameters.Target));
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
@@ -147,9 +152,63 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                         async () =>
                             await _adb.RemoveApk(parameters.Text, parameters.Bool, parameters.Bool2, parameters.Target));
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
+        #endregion
+
+        #region Copy/Move/Delete
+        public static void ExecuteCopy(object parameter)
+        {
+            ThreeTextCommandParameters parameters = (ThreeTextCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.Copy(parameters.Text, parameters.Text2, parameters.Bool, parameters.Target));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void ExecuteMove(object parameter)
+        {
+            ThreeTextCommandParameters parameters = (ThreeTextCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.Move(parameters.Text, parameters.Text2, parameters.Bool, parameters.Target));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void ExecuteDelete(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.Delete(parameters.Text, parameters.Bool, parameters.Target));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
         #endregion
 
         public static void ExecutePush(object parameter)
@@ -163,8 +222,9 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 await
                     Task.Run(
                         async () =>
-                            await _adb.Push(parameters.Text, parameters.Text2, parameters.Bool, parameters.Target));
+                            await _adb.Push(parameters.Text.Split(','), parameters.Text2, parameters.Bool, parameters.Target));
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
@@ -179,13 +239,14 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 {
                     _adb = new AdbTools(Context);
                     String[] paths = new string[4];
-                    paths[0] = parameters.Text2;
-                    paths[1] = parameters.Text3;
-                    paths[2] = parameters.Text4;
-                    paths[3] = parameters.Text5;
+                    if (!string.IsNullOrEmpty(parameters.Text2)) paths[0] = parameters.Text2;
+                    if (!string.IsNullOrEmpty(parameters.Text3)) paths[1] = parameters.Text3;
+                    if (!string.IsNullOrEmpty(parameters.Text4)) paths[2] = parameters.Text4;
+                    if (!string.IsNullOrEmpty(parameters.Text5)) paths[3] = parameters.Text5;
                     await _adb.Pull(parameters.Text, parameters.Bool, paths, parameters.Target);
                 });
             };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
 
@@ -202,10 +263,11 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                     {
                         _adb = new AdbTools(Context);
                         string[] cmds = new string[1];
-                        cmds[0]=parameters.Text;
+                        cmds[0] = parameters.Text;
                         await _adb.Execute(parameters.Bool, parameters.Target, cmds);
                     });
                 };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
                 worker.RunWorkerAsync();
             }
         }

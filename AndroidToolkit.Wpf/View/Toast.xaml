@@ -24,10 +24,13 @@
                 <Storyboard>
                     <DoubleAnimation Storyboard.TargetProperty="Height" From="0" To="75" Duration="0:0:1"/>
                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontSize)" Duration="0:0:1" Storyboard.TargetName="TextBlock">
-                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="18"/>
+                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="16"/>
                     </DoubleAnimationUsingKeyFrames>
-                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Rectangle.Width)" Duration="0:0:1" Storyboard.TargetName="Icon">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Rectangle.Width)" Duration="0:0:1" Storyboard.TargetName="AndroidIcon">
                         <EasingDoubleKeyFrame KeyTime="0:0:1" Value="60"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Rectangle.Width)" Duration="0:0:1" Storyboard.TargetName="AndroidCog">
+                        <EasingDoubleKeyFrame KeyTime="0:0:1" Value="25"/>
                     </DoubleAnimationUsingKeyFrames>
                 </Storyboard>
             </BeginStoryboard>
@@ -49,11 +52,23 @@
             <ColumnDefinition Width="0.3*"/>
             <ColumnDefinition Width="0.7*"/>
         </Grid.ColumnDefinitions>
-        <Rectangle Name="Icon" Margin="5" Width="1" Grid.Column="0" Grid.RowSpan="2"  Fill="White">
-            <Rectangle.OpacityMask>
-                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_notification}"></VisualBrush>
-            </Rectangle.OpacityMask>
-        </Rectangle>
-        <TextBlock Name="TextBlock" Grid.Column="1" Grid.Row="1" Style="{StaticResource TileTitle}" Foreground="White" FontSize="1"/>
+     <Grid Grid.Column="0" Grid.RowSpan="2">
+            <Rectangle Name="AndroidIcon" Width="1" Margin="5" Fill="{StaticResource FlatButtonBackgroundBrush}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Visual="{StaticResource appbar_os_android}"></VisualBrush>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            <Rectangle Name="AndroidCog" Width="1" Height="25" Margin="0,8,0,0" Fill="{StaticResource FlatButtonForegroundBrush}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Visual="{StaticResource appbar_cog}"></VisualBrush>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+        </Grid>
+        <TextBlock Margin="5" Name="TextBlock" Grid.Column="1" Grid.Row="1" Style="{StaticResource TileTitle}" Foreground="White" FontSize="1"/>
+        <Button Click="ButtonBase_OnClick" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Margin="0,0,0,39" Grid.RowSpan="2">
+           <Button.Content>
+                <TextBlock VerticalAlignment="Top">X</TextBlock>
+           </Button.Content>
+        </Button>
     </Grid>
 </Window>
