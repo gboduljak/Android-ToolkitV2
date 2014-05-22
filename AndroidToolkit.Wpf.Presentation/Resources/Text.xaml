@@ -70,4 +70,11 @@
         <Setter Property="Foreground" Value="DarkGray" />
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
+
+    <Style x:Key="FooterTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"></Setter>
+        <Setter Property="FontSize" Value="14"></Setter>
+        <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}"></Setter>
+    </Style>
+
 </ResourceDictionary>

@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation;
 using AndroidToolkit.Wpf.Presentation.Converters;
 using AndroidToolkit.Wpf.Presentation.Presenter;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MahApps.Metro;
 
 namespace AndroidToolkit.Wpf.ViewModel
 {
@@ -23,7 +26,12 @@ namespace AndroidToolkit.Wpf.ViewModel
             InstallTwoCommandParameters = new TwoCommandParameters();
             UninstallTwoCommandParameters = new TwoCommandParameters();
             UiParameters = new UIParameters();
-            ExecuteSingleCommandParameters=new TwoCommandParameters();
+            ExecuteSingleCommandParameters = new TwoCommandParameters();
+            CopyCommandParameters = new ThreeTextCommandParameters();
+            MoveCommandParameters = new ThreeTextCommandParameters();
+            DeleteCommandParameters = new TwoCommandParameters();
+            SideloadParameters = new TwoCommandParameters();
+            ExecuteCommandsParameters = new ExecuteCommandParameters();
         }
 
         #region Commands
@@ -150,6 +158,101 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<ThreeTextCommandParameters> _copyCommand;
+
+        public RelayCommand<ThreeTextCommandParameters> CopyCommand
+        {
+            get
+            {
+                return _copyCommand ?? (_copyCommand = new RelayCommand<ThreeTextCommandParameters>(AdbPresenter.ExecuteCopy));
+            }
+            set
+            {
+                if (_copyCommand != value)
+                {
+                    RaisePropertyChanging(() => this.CopyCommand);
+                    _copyCommand = value;
+                    RaisePropertyChanged(() => this.CopyCommand);
+                }
+            }
+        }
+
+        private RelayCommand<ThreeTextCommandParameters> _moveCommand;
+
+        public RelayCommand<ThreeTextCommandParameters> MoveCommand
+        {
+            get
+            {
+                return _moveCommand ?? (_moveCommand = new RelayCommand<ThreeTextCommandParameters>(AdbPresenter.ExecuteMove));
+            }
+            set
+            {
+                if (_moveCommand != value)
+                {
+                    RaisePropertyChanging(() => this.MoveCommand);
+                    _moveCommand = value;
+                    RaisePropertyChanged(() => this.MoveCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _deleteCommand;
+
+        public RelayCommand<TwoCommandParameters> DeleteCommand
+        {
+            get
+            {
+                return _deleteCommand ?? (_deleteCommand = new RelayCommand<TwoCommandParameters>(AdbPresenter.ExecuteDelete));
+            }
+            set
+            {
+                if (_deleteCommand != value)
+                {
+                    RaisePropertyChanging(() => this.DeleteCommand);
+                    _deleteCommand = value;
+                    RaisePropertyChanged(() => this.DeleteCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _sideloadCommand;
+
+        public RelayCommand<TwoCommandParameters> SideloadCommand
+        {
+            get
+            {
+                return _sideloadCommand ?? (_sideloadCommand = new RelayCommand<TwoCommandParameters>(AdbPresenter.ExecuteSideload));
+            }
+            set
+            {
+                if (_sideloadCommand != value)
+                {
+                    RaisePropertyChanging(() => this.SideloadCommand);
+                    _sideloadCommand = value;
+                    RaisePropertyChanged(() => this.SideloadCommand);
+                }
+            }
+        }
+
+        private RelayCommand<UIParameters> _logcatCommand;
+
+        public RelayCommand<UIParameters> LogcatCommand
+        {
+            get
+            {
+                return _logcatCommand ?? (_logcatCommand = new RelayCommand<UIParameters>(AdbPresenter.ExecuteLogcat));
+            }
+            set
+            {
+                if (_logcatCommand != value)
+                {
+                    RaisePropertyChanging(() => this.LogcatCommand);
+                    _logcatCommand = value;
+                    RaisePropertyChanged(() => this.LogcatCommand);
+                }
+            }
+        }
+
 
         private RelayCommand<TwoCommandParameters> _installCommand;
 
@@ -158,7 +261,6 @@ namespace AndroidToolkit.Wpf.ViewModel
             get
             {
                 return _installCommand ?? (_installCommand = new RelayCommand<TwoCommandParameters>(AdbPresenter.ExecuteInstall));
-
             }
             set
             {
@@ -170,7 +272,6 @@ namespace AndroidToolkit.Wpf.ViewModel
                 }
             }
         }
-
 
         private RelayCommand<TwoCommandParameters> _uninstallCommand;
 
@@ -192,6 +293,46 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<UIParameters> _listAppsCommand;
+
+        public RelayCommand<UIParameters> ListAppsCommand
+        {
+            get
+            {
+                return _listAppsCommand ?? (_listAppsCommand = new RelayCommand<UIParameters>(AdbPresenter.ExecuteListApps));
+            }
+            set
+            {
+                if (_listAppsCommand != value)
+                {
+                    RaisePropertyChanging(() => this.ListAppsCommand);
+                    _listAppsCommand = value;
+                    RaisePropertyChanged(() => this.ListAppsCommand);
+                }
+            }
+        }
+
+        private RelayCommand<UIParameters> _listDevicesCommand;
+
+        public RelayCommand<UIParameters> ListDevicesCommand
+        {
+            get
+            {
+                return _listDevicesCommand ?? (_listDevicesCommand = new RelayCommand<UIParameters>(AdbPresenter.ExecuteListDevices));
+            }
+            set
+            {
+                if (_listDevicesCommand != value)
+                {
+                    RaisePropertyChanging(() => this.ListDevicesCommand);
+                    _listDevicesCommand = value;
+                    RaisePropertyChanged(() => this.ListDevicesCommand);
+                }
+            }
+        }
+
+
+        #region Execute
         private RelayCommand<TwoCommandParameters> _executeSingleCommand;
 
         public RelayCommand<TwoCommandParameters> ExecuteSingleCommand
@@ -208,6 +349,22 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<ExecuteCommandParameters> _executeCommand;
+
+        public RelayCommand<ExecuteCommandParameters> ExecuteCommands
+        {
+            get { return _executeCommand ?? (_executeCommand = new RelayCommand<ExecuteCommandParameters>(AdbPresenter.Execute)); }
+            set
+            {
+                if (_executeCommand != value)
+                {
+                    RaisePropertyChanging(() => this.ExecuteCommands);
+                    _executeCommand = value;
+                    RaisePropertyChanged(() => this.ExecuteCommands);
+                }
+            }
+        }
+        #endregion
 
         #region UICommands
 
@@ -243,6 +400,26 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<TextBox> _openZipCommand;
+        public RelayCommand<TextBox> OpenZipCommand
+        {
+            get
+            {
+                return _openZipCommand ?? (_openZipCommand = new RelayCommand<TextBox>((arg) =>
+                    {
+                        arg.Text = FileDialog.ShowDialog("Android Zip File (.zip)|*.zip", false);
+                    }));
+            }
+            set
+            {
+                if (_openZipCommand != value)
+                {
+                    RaisePropertyChanging(() => this.OpenZipCommand);
+                    _openZipCommand = value;
+                    RaisePropertyChanged(() => this.OpenZipCommand);
+                }
+            }
+        }
         private RelayCommand<TextBox> _openAppCommand;
 
         public RelayCommand<TextBox> OpenAppCommand
@@ -281,7 +458,31 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #region Properties
 
+        private ObservableCollection<Accent> _accents;
+
+        public ObservableCollection<Accent> Accents
+        {
+            get { return _accents ?? (_accents = new ObservableCollection<Accent>(ThemeManager.Accents)); }
+            set
+            {
+                if (_accents != value)
+                {
+                    RaisePropertyChanging(() => Accents);
+                    this._accents = value;
+                    RaisePropertyChanged(() => Accents);
+                }
+            }
+        }
+
         public UIParameters UiParameters { get; set; }
+
+        public ThreeTextCommandParameters CopyCommandParameters { get; set; }
+
+        public ThreeTextCommandParameters MoveCommandParameters { get; set; }
+
+        public TwoCommandParameters DeleteCommandParameters { get; set; }
+
+        public TwoCommandParameters SideloadParameters { get; set; }
 
         public ThreeTextCommandParameters ThreeTextCommandParameters { get; set; }
 
@@ -292,6 +493,8 @@ namespace AndroidToolkit.Wpf.ViewModel
         public TwoCommandParameters UninstallTwoCommandParameters { get; set; }
 
         public TwoCommandParameters ExecuteSingleCommandParameters { get; set; }
+
+        public ExecuteCommandParameters ExecuteCommandsParameters { get; set; }
 
         #endregion
 

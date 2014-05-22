@@ -11,9 +11,9 @@ namespace AndroidToolkit.Infrastructure.Utilities
 
         Task<string> Execute(Command cmd, bool createNoWindow = true);
 
-        Task Execute(IEnumerable<Command> cmds, TextBlock context, bool createNoWindow = true);
+        Task Execute(IList<Command> cmds, TextBlock context, bool createNoWindow = true);
 
-        Task<string> Execute(IEnumerable<Command> cmds, bool createNoWindow = true);
+        Task<string> Execute(IList<Command> cmds, bool createNoWindow = true);
 
     }
 }

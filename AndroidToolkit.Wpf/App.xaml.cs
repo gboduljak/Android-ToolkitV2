@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
+using AndroidToolkit.Wpf.View;
 
 namespace AndroidToolkit.Wpf
 {
@@ -7,6 +9,8 @@ namespace AndroidToolkit.Wpf
     /// </summary>
     public partial class App : Application
     {
-      
+ 
     }
+
+
 }

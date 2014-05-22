@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using AndroidToolkit.Infrastructure;
 using AndroidToolkit.Infrastructure.Tools;
@@ -21,6 +22,26 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
         public static TextBlock Context { get; set; }
 
         private static AdbTools _adb;
+
+        public static void ExecuteListDevices(object parameter)
+        {
+            UIParameters parameters = (UIParameters)parameter;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        await _adb.ListDevices(parameters.Context2, parameters.Bool);
+                    });
+                };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                worker.RunWorkerAsync();
+            }
+        }
 
         #region UI
 
@@ -156,6 +177,23 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.RunWorkerAsync();
         }
 
+        public static void ExecuteListApps(object parameter)
+        {
+            UIParameters parameters = (UIParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.ListApps(parameters.Context2, parameters.Bool, parameters.Target));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
         #endregion
 
         #region Copy/Move/Delete
@@ -209,6 +247,40 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
+
+        public static void ExecuteSideload(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.Sideload(parameters.Text, parameters.Bool, parameters.Target));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void ExecuteLogcat(object parameter)
+        {
+            UIParameters parameters = (UIParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { _adb = new AdbTools(Context); });
+                await
+                    Task.Run(
+                        async () =>
+                            await _adb.Logcat(parameters.Context2, parameters.Bool, parameters.Target));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
         #endregion
 
         public static void ExecutePush(object parameter)
@@ -250,6 +322,40 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.RunWorkerAsync();
         }
 
+        public static void Execute(object parameter)
+        {
+            ExecuteCommandParameters parameters = parameter as ExecuteCommandParameters;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        var cmds = new List<string>
+                        {
+                            parameters.Text,
+                            parameters.Text2,
+                            parameters.Text3,
+                            parameters.Text4,
+                            parameters.Text5,
+                            parameters.Text6,
+                            parameters.Text7,
+                            parameters.Text8,
+                            parameters.Text9,
+                            parameters.Text10
+                        };
+                        await _adb.Execute(cmds.ToArray<string>(), parameters.Bool, parameters.Target);
+                    });
+                };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                worker.RunWorkerAsync();
+            }
+
+        }
+
         public static void ExecuteSingleCommand(object parameter)
         {
             TwoCommandParameters parameters = parameter as TwoCommandParameters;
@@ -262,9 +368,9 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                     await Context.Dispatcher.InvokeAsync(async () =>
                     {
                         _adb = new AdbTools(Context);
-                        string[] cmds = new string[1];
+                        var cmds = new string[1];
                         cmds[0] = parameters.Text;
-                        await _adb.Execute(parameters.Bool, parameters.Target, cmds);
+                        await _adb.Execute(cmds, parameters.Bool, parameters.Target);
                     });
                 };
                 worker.RunWorkerCompleted += (sender, args) => worker.Dispose();

@@ -13,6 +13,7 @@
         <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Icons.xaml" />
         <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Text.xaml" />
         <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/CustomButtonStyle.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/themes/tile.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type TextBox}"
@@ -137,7 +138,19 @@
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
         </Style.Triggers>
+        
     </Style>
 
     <Style x:Key="PullButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
@@ -152,9 +165,98 @@
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CopyButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroCircleButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=CopyFrom, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=CopyTo, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
         </Style.Triggers>
     </Style>
     
+    <Style x:Key="MoveButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroCircleButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=MoveFrom, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=MoveTo, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="DeleteButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroCircleButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=DeletePath, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+        
+    </Style>
+
+
+
     <Style x:Key="InstallButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding ElementName=InstallApp, Path=(Validation.HasError)}" Value="True">
@@ -164,7 +266,19 @@
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
         </Style.Triggers>
+        
     </Style>
     
     <Style x:Key="UninstallButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
@@ -176,12 +290,31 @@
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
             </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
         </Style.Triggers>
     </Style>
-    
-    <Style x:Key="FooterTextStyle" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Segoe UI"></Setter>
-        <Setter Property="FontSize" Value="14"></Setter>
-        <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}"></Setter>
+ 
+
+    <Style x:Key="ExecuteButtonStyle" TargetType="{x:Type controls:Tile}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=Command1, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </Trigger>
+        </Style.Triggers>
+
     </Style>
 </ResourceDictionary>

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Utilities;
 
 namespace AndroidToolkit.Infrastructure.Tools
@@ -43,14 +45,14 @@ namespace AndroidToolkit.Infrastructure.Tools
              });
         }
 
-        public async Task Execute(bool createNoWindow = true, string target = null, params string[] cmds)
+        public async Task Execute(string[] cmds, bool createNoWindow = true, string target = null)
         {
             await Context.Dispatcher.InvokeAsync(async () =>
             {
                 _cmds = new List<Command>();
-                for (int i = 0; i < cmds.Count(); i++)
+                foreach (string cmd in cmds.Where(cmd => !string.IsNullOrEmpty(cmd)))
                 {
-                    _cmds.Add(new Command(string.Format("{0} ", cmds[i])));
+                    _cmds.Add(new Command(string.Format("{0}", cmd)));
                 }
                 await _executor.Execute(_cmds, Context, createNoWindow);
             });
@@ -78,6 +80,11 @@ namespace AndroidToolkit.Infrastructure.Tools
             return output.Contains('#');
         }
 
+        public async Task ListDevices(TextBox context, bool createNoWindow)
+        {
+            await context.Dispatcher.InvokeAsync(async () => context.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("adb devices"), createNoWindow), 4)));
+        }
+
         private static void KillAdb()
         {
             Process[] processes = Process.GetProcesses();
@@ -100,6 +107,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             this._cmds = null;
             GC.Collect();
         }
+
 
 
     }

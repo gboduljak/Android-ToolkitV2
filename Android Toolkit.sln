@@ -11,10 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Wpf.Presenta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Data", "AndroidToolkit.Data\AndroidToolkit.Data.csproj", "{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DBB619FD-1610-4447-8546-D4DBA804B00A}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8E9B9B18-C6AB-4742-85AB-99A01B3BBCDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

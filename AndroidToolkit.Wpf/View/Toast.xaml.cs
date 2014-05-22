@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
@@ -49,15 +51,26 @@ namespace AndroidToolkit.Wpf.View
             };
             timer.Enabled = true;
         }
+     
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        [DllImport("kernel32.dll", EntryPoint = "SetProcessWorkingSetSize", ExactSpelling = true, CharSet = CharSet.Ansi, SetLastError = true)]
+        private static extern int SetProcessWorkingSetSize(
+          IntPtr process, int minimumWorkingSetSize, int maximumWorkingSetSize);
 
         public void Dispose()
         {
             GC.Collect();
+            GC.SuppressFinalize(this);
+            SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        ~Toast()
         {
-            this.Close();
+            Dispose();
         }
     }
 }

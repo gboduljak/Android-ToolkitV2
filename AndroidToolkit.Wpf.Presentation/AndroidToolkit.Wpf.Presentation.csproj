@@ -103,6 +103,8 @@
     <Compile Include="Controls\MainLogo.xaml.cs">
       <DependentUpon>MainLogo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ExecuteCommandParameters.cs" />
+    <Compile Include="Converters\ExecuteCommandParametersConverter.cs" />
     <Compile Include="Converters\FileOpsParameters.cs" />
     <Compile Include="Converters\FileOpsParametersConverter.cs" />
     <Compile Include="Converters\FiveTextCommandParameters.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Converters\TwoCommandParameters.cs" />
     <Compile Include="Converters\TwoCommandsParametersConverter.cs" />
     <Compile Include="Converters\UIParameters.cs" />
+    <Compile Include="Converters\UIParametersConverter.cs" />
     <Compile Include="Presenter\AdbPresenter.cs" />
     <Compile Include="Presenter\FlyoutPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Icons.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Text.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Text.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -36,13 +37,14 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.3*"/>
-                <RowDefinition Height="0.7*"/>
+                <RowDefinition Height="0.65*"/>
+                <RowDefinition Height="0.05*"></RowDefinition>
             </Grid.RowDefinitions>
             <ScrollViewer CanContentScroll="True" Width="{Binding}" Height="{Binding}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="2">
-                <controls:MainLogo x:Name="Logo" Width="{Binding}" Height="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top"  MinWidth="775" />
+                <controls:MainLogo x:Name="Logo" Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Height="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top"  MinWidth="775" />
            </ScrollViewer>
             <ScrollViewer Grid.Column="0" Grid.Row="1" CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5" >
                     <Rectangle Width="200" Height="220"  Fill="{StaticResource FlatButtonBackgroundBrush}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Visual="{StaticResource appbar_os_android}"></VisualBrush>
@@ -55,11 +57,19 @@
                     </Rectangle>
                 </Grid>
             </ScrollViewer>
-            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="1">
-                <Grid >
+            <DockPanel VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="2">
+                <Rectangle Fill="{DynamicResource AccentColorBrush}" Width="20" Height="20" Margin="5,0,0,0">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Visual="{StaticResource appbar_box}"></VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock Margin="10,0,0,0" Style="{StaticResource FooterTextStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" Text="Gabrijel Boduljak"/>
+            </DockPanel>
+            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
+                <Grid>
                     <TabControl>
                         <TabItem Header="TOOLS">
-                            <metroControls:FlipView IsBannerEnabled="False" Margin="10,5">
+                            <metroControls:FlipView IsBannerEnabled="False" Margin="10,5" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <metroControls:Tile Width="470" Height="180" Title="ADB" TitleFontSize="24" Command="{Binding ShowAdbCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                                     <Rectangle Width="120" Height="120" Fill="White">
                                         <Rectangle.OpacityMask>

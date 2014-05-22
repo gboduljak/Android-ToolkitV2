@@ -46,17 +46,5 @@ namespace AndroidToolkit.Wpf.Properties {
                 this["ADBTarget"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ADBLightTheme {
-            get {
-                return ((bool)(this["ADBLightTheme"]));
-            }
-            set {
-                this["ADBLightTheme"] = value;
-            }
-        }
     }
 }

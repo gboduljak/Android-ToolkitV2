@@ -26,7 +26,7 @@
 
           <DockPanel Grid.Row="0">
 
-            <TextBlock  Style="{StaticResource BigTitle}" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">Android Toolkit</TextBlock>
+            <TextBlock x:Name="headerTitle" Style="{StaticResource BigTitle}" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">Android Toolkit</TextBlock>
             <TextBlock  x:Name="headerSubitle"  Style="{StaticResource BigTitle2}" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center"/>
         </DockPanel>
 

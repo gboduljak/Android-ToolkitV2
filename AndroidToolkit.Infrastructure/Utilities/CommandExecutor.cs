@@ -67,7 +67,7 @@ namespace AndroidToolkit.Infrastructure.Utilities
             });
         }
 
-        public Task Execute(IEnumerable<Command> cmds, TextBlock context, bool createNoWindow = true)
+        public Task Execute(IList<Command> cmds, TextBlock context, bool createNoWindow = true)
         {
             return Task.Run(async () =>
             {
@@ -97,7 +97,7 @@ namespace AndroidToolkit.Infrastructure.Utilities
             });
         }
 
-        public Task<string> Execute(IEnumerable<Command> cmds, bool createNoWindow = true)
+        public Task<string> Execute(IList<Command> cmds, bool createNoWindow = true)
         {
             return Task.Run(async () =>
             {

@@ -28,5 +28,9 @@ namespace AndroidToolkit.Wpf.Presentation.Controls
         {
             get { return this.headerSubitle; }
         }
+        public TextBlock Title
+        {
+            get { return this.headerTitle; }
+        }
     }
 }

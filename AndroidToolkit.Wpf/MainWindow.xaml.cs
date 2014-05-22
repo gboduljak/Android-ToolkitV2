@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using AndroidToolkit.Wpf.ViewModel;
 using MahApps.Metro.Controls;
@@ -17,7 +18,7 @@ namespace AndroidToolkit.Wpf
         public MainWindow()
         {
             InitializeComponent();
-            _viewModel = new MainViewModel();
+            _viewModel = new ViewModelLocator().Main;
             this.DataContext = _viewModel;
             this.Logo.HeaderSubtitle.Text = "HOME";
             this.Closing += delegate { _viewModel.Cleanup(); };
@@ -31,8 +32,7 @@ namespace AndroidToolkit.Wpf
         {
             GC.Collect();
             GC.SuppressFinalize(this);
-            SetProcessWorkingSetSize(
-       System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
+            SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace AndroidToolkit.Wpf.Presentation
 {
     public class AppMessages
     {
-        public static class CustomerIsValid
+        public static class AppIsValid
         {
             public static void Send(bool argument)
             {

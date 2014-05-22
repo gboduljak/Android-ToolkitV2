@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -21,6 +22,7 @@ using AndroidToolkit.Wpf.Presentation.Presenter;
 using AndroidToolkit.Wpf.ViewModel;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using FileDialog = AndroidToolkit.Infrastructure.Helpers.FileDialog;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -36,9 +38,9 @@ namespace AndroidToolkit.Wpf.View
         public AdbView()
         {
             InitializeComponent();
-            _viewModel = new AdbViewModel();
+            _viewModel = new ViewModelLocator().Adb;
             this.DataContext = _viewModel;
-            Logo.HeaderSubtitle.Text = "ADB";
+            Header.HeaderSubtitle.Text = "ADB";
             AddEvents();
             _FlyoutPresenter = Presentation.Presenter.FlyoutPresenter.Present;
         }
@@ -46,6 +48,7 @@ namespace AndroidToolkit.Wpf.View
         #region AddEvent
         private void AddEvents()
         {
+
             this.Closed += delegate
             {
                 Dispose();
@@ -61,34 +64,191 @@ namespace AndroidToolkit.Wpf.View
                 Dispose();
             };
 
+            this.SideloadTile.IsEnabled = false;
+            this.SideloadFile.TextChanged += (sender, args) =>
+            {
+                this.SideloadTile.IsEnabled = !string.IsNullOrEmpty(this.SideloadFile.Text);
+            };
+
             this.RebootButton.Click += ButtonClickHandler;
             this.RebootRecoveryButton.Click += ButtonClickHandler;
             this.RebootBootloaderButton.Click += ButtonClickHandler;
             this.PushButton.Click += ButtonClickHandler;
+
+            this.PushFile.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.PushFile.Drop += TextBoxDropHandler1;
+
+            this.PullFile1.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.PullFile1.Drop += TextBoxDropHandler2;
+            this.PullFile2.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.PullFile2.Drop += TextBoxDropHandler2;
+            this.PullFile3.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.PullFile3.Drop += TextBoxDropHandler2;
+            this.PullFile4.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.PullFile4.Drop += TextBoxDropHandler2;
             this.PullButton.Click += ButtonClickHandler;
+
+            this.SideloadFile.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.SideloadFile.Drop += TextBoxDropHandler4;
+
+
+            this.CopyButton.Click += ButtonClickHandler;
+            this.MoveButton.Click += ButtonClickHandler;
+
             this.InstallButton.Click += ButtonClickHandler;
+            this.InstallApp.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.InstallApp.Drop += TextBoxDropHandler3;
+
             this.UninstallButton.Click += ButtonClickHandler;
+
+            this.ListApps.Click += async (sender, args) =>
+            {
+                _FlyoutPresenter.Invoke(this, 2);
+                await this.Dispatcher.InvokeAsync(() =>
+                {
+                    _FlyoutPresenter.Invoke(this, 4);
+                    using (Toast toast = new Toast("Working in background...", "Android Toolkit - Notification"))
+                    {
+                        toast.Show();
+                    }
+                    var timer = new System.Timers.Timer(2048);
+                    timer.Elapsed += async (s, e) =>
+                    {
+                        await this.Dispatcher.InvokeAsync(() => StatusLabel.Content = "Working in background...");
+                        await this.Dispatcher.InvokeAsync(() => _FlyoutPresenter.Invoke(this, 4));
+                        timer.Dispose();
+                    };
+                    timer.Enabled = true;
+
+                });
+            };
             this.RefreshApps.Click += ButtonClickHandler;
 
+            this.ListDevices.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 3);
+
             this.ShowDevices.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 3);
+
             this.ShowSettings.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 0);
+
+            this.ShowSettings2.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 0);
 
             this.ShowReboot.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 1);
 
+
+            bool themeLight = false;
+
             this.LightTheme.Checked += (sender, args) =>
             {
-                ThemeManager.ChangeAppTheme(this, "BaseLight");
-                this.Right.Background = Brushes.White;
-                this.RightTop.Background = Brushes.White;
-                this.LightTheme.IsEnabled = false;
-                this.Context.Foreground = Brushes.Gray;
+                themeLight = true;
             };
             this.LightTheme.Unchecked += (sender, args) =>
             {
-                ThemeManager.ChangeAppTheme(this, "BaseDark");
-                this.Right.Background = (SolidColorBrush)this.Resources["FlyoutBackgroundBrush"];
-                this.RightTop.Background = (SolidColorBrush)this.Resources["FlyoutBackgroundBrush"];
+                themeLight = false;
             };
+            this.AccentsComboBox.SelectionChanged += (sender, args) =>
+            {
+                _newAccent = AccentsComboBox.SelectedItem as Accent;
+            };
+
+
+            this.ApplyThemeChange.Click += async (sender, args) =>
+            {
+                if (AccentsComboBox.SelectedItem != null)
+                {
+                    ThemeManager.ChangeAppStyle(this, _newAccent,
+                        themeLight
+                            ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
+                            : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
+                    Header.HeaderTitle.Foreground = Brushes.Gray;
+                }
+                else
+                {
+                    ThemeManager.ChangeAppStyle(this, ThemeManager.Accents.First(x => x.Name == "Blue"),
+                      themeLight
+                          ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
+                          : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
+                    Header.HeaderTitle.Foreground = Brushes.Gray;
+                }
+                UiSettings.IsEnabled = false;
+                await this.ShowMessageAsync("UI Changed", "New UI settings have just been applied.");
+            };
+        }
+
+        private Accent _newAccent = ThemeManager.Accents.First(x => x.Name == "Blue");
+        private void TextBoxDropHandler1(object sender, DragEventArgs e)
+        {
+            object text = e.Data.GetData(DataFormats.FileDrop);
+            var tb = sender as TextBox;
+            if (tb == null) return;
+            var textPaths = text as string[];
+            if (textPaths != null)
+            {
+                if (textPaths.Length == 1)
+                {
+                    tb.Text = tb.Text + textPaths[0];
+                }
+                else
+                {
+                    if (tb.Text.Contains(','))
+                    {
+                        tb.Text = tb.Text.Remove(tb.Text.IndexOf(','));
+                    }
+                    for (int i = 0; i < textPaths.Length; i++)
+                    {
+                        tb.Text = tb.Text + "\n," + textPaths[i];
+                    }
+                }
+            }
+
+        }
+        private void TextBoxDropHandler2(object sender, DragEventArgs e)
+        {
+            object text = e.Data.GetData(DataFormats.FileDrop);
+            var tb = sender as TextBox;
+            if (tb != null)
+            {
+                tb.Text = string.Format("{0}", ((string[])text)[0]);
+            }
+        }
+        private async void TextBoxDropHandler3(object sender, DragEventArgs e)
+        {
+            object text = e.Data.GetData(DataFormats.FileDrop);
+            var tb = sender as TextBox;
+            if (tb != null)
+            {
+                string temp = string.Format("{0}", ((string[])text)[0]);
+                string path = System.IO.Path.GetExtension(temp);
+                if (path == ".apk")
+                {
+                    tb.Text = temp;
+                }
+                else
+                {
+                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an android package file (.apk)");
+                }
+
+
+            }
+        }
+        private async void TextBoxDropHandler4(object sender, DragEventArgs e)
+        {
+            object text = e.Data.GetData(DataFormats.FileDrop);
+            var tb = sender as TextBox;
+            if (tb != null)
+            {
+                string temp = string.Format("{0}", ((string[])text)[0]);
+                string path = System.IO.Path.GetExtension(temp);
+                if (path == ".zip")
+                {
+                    tb.Text = temp;
+                }
+                else
+                {
+                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an android zip (.zip)");
+                }
+
+
+            }
         }
 
         private async void ButtonClickHandler(object sender, RoutedEventArgs e)
@@ -96,7 +256,7 @@ namespace AndroidToolkit.Wpf.View
             await this.Dispatcher.InvokeAsync(() =>
             {
                 _FlyoutPresenter.Invoke(this, 4);
-                using (Toast toast = new Toast("Working in background...","Android Toolkit - Notification"))
+                using (Toast toast = new Toast("Working in background...", "Android Toolkit - Notification"))
                 {
                     toast.Show();
                 }
@@ -120,6 +280,7 @@ namespace AndroidToolkit.Wpf.View
         {
             this.Dispose();
         }
+
         [DllImport("kernel32.dll", EntryPoint = "SetProcessWorkingSetSize", ExactSpelling = true, CharSet = CharSet.Ansi, SetLastError = true)]
         private static extern int SetProcessWorkingSetSize(
           IntPtr process, int minimumWorkingSetSize, int maximumWorkingSetSize);

@@ -60,5 +60,24 @@ namespace AndroidToolkit.Infrastructure.Tools
                 }
             });
         }
+
+        public async Task ListApps(TextBox context2, bool createNoWindow, string target = null)
+        {
+            await Context.Dispatcher.InvokeAsync(async () =>
+            {
+                if (!string.IsNullOrEmpty(target))
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb -s {0} shell pm list packages", target)), Context, createNoWindow));
+                    string logcat = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb -s {0} shell pm list packages", target)), createNoWindow), 4));
+                    await context2.Dispatcher.InvokeAsync(() => context2.Text = logcat);
+                }
+                else
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb shell pm list packages")), Context, createNoWindow));
+                    string logcat = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb shell pm list packages")), createNoWindow), 4));
+                    await context2.Dispatcher.InvokeAsync(() => context2.Text = logcat);
+                }
+            });
+        }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using AndroidToolkit.Infrastructure.Helpers;
+using AndroidToolkit.Infrastructure.Utilities;
 
 namespace AndroidToolkit.Infrastructure.Tools
 {
@@ -79,7 +80,6 @@ namespace AndroidToolkit.Infrastructure.Tools
 
         }
 
-        //previše
         public async Task Pull(string location, bool createNoWindow, string[] paths, string target = null)
         {
             if (!string.IsNullOrEmpty(target))
@@ -144,6 +144,37 @@ namespace AndroidToolkit.Infrastructure.Tools
                 {
                     filePath = PathGenerator.Generate(filePath);
                     await Task.Run(() => _executor.Execute(new Command(string.Format("adb sideload {0} ", filePath)), Context, createNoWindow));
+                });
+            }
+        }
+
+        public async Task Logcat(TextBox logcatText, bool createNoWindow, string target = null)
+        {
+            if (!string.IsNullOrEmpty(target))
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb logcat -v long > logcat.txt -s {0}", target)), Context, createNoWindow));
+                    await Task.Run(async () =>
+                    {
+                        string logcat = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb logcat -v long > logcat.txt -s {0}", target)), createNoWindow), 4));
+                        await logcatText.Dispatcher.InvokeAsync(() => logcatText.Text = logcat);
+                    });
+                });
+            }
+            else
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        await Task.Run(() => _executor.Execute(new Command(string.Format("adb logcat -v long > logcat.txt")), Context, createNoWindow));
+                        await Task.Run(async () =>
+                        {
+                            string logcat = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(File.ReadAllText("logcat.txt"), 4));
+                            await logcatText.Dispatcher.InvokeAsync(() => logcatText.Text = logcat);
+                        });
+                    });
                 });
             }
         }
