@@ -150,7 +150,7 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
-        
+
     </Style>
 
     <Style x:Key="PullButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
@@ -204,7 +204,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <Style x:Key="MoveButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroCircleButtonStyle}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding ElementName=MoveFrom, Path=(Validation.HasError)}" Value="True">
@@ -252,10 +252,8 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
-        
+
     </Style>
-
-
 
     <Style x:Key="InstallButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
         <Style.Triggers>
@@ -278,9 +276,9 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
-        
+
     </Style>
-    
+
     <Style x:Key="UninstallButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding ElementName=UninstallApp, Path=(Validation.HasError)}" Value="True">
@@ -303,7 +301,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
- 
 
     <Style x:Key="ExecuteButtonStyle" TargetType="{x:Type controls:Tile}">
         <Style.Triggers>
@@ -317,4 +314,57 @@
         </Style.Triggers>
 
     </Style>
+
+    <Style x:Key="DropTextBox" TargetType="TextBox" BasedOn="{StaticResource TextBoxOpenStyle}">
+        <Style.Triggers>
+            <Trigger Property="AllowDrop" Value="True"></Trigger>
+            <EventTrigger RoutedEvent="Loaded">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.800" Storyboard.TargetProperty="Width" From="10" To="250" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="PreviewDragOver">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.800" Storyboard.TargetProperty="Width" To="200" />
+                            <DoubleAnimation Duration="0:0:0.800" Storyboard.TargetProperty="Height" To="64" />
+                            <ColorAnimation  Duration="0:0:0.800" Storyboard.TargetProperty="BorderBrush" To="DeepSkyBlue" />
+                            <ThicknessAnimation Duration="0:0:0.800" Storyboard.TargetProperty="BorderThickness" To="5"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="RestoreTileStyle" TargetType="{x:Type controls:Tile}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=RestoreFile, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
+
+
 </ResourceDictionary>

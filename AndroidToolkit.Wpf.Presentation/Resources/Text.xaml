@@ -53,12 +53,22 @@
     </Style>
 
     <Style x:Key="TileTitle" TargetType="TextBlock">
+        <Style.Triggers>
+           <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="DarkGray" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="Foreground" Value="Gray" />
     </Style>
 
     <Style x:Key="TileTitleLabel" TargetType="Label">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="DarkGray" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontFamily" Value="Segoe UI Light" />
         <Setter Property="Foreground" Value="Gray" />
@@ -72,9 +82,13 @@
     </Style>
 
     <Style x:Key="FooterTextStyle" TargetType="TextBlock">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="Gray" />
+            </Trigger>
+        </Style.Triggers>
         <Setter Property="FontFamily" Value="Segoe UI"></Setter>
         <Setter Property="FontSize" Value="14"></Setter>
         <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}"></Setter>
     </Style>
-
 </ResourceDictionary>

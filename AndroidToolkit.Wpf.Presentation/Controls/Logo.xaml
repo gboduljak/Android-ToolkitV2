@@ -45,7 +45,15 @@
                 <ColumnDefinition Width="0.3*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Name="headerTitle" Grid.Column="0" Style="{StaticResource BigTitle}" HorizontalAlignment="Center" VerticalAlignment="Center">Android Toolkit</TextBlock>
-            <TextBlock x:Name="headerSubitle" Grid.Column="1" Style="{StaticResource BigTitle2}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="tool"/>
+            <DockPanel Grid.Column="1">
+                <Rectangle Width="60" Height="60" Margin="0,0,10,0" Fill="{StaticResource FlatButtonBackgroundBrush}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Visual="{StaticResource appbar_cog}"></VisualBrush>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBlock x:Name="headerSubitle" Style="{StaticResource BigTitle2}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="tool"/>
+            </DockPanel>
+           
         </Grid>
         <Rectangle Grid.Column="0" Grid.Row="1" Fill="{StaticResource AccentColorBrush}"/>
         <Rectangle Grid.Column="1" Grid.Row="1" Fill="#939393"/>

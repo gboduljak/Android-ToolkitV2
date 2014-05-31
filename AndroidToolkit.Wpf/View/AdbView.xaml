@@ -29,6 +29,7 @@
             <converters:FiveTextCommandParametersConverter x:Key="FiveTextCommandParametersConverter"/>
             <converters:UIParametersConverter x:Key="UIParametersConverter"/>
             <converters:ExecuteCommandParametersConverter x:Key="ExecuteCommandParametersConverter"/>
+            <converters:BackupParametersConverter x:Key="BackupParametersConverter"/>
             <Storyboard x:Key="OnLoaded">
                 <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontSize)" Storyboard.TargetName="OverviewText">
                     <EasingDoubleKeyFrame KeyTime="0:0:1" Value="20"/>
@@ -307,6 +308,206 @@
             <metroControls:Flyout Position="Bottom" Header="Working..." Width="{Binding}" Height="90" Theme="Adapt" Background="#9f000000">
                 <metroControls:ProgressRing IsActive="True" IsLarge="True" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </metroControls:Flyout>
+            <metroControls:Flyout Position="Left" Header="ADB BACKUP TOOL" IsModal="False" Theme="Adapt" IsPinned="True" MinWidth="600">
+                <ScrollViewer Margin="10">
+                    <StackPanel>
+                        <DockPanel HorizontalAlignment="Center">
+                            <Rectangle Width="128" Height="128" Margin="10" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}"></VisualBrush>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <Rectangle Width="128" Height="128" Margin="10" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_database}"></VisualBrush>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </DockPanel>
+                        <TextBlock Margin="10,0,0,0" Style="{StaticResource TileTitle}" FontSize="16" TextWrapping="Wrap" Width="550" HorizontalAlignment="Left" VerticalAlignment="Top">The latest version of the ADB platform tools (for Android 4.0+ ) allows you to create a full system backup, including app apks, their respective data, as well as the internal storage. Android Toolkit gives you an opportunity to use GUI for backup operations. <Run Foreground="{DynamicResource AccentColorBrush}">Root is not required.</Run></TextBlock>
+                        <Expander Header="Backup">
+                            <StackPanel>
+                                <DockPanel>
+                                    <Label Style="{StaticResource TileTitleLabel}" FontSize="14" Foreground="DarkGray">BACKUP TYPE:</Label>
+                                    <ComboBox Margin="10,0,0,0" Name="BackupTypeComboBox" ItemsSource="{Binding AdbBackupModes}" SelectedIndex="0">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <Rectangle Width="20" Height="20" Fill="DarkGray">
+                                                        <Rectangle.OpacityMask>
+                                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}"/>
+                                                        </Rectangle.OpacityMask>
+                                                    </Rectangle>
+                                                    <Label Margin="10,0,0,0" Style="{StaticResource TileTitleLabel}" Foreground="DarkGray" Content="{Binding Text}"/>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </DockPanel>
+                                <DockPanel>
+                                    <Label Style="{StaticResource TileTitleLabel}" FontSize="14" Foreground="DarkGray">BACKUP NAME:</Label>
+                                    <TextBox VerticalAlignment="Center" Name="BackupName" Margin="5" Text="{Binding Path=BackupParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.Watermark="ENTER BACKUP NAME" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"></TextBox>
+                                </DockPanel>
+                                <DockPanel>
+                                    <Label Style="{StaticResource TileTitleLabel}" FontSize="14" Foreground="DarkGray">BACKUP LOCATION:</Label>
+                                    <TextBox Style="{StaticResource TextBoxOpenStyle}" TextWrapping="Wrap" Name="BackupLocation" Margin="5" Text="{Binding Path=BackupParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding SaveFileCommand}" metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=BackupLocation}"  metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE LOCATION" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
+                                </DockPanel>
+                                <metroControls:Tile HorizontalAlignment="Left"  Command="{Binding BackupCommand}">
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource BackupParametersConverter}">
+                                            <Binding ElementName="Context"/>
+                                            <Binding ElementName="BackupTypeComboBox"/>
+                                            <Binding ElementName="BackupName" Path="Text"/>
+                                            <Binding ElementName="BackupLocation" Path="Text"/>
+                                            <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                            <Binding ElementName="Target" Path="Text"/>
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                    <Rectangle Width="80" Height="80" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_reset}"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                            </StackPanel>
+                        </Expander>
+                        <Expander Header="Restore">
+                            <DockPanel VerticalAlignment="Top">
+                                <metroControls:Tile HorizontalAlignment="Left" Command="{Binding OpenBackupCommand}" CommandParameter="{Binding ElementName=RestoreFile}">
+                                    <Rectangle Width="80" Height="80" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                                <metroControls:Tile Command="{Binding RestoreCommand}" HorizontalAlignment="Left" Style="{StaticResource RestoreTileStyle}">
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource TwoCommandsParametersConverter}">
+                                            <Binding ElementName="Context"/>
+                                            <Binding ElementName="RestoreFile" Path="Text"/>
+                                            <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                            <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                            <Binding ElementName="Target" Path="Text"/>
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                    <Rectangle Width="80" Height="80" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_reset}"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </metroControls:Tile>
+                                <TextBox Visibility="Collapsed" Name="RestoreFile" Style="{StaticResource DropTextBox}" HorizontalAlignment="Left" AllowDrop="True" Text="{Binding Path=RestoreParameters.Text, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenBackupCommand}" metroControls:TextboxHelper.ButtonCommandParameter="{Binding RelativeSource={RelativeSource Self}}" metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE THE BACKUP (.ab)"></TextBox>
+                            </DockPanel>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </metroControls:Flyout>
+            <metroControls:Flyout Position="Right" Header="Remote ADB" IsModal="True" Theme="Adapt" IsPinned="False">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.50*"></ColumnDefinition>
+                        <ColumnDefinition Width="0.50*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Margin="20" Width="128" Height="128" Grid.Column="0"  VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <Grid.Background>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_rss}"/>
+                        </Grid.Background>
+                    </Grid>
+                    <StackPanel Margin="20" Grid.Column="1">
+                        <GroupBox Header="SET UP">
+                            <StackPanel Margin="10">
+                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE PORT" x:Name="TargetDevicePort" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE IP" x:Name="TargetDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Margin="0,0,1,0" x:Name="ApplyRemoteADB" Grid.Column="0" HorizontalAlignment="Left" Foreground="#FF706D6D" MinWidth="200" >
+                                        <Rectangle Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="#FF706D6D">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_radar}"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+                                    <Button Margin="1,0,0,0" x:Name="KillRemoteADB" Grid.Column="1" Foreground="#FF706D6D" HorizontalAlignment="Left" MinWidth="200" >
+                                        <Rectangle Width="30" Height="30" VerticalAlignment="Center" Fill="#FF706D6D">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_connect}"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Button>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0" Header="SAVE IP">
+                                        <StackPanel>
+                                            <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE IP" x:Name="SaveDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                            <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE NAME" x:Name="SaveDeviceName" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                            <Button x:Name="SaveIPButton" Style="{DynamicResource MetroAccentButton}">
+                                                <Rectangle Width="24" Height="22">
+                                                    <Rectangle.Fill>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                                                    </Rectangle.Fill>
+                                                </Rectangle>
+                                            </Button>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="1" Header="IP List">
+                                        <StackPanel>
+                                            <ListView x:Name="IPListView" MinWidth="250" MaxHeight="250">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <WrapPanel>
+                                                            <Rectangle Width="18" Height="28" Margin="10">
+                                                                <Rectangle.Fill>
+                                                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
+                                                                </Rectangle.Fill>
+                                                            </Rectangle>
+                                                            <TextBlock Text="IP: " />
+                                                            <TextBlock Text="{Binding DeviceIP}" FontWeight="Bold" />
+                                                            <TextBlock Text=", " />
+                                                            <TextBlock Text="Name: " />
+                                                            <TextBlock Text="{Binding DeviceName}" FontWeight="Bold" />
+                                                        </WrapPanel>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+
+                                            </ListView>
+                                            <Button x:Name="RefreshIPButton" Style="{DynamicResource MetroAccentButton}" Margin="0,0,0,5">
+                                                <Rectangle Width="24" Height="22">
+                                                    <Rectangle.Fill>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
+                                                    </Rectangle.Fill>
+                                                </Rectangle>
+                                            </Button>
+                                            <Button x:Name="DeleteIPsButton" Style="{DynamicResource MetroAccentButton}">
+                                                <Rectangle Width="24" Height="22">
+                                                    <Rectangle.Fill>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_delete}" />
+                                                    </Rectangle.Fill>
+                                                </Rectangle>
+                                            </Button>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </Grid>
+                            </StackPanel>
+                        </GroupBox>
+                        <Button x:Name="RemoteADBHelp" Foreground="#FF706D6D" Margin="0,0,0,5">
+                            <DockPanel>
+                                <Rectangle Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Fill="#FF706D6D">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_lines_horizontal_4}"/>
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Foreground="#FF706D6D" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" Margin="10,0,0,0">HELP?</TextBlock>
+                            </DockPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </metroControls:Flyout>
         </metroControls:FlyoutsControl>
     </metroControls:MetroWindow.Flyouts>
 
@@ -422,7 +623,6 @@
                                             </Rectangle.OpacityMask>
                                         </Rectangle>
                                     </Button>
-
                                     <TextBox Style="{StaticResource TextBoxOpenStyle}" TextWrapping="Wrap" Name="PullLocation" Margin="5" Text="{Binding Path=FiveTextCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding SaveFileCommand}" metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=PullLocation}"  metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE LOCATION" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
                                     <TextBox TextWrapping="Wrap" Name="PullFile1" Margin="5" Text="{Binding Path=FiveTextCommandParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"  metroControls:TextboxHelper.Watermark="PULL FILE 1 PATH" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"  metroControls:TextboxHelper.ClearTextButton="True"/>
                                     <Expander Header="PULL MORE FILES">
@@ -834,7 +1034,7 @@
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>
-                            <Button Width="64" Height="64" Grid.Column="1" Style="{StaticResource MetroCircleButtonStyle}">
+                            <Button Name="ShowBackup" Width="64" Height="64" Grid.Column="1" Style="{StaticResource MetroCircleButtonStyle}">
                                 <Rectangle Width="32" Height="32" Fill="{StaticResource FlatButtonBackgroundBrush}">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_database}"></VisualBrush>
@@ -848,7 +1048,7 @@
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>
-                            <Button Width="64" Height="64" Grid.Column="2" Style="{StaticResource MetroCircleButtonStyle}">
+                            <Button Name="ShowRemoteAdb" Width="64" Height="64" Grid.Column="2" Style="{StaticResource MetroCircleButtonStyle}">
                                 <Rectangle Width="32" Height="32" Fill="{StaticResource FlatButtonBackgroundBrush}">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_radar}"></VisualBrush>

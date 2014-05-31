@@ -138,6 +138,12 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             TextBox context = parameter as TextBox;
             if (context != null) context.Dispatcher.Invoke(() => { context.Text = dialog.SelectedPath; });
         }
+        public static void OpenBackup(object parameter)
+        {
+            TextBox context = parameter as TextBox;
+            string file = FileDialog.ShowDialog("Android backup (.ab)|*.ab", false);
+            if (context != null) context.Dispatcher.Invoke(() => { context.Text = file; });
+        }
 
         #endregion
 
@@ -377,5 +383,68 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 worker.RunWorkerAsync();
             }
         }
+
+        #region Backup/Restore
+
+        public static void ExecuteBackup(object parameter)
+        {
+            BackupParameters parameters = parameter as BackupParameters;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        if (parameters.Context2.SelectedIndex == 0)
+                        {
+                            await _adb.Backup(parameters.Text, parameters.Text2, AdbBackupMode.All, parameters.Bool, parameters.Target);
+                        }
+                        if (parameters.Context2.SelectedIndex == 1)
+                        {
+                            await _adb.Backup(parameters.Text, parameters.Text2, AdbBackupMode.Apps, parameters.Bool, parameters.Target);
+                        }
+                        if (parameters.Context2.SelectedIndex == 2)
+                        {
+                            await _adb.Backup(parameters.Text, parameters.Text2, AdbBackupMode.SystemApps, parameters.Bool, parameters.Target);
+                        }
+                        if (parameters.Context2.SelectedIndex == 3)
+                        {
+                            await _adb.Backup(parameters.Text, parameters.Text2, AdbBackupMode.AppsWithoutSystemApps, parameters.Bool, parameters.Target);
+                        }
+                        if (parameters.Context2.SelectedIndex == 4)
+                        {
+                            await _adb.Backup(parameters.Text, parameters.Text2, AdbBackupMode.SDCard, parameters.Bool, parameters.Target);
+                        }
+                    });
+                };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                worker.RunWorkerAsync();
+            }
+        }
+
+        public static void ExecuteRestore(object parameter)
+        {
+            TwoCommandParameters parameters = parameter as TwoCommandParameters;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        await _adb.Restore(parameters.Text, parameters.Bool, parameters.Target);
+                    });
+                };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                worker.RunWorkerAsync();
+            }
+        }
+
+        #endregion
     }
 }

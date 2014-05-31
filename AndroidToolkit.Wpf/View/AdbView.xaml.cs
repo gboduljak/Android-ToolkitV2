@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
+using AndroidToolkit.Infrastructure.Helpers;
+using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation.Converters;
 using AndroidToolkit.Wpf.Presentation.Presenter;
 using AndroidToolkit.Wpf.ViewModel;
@@ -134,6 +137,10 @@ namespace AndroidToolkit.Wpf.View
 
             this.ShowReboot.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 1);
 
+            this.ShowBackup.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 5);
+
+            this.ShowRemoteAdb.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 6);
+
 
             bool themeLight = false;
 
@@ -145,6 +152,7 @@ namespace AndroidToolkit.Wpf.View
             {
                 themeLight = false;
             };
+
             this.AccentsComboBox.SelectionChanged += (sender, args) =>
             {
                 _newAccent = AccentsComboBox.SelectedItem as Accent;
@@ -160,6 +168,16 @@ namespace AndroidToolkit.Wpf.View
                             ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
                             : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
                     Header.HeaderTitle.Foreground = Brushes.Gray;
+                    if (themeLight)
+                    {
+                        Right.Background = Brushes.White;
+                        RightTop.Background = Brushes.GhostWhite;
+                    }
+                    else
+                    {
+                        Right.Background = Resources["FlyoutBackgroundBrush"] as SolidColorBrush;
+                        RightTop.Background = Resources["FlyoutBackgroundBrush"] as SolidColorBrush;
+                    }
                 }
                 else
                 {
@@ -168,10 +186,25 @@ namespace AndroidToolkit.Wpf.View
                           ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
                           : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
                     Header.HeaderTitle.Foreground = Brushes.Gray;
+                    if (themeLight)
+                    {
+                        Right.Background = Brushes.White;
+                        RightTop.Background = Brushes.GhostWhite;
+                    }
+                    else
+                    {
+                        Right.Background = Resources["FlyoutBackgroundBrush"] as SolidColorBrush;
+                        RightTop.Background = Resources["FlyoutBackgroundBrush"] as SolidColorBrush;
+                    }
                 }
+                UiSettings.IsExpanded = false;
                 UiSettings.IsEnabled = false;
                 await this.ShowMessageAsync("UI Changed", "New UI settings have just been applied.");
             };
+
+
+            this.RestoreFile.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.RestoreFile.Drop += TextBoxDropHandler5;
         }
 
         private Accent _newAccent = ThemeManager.Accents.First(x => x.Name == "Blue");
@@ -250,7 +283,26 @@ namespace AndroidToolkit.Wpf.View
 
             }
         }
+        private async void TextBoxDropHandler5(object sender, DragEventArgs e)
+        {
+            object text = e.Data.GetData(DataFormats.FileDrop);
+            var tb = sender as TextBox;
+            if (tb != null)
+            {
+                string temp = string.Format("{0}", ((string[])text)[0]);
+                string path = System.IO.Path.GetExtension(temp);
+                if (path == ".ab")
+                {
+                    tb.Text = temp;
+                }
+                else
+                {
+                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an android backup (.ab)");
+                }
 
+
+            }
+        }
         private async void ButtonClickHandler(object sender, RoutedEventArgs e)
         {
             await this.Dispatcher.InvokeAsync(() =>

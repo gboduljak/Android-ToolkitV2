@@ -15,7 +15,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             {
                 await Context.Dispatcher.InvokeAsync(async () =>
                 {
-                    string pathlocation = PathGenerator.Generate(location, name);
+                    string pathlocation = PathGenerator.Generate(location, string.Format("{0}.{1}", name, "ab"));
                     await Task.Run(async () =>
                     {
                         if (mode == AdbBackupMode.All)
@@ -45,7 +45,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             {
                 await Context.Dispatcher.InvokeAsync(async () =>
                 {
-                    string pathlocation = PathGenerator.Generate(location, name);
+                  string pathlocation = PathGenerator.Generate(location, string.Format("{0}.{1}", name, "ab"));
                     await Task.Run(async () =>
                     {
                         if (mode == AdbBackupMode.All)

@@ -34,6 +34,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
@@ -49,7 +50,10 @@
     <Compile Include="Adapters\ITextBlockAdapter.cs" />
     <Compile Include="Adapters\TextBlockAdapter.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="Helpers\EnumDescription.cs" />
+    <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FileDialog.cs" />
+    <Compile Include="Helpers\PathAttribute.cs" />
     <Compile Include="Helpers\PathGenerator.cs" />
     <Compile Include="Helpers\StringLinesRemover.cs" />
     <Compile Include="Helpers\UIHelper.cs" />

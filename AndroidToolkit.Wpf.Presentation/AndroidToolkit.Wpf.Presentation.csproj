@@ -103,6 +103,8 @@
     <Compile Include="Controls\MainLogo.xaml.cs">
       <DependentUpon>MainLogo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BackupParameters.cs" />
+    <Compile Include="Converters\BackupParametersConverter.cs" />
     <Compile Include="Converters\ExecuteCommandParameters.cs" />
     <Compile Include="Converters\ExecuteCommandParametersConverter.cs" />
     <Compile Include="Converters\FileOpsParameters.cs" />

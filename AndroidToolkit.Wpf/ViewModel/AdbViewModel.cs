@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace AndroidToolkit.Wpf.ViewModel
             DeleteCommandParameters = new TwoCommandParameters();
             SideloadParameters = new TwoCommandParameters();
             ExecuteCommandsParameters = new ExecuteCommandParameters();
+            BackupParameters = new BackupParameters();
+            RestoreParameters = new TwoCommandParameters();
         }
 
         #region Commands
@@ -331,6 +334,47 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        #region Backup
+
+        private RelayCommand<BackupParameters> _backupCommand;
+
+        public RelayCommand<BackupParameters> BackupCommand
+        {
+            get
+            {
+                return _backupCommand ?? (_backupCommand = new RelayCommand<BackupParameters>(AdbPresenter.ExecuteBackup));
+            }
+            set
+            {
+                if (_backupCommand != value)
+                {
+                    RaisePropertyChanging(() => this.BackupCommand);
+                    _backupCommand = value;
+                    RaisePropertyChanged(() => this.BackupCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _restoreCommand;
+        public RelayCommand<TwoCommandParameters> RestoreCommand
+        {
+            get
+            {
+                return _restoreCommand ?? (_restoreCommand = new RelayCommand<TwoCommandParameters>(AdbPresenter.ExecuteRestore));
+            }
+            set
+            {
+                if (_restoreCommand != value)
+                {
+                    RaisePropertyChanging(() => this.RestoreCommand);
+                    _restoreCommand = value;
+                    RaisePropertyChanged(() => this.RestoreCommand);
+                }
+            }
+        }
+
+        #endregion
+
 
         #region Execute
         private RelayCommand<TwoCommandParameters> _executeSingleCommand;
@@ -420,6 +464,21 @@ namespace AndroidToolkit.Wpf.ViewModel
                 }
             }
         }
+        private RelayCommand<TextBox> _openBackupCommand;
+
+        public RelayCommand<TextBox> OpenBackupCommand
+        {
+            get { return _openBackupCommand ?? (_openBackupCommand = new RelayCommand<TextBox>(AdbPresenter.OpenBackup)); }
+            set
+            {
+                if (_openBackupCommand != value)
+                {
+                    RaisePropertyChanging(() => this.ClearImmediateCommand);
+                    _openBackupCommand = value;
+                    RaisePropertyChanged(() => this.PrepareCommand);
+                }
+            }
+        }
         private RelayCommand<TextBox> _openAppCommand;
 
         public RelayCommand<TextBox> OpenAppCommand
@@ -474,6 +533,11 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        public IEnumerable AdbBackupModes
+        {
+            get { return typeof(AdbBackupMode).ToList(); }
+        }
+
         public UIParameters UiParameters { get; set; }
 
         public ThreeTextCommandParameters CopyCommandParameters { get; set; }
@@ -495,6 +559,10 @@ namespace AndroidToolkit.Wpf.ViewModel
         public TwoCommandParameters ExecuteSingleCommandParameters { get; set; }
 
         public ExecuteCommandParameters ExecuteCommandsParameters { get; set; }
+
+        public BackupParameters BackupParameters { get; set; }
+
+        public TwoCommandParameters RestoreParameters { get; set; }
 
         #endregion
 
