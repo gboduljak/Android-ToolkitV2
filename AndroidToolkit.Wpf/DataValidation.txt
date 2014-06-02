@@ -1,1 +1,0 @@
-﻿http://stackoverflow.com/questions/4903047/wpf-binding-use-dataannotations-for-validationrules

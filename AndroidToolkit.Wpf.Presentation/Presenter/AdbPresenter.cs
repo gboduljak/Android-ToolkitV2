@@ -446,5 +446,50 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
         }
 
         #endregion
+
+        #region Remote
+
+        public static void ExecuteRemoteConnect(object parameter)
+        {
+            ThreeTextCommandParameters parameters = parameter as ThreeTextCommandParameters;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        await _adb.RemoteConnect(parameters.Text, parameters.Text2, parameters.Bool, parameters.Target);
+                    });
+                };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                worker.RunWorkerAsync();
+            }
+        }
+
+        public static void ExecuteRemoteDisconnect(object parameter)
+        {
+            SingleCommandParameters parameters = parameter as SingleCommandParameters;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        await _adb.RemoteDisconnect(parameters.Bool);
+                    });
+                };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                worker.RunWorkerAsync();
+            }
+        }
+
+
+        #endregion
     }
 }

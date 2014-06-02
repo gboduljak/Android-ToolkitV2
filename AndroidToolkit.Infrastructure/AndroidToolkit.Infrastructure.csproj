@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -50,6 +54,10 @@
     <Compile Include="Adapters\ITextBlockAdapter.cs" />
     <Compile Include="Adapters\TextBlockAdapter.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="DataAccess\IRemoteInfoRepository.cs" />
+    <Compile Include="DataAccess\RemoteInfoRepository.cs" />
+    <Compile Include="Device\DeviceInfo.cs" />
+    <Compile Include="Device\RemoteInfo.cs" />
     <Compile Include="Helpers\EnumDescription.cs" />
     <Compile Include="Helpers\EnumExtensions.cs" />
     <Compile Include="Helpers\FileDialog.cs" />
@@ -64,8 +72,12 @@
     <Compile Include="Tools\AdbTools.cs" />
     <Compile Include="Tools\AdbTools.FileOps.cs" />
     <Compile Include="Tools\AdbTools.Reboot.cs" />
+    <Compile Include="Tools\AdbTools.Remote.cs" />
     <Compile Include="Utilities\CommandExecutor.cs" />
     <Compile Include="Utilities\ICommandExecutor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

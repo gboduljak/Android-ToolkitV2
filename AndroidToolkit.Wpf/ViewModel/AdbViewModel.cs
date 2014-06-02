@@ -35,6 +35,8 @@ namespace AndroidToolkit.Wpf.ViewModel
             ExecuteCommandsParameters = new ExecuteCommandParameters();
             BackupParameters = new BackupParameters();
             RestoreParameters = new TwoCommandParameters();
+            RemoteConnectParameters = new ThreeTextCommandParameters();
+            RemoteDisconnectParameters = new SingleCommandParameters();
         }
 
         #region Commands
@@ -375,7 +377,6 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #endregion
 
-
         #region Execute
         private RelayCommand<TwoCommandParameters> _executeSingleCommand;
 
@@ -513,6 +514,45 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #endregion
 
+        #region Remote
+        private RelayCommand<SingleCommandParameters> _remoteDisconnectCommand;
+
+        public RelayCommand<SingleCommandParameters> RemoteDisconnectCommand
+        {
+            get
+            {
+                return _remoteDisconnectCommand ?? (_remoteDisconnectCommand = new RelayCommand<SingleCommandParameters>(AdbPresenter.ExecuteRemoteDisconnect));
+            }
+            set
+            {
+                if (_remoteDisconnectCommand != value)
+                {
+                    RaisePropertyChanging(() => this.RemoteDisconnectCommand);
+                    _remoteDisconnectCommand = value;
+                    RaisePropertyChanged(() => this.RemoteDisconnectCommand);
+                }
+            }
+        }
+
+        private RelayCommand<ThreeTextCommandParameters> _remoteConnectCommand;
+
+        public RelayCommand<ThreeTextCommandParameters> RemoteConnectCommand
+        {
+            get
+            {
+                return _remoteConnectCommand ?? (_remoteConnectCommand = new RelayCommand<ThreeTextCommandParameters>(AdbPresenter.ExecuteRemoteConnect));
+            }
+            set
+            {
+                if (_remoteConnectCommand != value)
+                {
+                    RaisePropertyChanging(() => this.RemoteConnectCommand);
+                    _remoteConnectCommand = value;
+                    RaisePropertyChanged(() => this.RemoteConnectCommand);
+                }
+            }
+        }
+        #endregion
         #endregion
 
         #region Properties
@@ -564,10 +604,30 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         public TwoCommandParameters RestoreParameters { get; set; }
 
+        public SingleCommandParameters RemoteDisconnectParameters { get; set; }
+
+        public ThreeTextCommandParameters RemoteConnectParameters { get; set; }
+
         #endregion
 
-
-
+        ~AdbViewModel()
+        {
+            ThreeTextCommandParameters = null;
+            FiveTextCommandParameters = null;
+            InstallTwoCommandParameters = null;
+            UninstallTwoCommandParameters = null;
+            UiParameters = null;
+            ExecuteSingleCommandParameters = null;
+            CopyCommandParameters = null;
+            MoveCommandParameters = null;
+            DeleteCommandParameters = null;
+            SideloadParameters = null;
+            ExecuteCommandsParameters = null;
+            BackupParameters = null;
+            RestoreParameters = null;
+            RemoteConnectParameters = null;
+            RemoteDisconnectParameters = null;
+        }
     }
 }
 

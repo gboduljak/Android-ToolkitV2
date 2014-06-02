@@ -415,21 +415,37 @@
                     <StackPanel Margin="20" Grid.Column="1">
                         <GroupBox Header="SET UP">
                             <StackPanel Margin="10">
-                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE PORT" x:Name="TargetDevicePort" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE IP" x:Name="TargetDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" Text="{Binding Path=RemoteConnectParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER DEVICE PORT" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" x:Name="TargetDevicePort" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" Text="{Binding Path=RemoteConnectParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER DEVICE IP" x:Name="TargetDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="0.5*"/>
                                         <ColumnDefinition Width="0.5*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Margin="0,0,1,0" x:Name="ApplyRemoteADB" Grid.Column="0" HorizontalAlignment="Left" Foreground="#FF706D6D" MinWidth="200" >
+                                    <Button Margin="0,0,1,0" x:Name="ApplyRemoteADB" Command="{Binding RemoteConnectCommand}" Grid.Column="0" HorizontalAlignment="Left" Foreground="#FF706D6D" MinWidth="200" >
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource ThreeTextCommandParametersConverter}">
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="TargetDeviceIP" Path="Text"/>
+                                                <Binding ElementName="TargetDevicePort" Path="Text"/>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="Target" Path="Text"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
                                         <Rectangle Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="#FF706D6D">
                                             <Rectangle.OpacityMask>
                                                 <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_radar}"/>
                                             </Rectangle.OpacityMask>
                                         </Rectangle>
                                     </Button>
-                                    <Button Margin="1,0,0,0" x:Name="KillRemoteADB" Grid.Column="1" Foreground="#FF706D6D" HorizontalAlignment="Left" MinWidth="200" >
+                                    <Button Margin="1,0,0,0" x:Name="KillRemoteADB" Command="{Binding RemoteDisconnectCommand}" Grid.Column="1" Foreground="#FF706D6D" HorizontalAlignment="Left" MinWidth="200" >
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource SingleCommandParametersConverter}">
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="Target" Path="Text"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
                                         <Rectangle Width="30" Height="30" VerticalAlignment="Center" Fill="#FF706D6D">
                                             <Rectangle.OpacityMask>
                                                 <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_connect}"/>
@@ -819,7 +835,7 @@
                                     <Button.CommandParameter>
                                         <MultiBinding Converter="{StaticResource TwoCommandsParametersConverter}">
                                             <Binding ElementName="Context"/>
-                                            <Binding ElementName="UnistallApp" Path="Text"/>
+                                            <Binding ElementName="UninstallApp" Path="Text"/>
                                             <Binding ElementName="UninstallSystemApp" Path="IsChecked"/>
                                             <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
                                             <Binding ElementName="Target" Path="Text"/>
