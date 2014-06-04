@@ -366,5 +366,58 @@
 
     </Style>
 
+    <Style x:Key="RemoteConnectButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource FlatMetroAccentButton}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=TargetDeviceIP, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=TargetDevicePort, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="White"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
+
+    <Style x:Key="SaveRemoteInfoButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource FlatMetroAccentButton}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=SaveDeviceIP, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=SaveDevicePort, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="White"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
 
 </ResourceDictionary>

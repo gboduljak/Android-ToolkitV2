@@ -13,6 +13,7 @@
 */
 
 using AndroidToolkit.Infrastructure.Adapters;
+using AndroidToolkit.Infrastructure.DataAccess;
 using AndroidToolkit.Infrastructure.Utilities;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
@@ -45,8 +46,9 @@ namespace AndroidToolkit.Wpf.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<AdbViewModel>();
-            SimpleIoc.Default.Register<ICommandExecutor,CommandExecutor>();
-            SimpleIoc.Default.Register<ITextBlockAdapter,TextBlockAdapter>();
+            SimpleIoc.Default.Register<ICommandExecutor, CommandExecutor>();
+            SimpleIoc.Default.Register<ITextBlockAdapter, TextBlockAdapter>();
+            SimpleIoc.Default.Register<IRemoteInfoRepository, RemoteInfoRepository>();
         }
 
         public MainViewModel Main
@@ -64,6 +66,25 @@ namespace AndroidToolkit.Wpf.ViewModel
                 return ServiceLocator.Current.GetInstance<AdbViewModel>();
             }
         }
+
+        #region Repositories
+
+        public IRemoteInfoRepository RemoteInfoRepository
+        {
+            get { return ServiceLocator.Current.GetInstance<IRemoteInfoRepository>(); }
+        }
+
+        #endregion
+
+        #region Utilities
+
+        public ICommandExecutor CommandExecutor
+        {
+            get { return ServiceLocator.Current.GetInstance<ICommandExecutor>(); }
+        }
+
+        #endregion
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

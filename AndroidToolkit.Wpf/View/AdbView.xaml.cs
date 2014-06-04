@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
+using AndroidToolkit.Infrastructure;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation.Converters;
@@ -49,7 +50,7 @@ namespace AndroidToolkit.Wpf.View
         }
 
         #region AddEvent
-        private void AddEvents()
+        private async void AddEvents()
         {
 
             this.Closed += delegate
@@ -122,7 +123,6 @@ namespace AndroidToolkit.Wpf.View
                         timer.Dispose();
                     };
                     timer.Enabled = true;
-
                 });
             };
             this.RefreshApps.Click += ButtonClickHandler;
@@ -205,6 +205,12 @@ namespace AndroidToolkit.Wpf.View
 
             this.RestoreFile.PreviewDragOver += (sender, args) => args.Handled = true;
             this.RestoreFile.Drop += TextBoxDropHandler5;
+
+            foreach (var item in await _viewModel.RemoteInfoRepository.Get())
+            {
+                _viewModel.RemoteInfos.Add(item);
+            }
+
         }
 
         private Accent _newAccent = ThemeManager.Accents.First(x => x.Name == "Blue");

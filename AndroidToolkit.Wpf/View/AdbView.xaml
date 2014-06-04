@@ -7,6 +7,7 @@
         xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:controls="clr-namespace:AndroidToolkit.Wpf.Presentation.Controls;assembly=AndroidToolkit.Wpf.Presentation"
         xmlns:converters="clr-namespace:AndroidToolkit.Wpf.Presentation.Converters;assembly=AndroidToolkit.Wpf.Presentation"
+        xmlns:device="clr-namespace:AndroidToolkit.Infrastructure.Device;assembly=AndroidToolkit.Infrastructure"
         Title="Android Toolkit - ADB" Height="600" Width="1100" MinHeight="350" MinWidth="525" ShowMinButton="True" ShowInTaskbar="True" ResizeMode="CanResizeWithGrip" WindowTransitionsEnabled="True" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
@@ -50,7 +51,7 @@
     <metroControls:MetroWindow.RightWindowCommands>
         <metroControls:WindowCommands>
 
-            <Button Name="StartAdb">
+            <Button Name="StartAdb" Command="{Binding PrepareCommand}" CommandParameter="{Binding ElementName=Context}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                    Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -64,7 +65,7 @@
                    Text="start ADB" />
                 </StackPanel>
             </Button>
-            <Button Name="KillAdb">
+            <Button Name="KillAdb" Command="{Binding KillAdbCommand}" CommandParameter="{Binding ElementName=Context}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20"
                    Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -128,7 +129,7 @@
     </metroControls:MetroWindow.RightWindowCommands>
 
     <Window.DataContext>
-        <local:AdbViewModel/>
+        <Binding Source="{StaticResource Locator}" Path="Adb"/>
     </Window.DataContext>
 
     <i:Interaction.Behaviors>
@@ -252,34 +253,36 @@
                 </StackPanel>
             </metroControls:Flyout>
             <metroControls:Flyout Name="ListAppsFlyout" Header="APPS" Position="Left" Theme="Adapt" Width="250" IsModal="False" IsPinned="True">
-                <StackPanel Margin="10">
-                    <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_app}"></VisualBrush>
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                    <Button Margin="5" Height="50" Name="RefreshApps" Command="{Binding ListAppsCommand}" Style="{StaticResource FlatMetroAccentButton }">
-                        <Button.CommandParameter>
-                            <MultiBinding Converter="{StaticResource UIParametersConverter}">
-                                <Binding ElementName="Context"/>
-                                <Binding ElementName="Packages"/>
-                                <Binding ElementName="Target" Path="Text"/>
-                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
-                                <Binding ElementName="ListAppsFlyout"/>
-                            </MultiBinding>
-                        </Button.CommandParameter>
-                        <Button.Content>
-                            <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Rectangle Width="20" Height="20" Fill="White">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Visual="{StaticResource appbar_refresh}" Stretch="Fill"/>
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                            </DockPanel>
-                        </Button.Content>
-                    </Button>
-                    <TextBox Name="Packages"></TextBox>
-                </StackPanel>
+           <ScrollViewer>
+                    <StackPanel Margin="10">
+                        <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_app}"></VisualBrush>
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <Button Margin="5" Height="50" Name="RefreshApps" Command="{Binding ListAppsCommand}" Style="{StaticResource FlatMetroAccentButton }">
+                            <Button.CommandParameter>
+                                <MultiBinding Converter="{StaticResource UIParametersConverter}">
+                                    <Binding ElementName="Context"/>
+                                    <Binding ElementName="Packages"/>
+                                    <Binding ElementName="Target" Path="Text"/>
+                                    <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                    <Binding ElementName="ListAppsFlyout"/>
+                                </MultiBinding>
+                            </Button.CommandParameter>
+                            <Button.Content>
+                                <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Rectangle Width="20" Height="20" Fill="White">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_refresh}" Stretch="Fill"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </DockPanel>
+                            </Button.Content>
+                        </Button>
+                        <TextBox Name="Packages"/>
+                    </StackPanel>
+                </ScrollViewer>
             </metroControls:Flyout>
             <metroControls:Flyout Header="DEVICES" Position="Right" Width="500" Theme="Accent" IsPinned="True">
                 <ScrollViewer CanContentScroll="True">
@@ -415,14 +418,14 @@
                     <StackPanel Margin="20" Grid.Column="1">
                         <GroupBox Header="SET UP">
                             <StackPanel Margin="10">
-                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" Text="{Binding Path=RemoteConnectParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER DEVICE PORT" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" x:Name="TargetDevicePort" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                                <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" Text="{Binding Path=RemoteConnectParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER DEVICE IP" x:Name="TargetDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBox Width="{Binding}" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" Text="{Binding Path=RemoteConnectParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER DEVICE PORT" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" x:Name="TargetDevicePort" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <TextBox Width="{Binding}"  metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" Text="{Binding Path=RemoteConnectParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER DEVICE IP" x:Name="TargetDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="0.5*"/>
                                         <ColumnDefinition Width="0.5*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Margin="0,0,1,0" x:Name="ApplyRemoteADB" Command="{Binding RemoteConnectCommand}" Grid.Column="0" HorizontalAlignment="Left" Foreground="#FF706D6D" MinWidth="200" >
+                                    <Button Margin="0,0,1,0" x:Name="ApplyRemoteADB" Style="{StaticResource RemoteConnectButtonStyle}" Command="{Binding RemoteConnectCommand}" Grid.Column="0" HorizontalAlignment="Left" Foreground="#FF706D6D" MinWidth="200" >
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource ThreeTextCommandParametersConverter}">
                                                 <Binding ElementName="Context"/>
@@ -432,7 +435,7 @@
                                                 <Binding ElementName="Target" Path="Text"/>
                                             </MultiBinding>
                                         </Button.CommandParameter>
-                                        <Rectangle Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="#FF706D6D">
+                                        <Rectangle Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="White">
                                             <Rectangle.OpacityMask>
                                                 <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_radar}"/>
                                             </Rectangle.OpacityMask>
@@ -453,72 +456,91 @@
                                         </Rectangle>
                                     </Button>
                                 </Grid>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="0.5*"/>
-                                        <ColumnDefinition Width="0.5*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <GroupBox Grid.Column="0" Header="SAVE IP">
-                                        <StackPanel>
-                                            <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE IP" x:Name="SaveDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                                            <TextBox metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE NAME" x:Name="SaveDeviceName" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                                            <Button x:Name="SaveIPButton" Style="{DynamicResource MetroAccentButton}">
-                                                <Rectangle Width="24" Height="22">
-                                                    <Rectangle.Fill>
-                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
-                                                    </Rectangle.Fill>
-                                                </Rectangle>
-                                            </Button>
-                                        </StackPanel>
-                                    </GroupBox>
-                                    <GroupBox Grid.Column="1" Header="IP List">
-                                        <StackPanel>
-                                            <ListView x:Name="IPListView" MinWidth="250" MaxHeight="250">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <WrapPanel>
-                                                            <Rectangle Width="18" Height="28" Margin="10">
-                                                                <Rectangle.Fill>
-                                                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
-                                                                </Rectangle.Fill>
-                                                            </Rectangle>
-                                                            <TextBlock Text="IP: " />
-                                                            <TextBlock Text="{Binding DeviceIP}" FontWeight="Bold" />
-                                                            <TextBlock Text=", " />
-                                                            <TextBlock Text="Name: " />
-                                                            <TextBlock Text="{Binding DeviceName}" FontWeight="Bold" />
-                                                        </WrapPanel>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
+                            </StackPanel>
+                        </GroupBox>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Expander Grid.Column="0" Header="SAVE IP">
+                                <StackPanel>
+                                    <TextBox Text="{Binding Path=RemoteSaveParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE ADDRESS" x:Name="SaveDeviceIP" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                    <TextBox Text="{Binding Path=RemoteSaveParameters.Text2, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.SelectAllOnFocus="True" metroControls:TextboxHelper.Watermark="ENTER DEVICE NAME" x:Name="SaveDeviceName" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                    <Button x:Name="SaveIPButton" Style="{DynamicResource SaveRemoteInfoButtonStyle}" Command="{Binding SaveRemoteInfoCommand}">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource ThreeTextCommandParametersConverter}">
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="SaveDeviceIP" Path="Text"/>
+                                                <Binding ElementName="SaveDeviceName" Path="Text"/>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="Target" Path="Text"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                        <Rectangle Width="24" Height="22">
+                                            <Rectangle.Fill>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                    </Button>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Grid.Column="1" Header="IP List">
+                                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <ListView x:Name="IPListView" MinWidth="300" MaxHeight="300" ItemsSource="{Binding Path=RemoteInfos}">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <Rectangle Width="18" Height="28" Margin="10">
+                                                            <Rectangle.Fill>
+                                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_iphone}" />
+                                                            </Rectangle.Fill>
+                                                        </Rectangle>
+                                                        <TextBlock FontFamily="Segoe UI"  Foreground="DarkGray" Margin="1">Address:</TextBlock>
+                                                        <TextBlock FontFamily="Segoe UI"  Foreground="DarkGray" Text="{Binding Path=Address}" FontWeight="Bold" Margin="1" />
+                                                        <TextBlock FontFamily="Segoe UI"  Foreground="DarkGray" Margin="1">Name:</TextBlock>
+                                                        <TextBlock Foreground="DarkGray" Text="{Binding Path=DeviceName}" FontWeight="Bold" Margin="1"  />
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
 
-                                            </ListView>
-                                            <Button x:Name="RefreshIPButton" Style="{DynamicResource MetroAccentButton}" Margin="0,0,0,5">
+                                        </ListView>
+                                        <Grid Margin="0,10,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="0.5*"/>
+                                                <ColumnDefinition Width="0.5*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="0" x:Name="RefreshIPButton" Command="{Binding RefreshRemoteInfoCommand}" CommandParameter="{Binding ElementName=IPListView}" Style="{DynamicResource FlatMetroAccentButton}">
                                                 <Rectangle Width="24" Height="22">
                                                     <Rectangle.Fill>
                                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
                                                     </Rectangle.Fill>
                                                 </Rectangle>
                                             </Button>
-                                            <Button x:Name="DeleteIPsButton" Style="{DynamicResource MetroAccentButton}">
+                                            <Button Grid.Column="1" x:Name="DeleteIPButton" Command="{Binding DeleteRemoteInfoCommand}" Style="{DynamicResource FlatMetroAccentButton}">
+                                                <Button.CommandParameter>
+                                                    <Binding ElementName="IPListView" Path="SelectedItem"/>
+                                                </Button.CommandParameter>
                                                 <Rectangle Width="24" Height="22">
                                                     <Rectangle.Fill>
                                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_delete}" />
                                                     </Rectangle.Fill>
                                                 </Rectangle>
                                             </Button>
-                                        </StackPanel>
-                                    </GroupBox>
-                                </Grid>
-                            </StackPanel>
-                        </GroupBox>
-                        <Button x:Name="RemoteADBHelp" Foreground="#FF706D6D" Margin="0,0,0,5">
+                                        </Grid>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Expander>
+                        </Grid>
+                        <Button x:Name="RemoteADBHelp" Foreground="#FF706D6D" Margin="40,0">
                             <DockPanel>
                                 <Rectangle Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Fill="#FF706D6D">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_lines_horizontal_4}"/>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
-                                <TextBlock Foreground="#FF706D6D" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" Margin="10,0,0,0">HELP?</TextBlock>
+                                <TextBlock Foreground="#FF706D6D" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" Margin="10,0,0,0">HELP</TextBlock>
                             </DockPanel>
                         </Button>
                     </StackPanel>

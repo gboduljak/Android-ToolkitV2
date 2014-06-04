@@ -25,9 +25,8 @@
     <i:Interaction.Behaviors>
         <Behaviours:BorderlessWindowBehavior ResizeWithGrip="False" />
     </i:Interaction.Behaviors>
-  
     <Window.DataContext>
-        <local:MainViewModel/>
+        <Binding Source="{StaticResource Locator}" Path="Main"/>
     </Window.DataContext>
     <metroControls:MetroContentControl>
         <Grid x:Name="LayoutRoot">

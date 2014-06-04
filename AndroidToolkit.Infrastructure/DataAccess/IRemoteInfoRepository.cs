@@ -9,8 +9,8 @@ namespace AndroidToolkit.Infrastructure.DataAccess
 {
     public interface IRemoteInfoRepository
     {
-        Task<IEnumerable<RemoteInfo>> Get();
-        Task Add(RemoteInfo info);
-        Task Delete(int id);
+        Task<IList<RemoteInfo>> Get();
+        Task<bool> Add(RemoteInfo info);
+        Task<bool> Delete(string address);
     }
 }

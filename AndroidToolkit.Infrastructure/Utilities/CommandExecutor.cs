@@ -61,8 +61,6 @@ namespace AndroidToolkit.Infrastructure.Utilities
                 await _process.StandardInput.FlushAsync();
                 _process.StandardInput.Dispose();
                 string output = await _process.StandardOutput.ReadToEndAsync();
-                _process.Close();
-                _process.Kill();
                 return output;
             });
         }
@@ -94,6 +92,7 @@ namespace AndroidToolkit.Infrastructure.Utilities
                 _process.StandardInput.Dispose();
                 _process.Close();
                 _process.Kill();
+                _process.Dispose();
             });
         }
 
@@ -121,8 +120,6 @@ namespace AndroidToolkit.Infrastructure.Utilities
                 await _process.StandardInput.FlushAsync();
                 _process.StandardInput.Dispose();
                 string output = await _process.StandardOutput.ReadToEndAsync();
-                _process.Close();
-                _process.Kill();
                 return output;
             });
         }

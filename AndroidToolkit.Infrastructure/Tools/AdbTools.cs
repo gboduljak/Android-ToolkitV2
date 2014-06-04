@@ -82,10 +82,11 @@ namespace AndroidToolkit.Infrastructure.Tools
 
         public async Task ListDevices(TextBox context, bool createNoWindow)
         {
-            await context.Dispatcher.InvokeAsync(async () => context.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("adb devices"), createNoWindow), 4)));
+            await context.Dispatcher.InvokeAsync(async () => 
+                context.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("adb devices")), 5)));
         }
 
-        private static void KillAdb()
+        public static void KillAdb()
         {
             Process[] processes = Process.GetProcesses();
             for (int i = 0; i < processes.Count(); i++)
@@ -107,8 +108,5 @@ namespace AndroidToolkit.Infrastructure.Tools
             this._cmds = null;
             GC.Collect();
         }
-
-
-
     }
 }

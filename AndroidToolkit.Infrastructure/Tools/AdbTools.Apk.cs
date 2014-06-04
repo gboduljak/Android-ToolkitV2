@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using AndroidToolkit.Infrastructure.Helpers;
 
@@ -67,15 +68,30 @@ namespace AndroidToolkit.Infrastructure.Tools
             {
                 if (!string.IsNullOrEmpty(target))
                 {
-                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb -s {0} shell pm list packages", target)), Context, createNoWindow));
-                    string logcat = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb -s {0} shell pm list packages", target)), createNoWindow), 4));
-                    await context2.Dispatcher.InvokeAsync(() => context2.Text = logcat);
+                    await Task.Run(async () =>
+                    {
+                        string logcat =
+                            StringLinesRemover.ForgetLastLine(
+                                StringLinesRemover.RemoveLine(
+                                    await
+                                        _executor.Execute(
+                                            new Command(string.Format("adb -s {0} shell pm list packages", target)),
+                                            createNoWindow), 4));
+                        await context2.Dispatcher.InvokeAsync(() => context2.Text = logcat);
+                    });
                 }
                 else
                 {
-                    await Task.Run(() => _executor.Execute(new Command(string.Format("adb shell pm list packages")), Context, createNoWindow));
-                    string logcat = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb shell pm list packages")), createNoWindow), 4));
-                    await context2.Dispatcher.InvokeAsync(() => context2.Text = logcat);
+                    await Task.Run(async () =>
+                    {
+                        string logcat =
+                            StringLinesRemover.ForgetLastLine(
+                                StringLinesRemover.RemoveLine(
+                                    await
+                                        _executor.Execute(new Command(string.Format("adb shell pm list packages")),
+                                            createNoWindow), 4));
+                        await context2.Dispatcher.InvokeAsync(() => context2.Text = logcat);
+                    });
                 }
             });
         }

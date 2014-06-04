@@ -5,16 +5,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AndroidToolkit.Infrastructure.DataAccess;
+using AndroidToolkit.Infrastructure.Device;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation;
 using AndroidToolkit.Wpf.Presentation.Converters;
 using AndroidToolkit.Wpf.Presentation.Presenter;
+using AndroidToolkit.Wpf.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro;
+using MahApps.Metro.Controls;
 
 namespace AndroidToolkit.Wpf.ViewModel
 {
@@ -37,10 +42,31 @@ namespace AndroidToolkit.Wpf.ViewModel
             RestoreParameters = new TwoCommandParameters();
             RemoteConnectParameters = new ThreeTextCommandParameters();
             RemoteDisconnectParameters = new SingleCommandParameters();
+            RemoteSaveParameters = new ThreeTextCommandParameters();
+            _remoteInfoRepository = ((ViewModelLocator)Application.Current.Resources["Locator"]).RemoteInfoRepository;
         }
 
         #region Commands
 
+        private RelayCommand<TextBlock> _killAdbCommand;
+
+        public RelayCommand<TextBlock> KillAdbCommand
+        {
+            get
+            {
+                return _killAdbCommand ?? (_killAdbCommand = new RelayCommand<TextBlock>(AdbPresenter.ExecuteKillAdb));
+
+            }
+            set
+            {
+                if (_killAdbCommand != value)
+                {
+                    RaisePropertyChanging(() =>KillAdbCommand);
+                    _killAdbCommand = value;
+                    RaisePropertyChanged(() => KillAdbCommand);
+                }
+            }
+        }
 
         #region Reboot
 
@@ -124,7 +150,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
-
+        #region File
         private RelayCommand<ThreeTextCommandParameters> _pushCommand;
 
         public RelayCommand<ThreeTextCommandParameters> PushCommand
@@ -219,6 +245,7 @@ namespace AndroidToolkit.Wpf.ViewModel
                 }
             }
         }
+        #endregion
 
         private RelayCommand<TwoCommandParameters> _sideloadCommand;
 
@@ -258,6 +285,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        #region Apps
 
         private RelayCommand<TwoCommandParameters> _installCommand;
 
@@ -335,6 +363,7 @@ namespace AndroidToolkit.Wpf.ViewModel
                 }
             }
         }
+        #endregion
 
         #region Backup
 
@@ -552,7 +581,100 @@ namespace AndroidToolkit.Wpf.ViewModel
                 }
             }
         }
+
+        private RelayCommand<ThreeTextCommandParameters> _saveRemoteInfoCommand;
+
+        public RelayCommand<ThreeTextCommandParameters> SaveRemoteInfoCommand
+        {
+            get
+            {
+                return _saveRemoteInfoCommand ?? (_saveRemoteInfoCommand = new RelayCommand<ThreeTextCommandParameters>(
+                    async (parameters) =>
+                    {
+                        if (parameters != null &&
+                            await
+                                _remoteInfoRepository.Add(new RemoteInfo()
+                                {
+                                    DeviceName = parameters.Text,
+                                    Address = parameters.Text2
+                                }))
+                        {
+                            using (Toast toast = new Toast("Remote info saved."))
+                            {
+                                toast.Show();
+                            }
+                        }
+                    }));
+            }
+            set
+            {
+                if (_saveRemoteInfoCommand != value)
+                {
+                    RaisePropertyChanging(() => this.SaveRemoteInfoCommand);
+                    _saveRemoteInfoCommand = value;
+                    RaisePropertyChanged(() => this.SaveRemoteInfoCommand);
+                }
+            }
+        }
+
+        private RelayCommand<object> _deleteRemoteInfoCommand;
+
+        public RelayCommand<object> DeleteRemoteInfoCommand
+        {
+            get
+            {
+                return _deleteRemoteInfoCommand ?? (_deleteRemoteInfoCommand = new RelayCommand<object>(
+                    async (parameter) =>
+                    {
+                        var item = parameter as RemoteInfo;
+                        if (item != null && await _remoteInfoRepository.Delete(item.Address))
+                        {
+                            using (Toast toast = new Toast("Remote info deleted."))
+                            {
+                                toast.Show();
+                            }
+                        }
+                    }));
+            }
+            set
+            {
+                if (_deleteRemoteInfoCommand != value)
+                {
+                    RaisePropertyChanging(() => DeleteRemoteInfoCommand);
+                    _deleteRemoteInfoCommand = value;
+                    RaisePropertyChanged(() => DeleteRemoteInfoCommand);
+                }
+            }
+        }
+        private RelayCommand<ListView> _refreshRemoteInfoCommand;
+
+        public RelayCommand<ListView> RefreshRemoteInfoCommand
+        {
+            get
+            {
+                return _refreshRemoteInfoCommand ?? (_refreshRemoteInfoCommand = new RelayCommand<ListView>(
+                    async (parameter) =>
+                    {
+                        RemoteInfos.Clear();
+                        foreach (var item in await RemoteInfoRepository.Get())
+                        {
+                            RemoteInfos.Add(item);
+                        }
+                        parameter.ItemsSource = RemoteInfos;
+                    }));
+            }
+            set
+            {
+                if (_refreshRemoteInfoCommand != value)
+                {
+                    RaisePropertyChanging(() => RefreshRemoteInfoCommand);
+                    _refreshRemoteInfoCommand = value;
+                    RaisePropertyChanged(() => RefreshRemoteInfoCommand);
+                }
+            }
+        }
         #endregion
+
         #endregion
 
         #region Properties
@@ -569,6 +691,22 @@ namespace AndroidToolkit.Wpf.ViewModel
                     RaisePropertyChanging(() => Accents);
                     this._accents = value;
                     RaisePropertyChanged(() => Accents);
+                }
+            }
+        }
+
+        private ObservableCollection<RemoteInfo> _remoteInfos;
+
+        public ObservableCollection<RemoteInfo> RemoteInfos
+        {
+            get { return _remoteInfos ?? (_remoteInfos = new ObservableCollection<RemoteInfo>()); }
+            set
+            {
+                if (_remoteInfos != value)
+                {
+                    RaisePropertyChanging(() => RemoteInfos);
+                    this._remoteInfos = value;
+                    RaisePropertyChanged(() => RemoteInfos);
                 }
             }
         }
@@ -608,6 +746,15 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         public ThreeTextCommandParameters RemoteConnectParameters { get; set; }
 
+        private IRemoteInfoRepository _remoteInfoRepository;
+
+        public IRemoteInfoRepository RemoteInfoRepository
+        {
+            get { return _remoteInfoRepository; }
+        }
+
+        public ThreeTextCommandParameters RemoteSaveParameters { get; set; }
+
         #endregion
 
         ~AdbViewModel()
@@ -627,6 +774,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             RestoreParameters = null;
             RemoteConnectParameters = null;
             RemoteDisconnectParameters = null;
+            _remoteInfoRepository = null;
         }
     }
 }

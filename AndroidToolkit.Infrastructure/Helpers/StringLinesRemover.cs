@@ -15,7 +15,11 @@ namespace AndroidToolkit.Infrastructure.Helpers
         }
         public static string ForgetLastLine(string input)
         {
-            return input.Remove(input.Length-20);
+            String newText = String.Empty;
+            List<String> lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            lines.RemoveAll(str => str.Contains("AndroidToolkit"));
+            lines.ForEach(str => newText += str + Environment.NewLine);
+            return newText;
         }
     }
 }

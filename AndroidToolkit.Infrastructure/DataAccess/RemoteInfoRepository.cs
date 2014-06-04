@@ -1,4 +1,7 @@
-﻿using AndroidToolkit.Infrastructure.Device;
+﻿using System.Collections;
+using System.Windows.Controls;
+using System.Windows.Forms;
+using AndroidToolkit.Infrastructure.Device;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,24 +15,57 @@ namespace AndroidToolkit.Infrastructure.DataAccess
 {
     public class RemoteInfoRepository : IRemoteInfoRepository
     {
-        public Task<IEnumerable<RemoteInfo>> Get()
+        public RemoteInfoRepository()
         {
-            return Task.Run(() => JsonConvert.DeserializeObject<IEnumerable<RemoteInfo>>(File.ReadAllText("remote.json")));
+            _infos = new List<RemoteInfo>();
         }
-
-        public Task Add(RemoteInfo info)
+        private static void CreateFile()
         {
-            return Task.Run(() => { File.WriteAllText("remote.json", JsonConvert.SerializeObject(info)); });
+            File.WriteAllText("remote.json","[]");
         }
-
-        public Task Delete(int id)
+        public Task<IList<RemoteInfo>> Get()
         {
             return Task.Run(() =>
             {
-                List<RemoteInfo> remoteInfos = JsonConvert.DeserializeObject<List<RemoteInfo>>(File.ReadAllText("remote.json"));
-                remoteInfos.Remove(remoteInfos.First(x => x.ID == id));
-                File.WriteAllText("remote.json", JsonConvert.SerializeObject(remoteInfos));
+                if (!File.Exists("remote.json"))
+                {
+                    CreateFile();
+                }
+                _infos = JsonConvert.DeserializeObject<List<RemoteInfo>>(File.ReadAllText("remote.json"));
+                return _infos;
             });
         }
+
+        public Task<bool> Add(RemoteInfo info)
+        {
+            return Task.Run(() =>
+            {
+                if (!File.Exists("remote.json"))
+                {
+                    CreateFile();
+                }
+                _infos.Add(info);
+                File.WriteAllText("remote.json", JsonConvert.SerializeObject(_infos));
+                return true;
+
+            });
+        }
+
+        public Task<bool> Delete(string address)
+        {
+            return Task.Run(() =>
+            {
+                if (!File.Exists("remote.json"))
+                {
+                    CreateFile();
+                }
+                _infos = JsonConvert.DeserializeObject<List<RemoteInfo>>(File.ReadAllText("remote.json"));
+                _infos.Remove(_infos.First(x => x.Address == address));
+                File.WriteAllText("remote.json", JsonConvert.SerializeObject(_infos));
+                return true;
+            });
+        }
+
+        private IList<RemoteInfo> _infos;
     }
 }

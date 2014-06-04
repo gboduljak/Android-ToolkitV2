@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,19 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
                 worker.RunWorkerAsync();
             }
+        }
+
+        public async static void ExecuteKillAdb(object parameter)
+        {
+            await Task.Factory.StartNew(async () =>
+            {
+                AdbTools.KillAdb();
+                var temp = parameter as TextBlock;
+                if (temp != null)
+                    await
+                        temp.Dispatcher.InvokeAsync(() => temp.Text = "ADB KILLED");
+                temp = null;
+            });
         }
 
         #region UI
