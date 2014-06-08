@@ -7,7 +7,6 @@
         xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:controls="clr-namespace:AndroidToolkit.Wpf.Presentation.Controls;assembly=AndroidToolkit.Wpf.Presentation"
         xmlns:converters="clr-namespace:AndroidToolkit.Wpf.Presentation.Converters;assembly=AndroidToolkit.Wpf.Presentation"
-        xmlns:device="clr-namespace:AndroidToolkit.Infrastructure.Device;assembly=AndroidToolkit.Infrastructure"
         Title="Android Toolkit - ADB" Height="600" Width="1100" MinHeight="350" MinWidth="525" ShowMinButton="True" ShowInTaskbar="True" ResizeMode="CanResizeWithGrip" WindowTransitionsEnabled="True" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
@@ -253,7 +252,7 @@
                 </StackPanel>
             </metroControls:Flyout>
             <metroControls:Flyout Name="ListAppsFlyout" Header="APPS" Position="Left" Theme="Adapt" Width="250" IsModal="False" IsPinned="True">
-           <ScrollViewer>
+                <ScrollViewer>
                     <StackPanel Margin="10">
                         <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Rectangle.OpacityMask>
@@ -284,7 +283,7 @@
                     </StackPanel>
                 </ScrollViewer>
             </metroControls:Flyout>
-            <metroControls:Flyout Header="DEVICES" Position="Right" Width="500" Theme="Accent" IsPinned="True">
+            <metroControls:Flyout Name="DevicesFlyout" Header="DEVICES" Position="Right" Width="500" Theme="Accent" IsPinned="True">
                 <ScrollViewer CanContentScroll="True">
                     <StackPanel Margin="20">
                         <Grid>
@@ -301,10 +300,34 @@
                         </Grid>
                         <Label Style="{StaticResource TileTitleLabel}" Foreground="White">ADB</Label>
                         <TextBox Name="ADBDevices" Width="{Binding}" Height="128"/>
-
-                        <!--<Rectangle Width="{Binding}" Fill="White" Height="1" Margin="20,10,20,0"/>-->
-                        <!--<Label Style="{StaticResource TileTitleLabel}" Foreground="White">Fastboot</Label>
-                        <TextBox Name="FastbootDevices" Width="{Binding}" Height="128"/>-->
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.5*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Name="RefreshDevices" Grid.Column="0" Command="{Binding RefreshDevicesCommand}">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource UIParametersConverter}">
+                                        <Binding ElementName="Context"/>
+                                        <Binding ElementName="ADBDevices"/>
+                                        <Binding ElementName="Target" Path="Text"/>
+                                        <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                        <Binding ElementName="DevicesFlyout"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                                <Rectangle Width="16" Height="16" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}"/>
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </Button>
+                            <Button Grid.Column="1" Margin="1" Command="{Binding DeviceInfoCommand}">
+                                <Button.CommandParameter>
+                                    <Binding ElementName="Target" Path="Text"/>
+                                </Button.CommandParameter>
+                                Details
+                            </Button>
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </metroControls:Flyout>

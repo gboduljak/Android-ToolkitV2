@@ -43,7 +43,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 worker.RunWorkerAsync();
             }
         }
-
+     
         public async static void ExecuteKillAdb(object parameter)
         {
             await Task.Factory.StartNew(async () =>

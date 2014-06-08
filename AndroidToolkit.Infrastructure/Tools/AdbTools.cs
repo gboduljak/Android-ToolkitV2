@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using AndroidToolkit.Infrastructure.Device;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Utilities;
 
@@ -58,31 +59,111 @@ namespace AndroidToolkit.Infrastructure.Tools
             });
         }
 
-        public async Task<bool> CheckRoot(string targetId = null, bool createNoWindow = true, string target = null)
+        public async Task<string> BuildProp(bool createWindow, string target = null)
         {
-            string output = string.Empty;
-            if (!string.IsNullOrEmpty(target))
-            {
-                await Context.Dispatcher.InvokeAsync(() => Parallel.Invoke(async () => { output = await _executor.Execute(new Command(string.Format("adb -s {0} shell su", target)), createNoWindow); }, () =>
-                {
-                    Thread.Sleep(2000);
-                    KillAdb();
-                }));
-            }
-            else
-            {
-                await Context.Dispatcher.InvokeAsync(() => Parallel.Invoke(async () => { output = await _executor.Execute(new Command("adb shell su"), createNoWindow); }, () =>
-                {
-                    Thread.Sleep(2000);
-                    KillAdb();
-                }));
-            }
-            return output.Contains('#');
+            return await _executor.Execute(new Command("adb shell cat /system/build.prop"), createWindow);
         }
 
+        public async Task<string> DeviceName(bool createWindow, string target = null)
+        {
+            if (!string.IsNullOrEmpty(target))
+            {
+                return await _executor.Execute(new Command(string.Format(@"adb -s {0} shell getprop ro.product.model", target)), createWindow);
+            }
+            return await _executor.Execute(new Command("adb shell getprop ro.product.model"), createWindow);
+        }
+
+        public async Task<string> DeviceOsVersion(bool createWindow, string target = null)
+        {
+            if (!string.IsNullOrEmpty(target))
+            {
+                return await _executor.Execute(new Command(string.Format(@"adb -s {0} shell getprop ro.build.version.release", target)), createWindow);
+            }
+            return await _executor.Execute(new Command("adb shell getprop ro.build.version.release"), createWindow);
+        }
+
+        public async Task<string> DeviceManufacturer(bool createWindow, string target = null)
+        {
+            if (!string.IsNullOrEmpty(target))
+            {
+                return await _executor.Execute(new Command(string.Format(@"adb -s {0} shell getprop ro.product.manufacturer", target)), createWindow);
+            }
+            return await _executor.Execute(new Command("adb shell getprop ro.product.manufacturer"), createWindow);
+        }
+
+        public async Task<string> DeviceCodename(bool createWindow, string target = null)
+        {
+            if (!string.IsNullOrEmpty(target))
+            {
+                return await _executor.Execute(new Command(string.Format(@"adb -s {0} shell getprop ro.product.name", target)), createWindow);
+            }
+            return await _executor.Execute(new Command("adb shell getprop ro.product.name"), createWindow);
+        }
+        public async Task<DeviceInfo> DeviceInfo(bool createWindow, string target = null)
+        {
+            string name =
+                StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(
+                   await DeviceName(createWindow, target), 4));
+
+            string codename =
+              StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(
+                 await DeviceCodename(createWindow, target), 4));
+
+            string manufacturer =
+                StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(
+                    await DeviceManufacturer(createWindow, target), 4));
+
+            string os = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await DeviceOsVersion(createWindow, target), 4));
+            string osDetails = string.Empty;
+            string root = string.Empty;
+            Parallel.Invoke(async () => { root = await _executor.Execute(new Command("adb shell su"), createWindow); root = StringLinesRemover.RemoveLine(root, 4); root = StringLinesRemover.ForgetLastLine(root); }, () => { Thread.Sleep(200); KillAdb(); });
+            string buildprop = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await BuildProp(createWindow, target),5));
+            bool isRoot = false;
+            if (os.Contains("1.5"))
+            {
+                osDetails = "CUPCAKE";
+            }
+            if (os.Contains("1.6"))
+            {
+                osDetails = "DONUT";
+            }
+            if (os.Contains("2"))
+            {
+                osDetails = "ECLAIR";
+            }
+            if (os.Contains("2.2") || os.Contains("2.2.3"))
+            {
+                osDetails = "FROYO";
+            }
+            if (os.Contains("2.3"))
+            {
+                osDetails = "GINGERBREAD";
+            }
+            if (os.Contains("3.0") || os.Contains("3.1") || os.Contains("3.2"))
+            {
+                osDetails = "HONEYCOMB";
+            }
+            if (os.Contains("4.0"))
+            {
+                osDetails = "ICE CREAM SANDWICH";
+            }
+            if (os.Contains("4.1") || os.Contains("4.2") || os.Contains("4.3"))
+            {
+                osDetails = "JELLY BEAN";
+            }
+            if (os.Contains("4.4"))
+            {
+                osDetails = "KIT KAT";
+            }
+            if (root.Contains('#'))
+            {
+                isRoot = true;
+            }
+            return new DeviceInfo() { Name = name, AndroidVersionCode = os, AndroidVersionName = osDetails, BuildProp = buildprop, Codename = codename, Manufacturer = manufacturer, IsRooted = isRoot };
+        }
         public async Task ListDevices(TextBox context, bool createNoWindow)
         {
-            await context.Dispatcher.InvokeAsync(async () => 
+            await context.Dispatcher.InvokeAsync(async () =>
                 context.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("adb devices")), 5)));
         }
 

@@ -26,6 +26,14 @@ namespace AndroidToolkit.Wpf.Presentation.Controls
             InitializeComponent();
         }
 
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
+            "Header", typeof (TextBlock), typeof (Logo), new PropertyMetadata(default(TextBlock)));
+
+        public TextBlock Header
+        {
+            get { return (TextBlock) GetValue(HeaderProperty); }
+            set { SetValue(HeaderProperty, value); }
+        }
 
         public TextBlock HeaderTitle
         {

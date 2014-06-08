@@ -105,6 +105,9 @@
     <Compile Include="View\AdbView.xaml.cs">
       <DependentUpon>AdbView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\DeviceDetails.xaml.cs">
+      <DependentUpon>DeviceDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Toast.xaml.cs">
       <DependentUpon>Toast.xaml</DependentUpon>
     </Compile>
@@ -121,6 +124,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\AdbView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DeviceDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using AndroidToolkit.Wpf.View;
 using AndroidToolkit.Wpf.ViewModel;
 using MahApps.Metro.Controls;
 

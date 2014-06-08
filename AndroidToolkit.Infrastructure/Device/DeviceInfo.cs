@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AndroidToolkit.Data
+namespace AndroidToolkit.Infrastructure.Device
 {
-    public struct DeviceInfo
+    [Serializable]
+    public class DeviceInfo
     {
-        public string Name;
-        public string Manufacturer;
-        public string AndroidVersionName;
-        public string AndroidVersionCode;
-        public string BuildProp;
-        public bool IsRooted;
+        public string Name { get; set; }
+        public string Codename { get; set; }
+        public string Manufacturer { get; set; }
+        public string AndroidVersionName { get; set; }
+        public string AndroidVersionCode { get; set; }
+        public string BuildProp { get; set; }
+        public bool IsRooted { get; set; }
     }
 }

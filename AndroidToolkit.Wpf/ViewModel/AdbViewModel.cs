@@ -61,7 +61,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             {
                 if (_killAdbCommand != value)
                 {
-                    RaisePropertyChanging(() =>KillAdbCommand);
+                    RaisePropertyChanging(() => KillAdbCommand);
                     _killAdbCommand = value;
                     RaisePropertyChanged(() => KillAdbCommand);
                 }
@@ -351,7 +351,8 @@ namespace AndroidToolkit.Wpf.ViewModel
         {
             get
             {
-                return _listDevicesCommand ?? (_listDevicesCommand = new RelayCommand<UIParameters>(AdbPresenter.ExecuteListDevices));
+                return _listDevicesCommand ??
+                       (_listDevicesCommand = new RelayCommand<UIParameters>(AdbPresenter.ExecuteListDevices));
             }
             set
             {
@@ -362,6 +363,26 @@ namespace AndroidToolkit.Wpf.ViewModel
                     RaisePropertyChanged(() => this.ListDevicesCommand);
                 }
             }
+
+        }
+        private RelayCommand<UIParameters> _refreshDevicesCommand;
+        public RelayCommand<UIParameters> RefreshDevicesCommand
+        {
+            get
+            {
+                return _refreshDevicesCommand ??
+                       (_refreshDevicesCommand = new RelayCommand<UIParameters>(AdbPresenter.ExecuteListDevices));
+            }
+            set
+            {
+                if (_refreshDevicesCommand != value)
+                {
+                    RaisePropertyChanging(() => this.RefreshDevicesCommand);
+                    _refreshDevicesCommand = value;
+                    RaisePropertyChanged(() => this.RefreshDevicesCommand);
+                }
+            }
+
         }
         #endregion
 
@@ -675,6 +696,47 @@ namespace AndroidToolkit.Wpf.ViewModel
         }
         #endregion
 
+        private RelayCommand<string> _deviceInfoCommand;
+
+        public RelayCommand<string> DeviceInfoCommand
+        {
+            get
+            {
+                return _deviceInfoCommand ?? (_deviceInfoCommand = new RelayCommand<string>(async (param) =>
+                {
+                    if (!IsWindowOpen<DeviceDetails>())
+                    {
+                        DeviceDetails details = new DeviceDetails();
+                        DeviceInfo info = await new AdbTools().DeviceInfo(true, param);
+                        details.Title.Text = StringLinesRemover.FitString(info.Name);
+                        details.Name.Text = StringLinesRemover.FitString(info.Name);
+                        details.Codename.Text = StringLinesRemover.FitString(info.Codename);
+                        details.Manufacturer.Text = StringLinesRemover.FitString(info.Manufacturer);
+                        details.AndroidOS.Text = StringLinesRemover.FitString(info.AndroidVersionName);
+                        details.AndroidOSCode.Text = StringLinesRemover.FitString(info.AndroidVersionCode);
+                        details.BuildProp.Text = StringLinesRemover.FitString(info.BuildProp);
+                        if (info.IsRooted)
+                        {
+                            details.HasRoot.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            details.NoRoot.Visibility = Visibility.Visible;
+                        }
+                        details.Show();
+                    }
+                }));
+            }
+            set
+            {
+                if (_deviceInfoCommand != value)
+                {
+                    RaisePropertyChanging(() => this.DeviceInfoCommand);
+                    _deviceInfoCommand = value;
+                    RaisePropertyChanged(() => this.DeviceInfoCommand);
+                }
+            }
+        }
         #endregion
 
         #region Properties
@@ -757,6 +819,12 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #endregion
 
+        private static bool IsWindowOpen<T>(string name = "") where T : Window
+        {
+            return string.IsNullOrEmpty(name)
+               ? Application.Current.Windows.OfType<T>().Any()
+               : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
+        }
         ~AdbViewModel()
         {
             ThreeTextCommandParameters = null;

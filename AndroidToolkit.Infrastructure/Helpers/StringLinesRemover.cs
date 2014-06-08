@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace AndroidToolkit.Infrastructure.Helpers
 {
-    internal static class StringLinesRemover
+    public static class StringLinesRemover
     {
+        public static string FitString(string input)
+        {
+            var lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(Environment.NewLine, lines); 
+        }
+
         public static string RemoveLine(string input, int numberOfLines)
         {
             var lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.None);

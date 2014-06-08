@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using AndroidToolkit.Infrastructure;
+using AndroidToolkit.Infrastructure.Device;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation.Converters;
@@ -210,6 +211,12 @@ namespace AndroidToolkit.Wpf.View
             {
                 _viewModel.RemoteInfos.Add(item);
             }
+
+            this.RefreshDevices.Click += (sender, args) =>
+            {
+                _FlyoutPresenter.Invoke(this, 3);
+                _FlyoutPresenter.Invoke(this, 3);
+            };
 
         }
 
