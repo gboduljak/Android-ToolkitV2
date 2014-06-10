@@ -53,7 +53,6 @@ namespace AndroidToolkit.Wpf.View
         #region AddEvent
         private async void AddEvents()
         {
-
             this.Closed += delegate
             {
                 Dispose();
@@ -61,6 +60,7 @@ namespace AndroidToolkit.Wpf.View
 
             this.Closing += delegate
             {
+                KillAdb.Command.Execute(null);
                 Dispose();
             };
 

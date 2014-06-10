@@ -148,7 +148,7 @@
                         <Expander Header="Device settings">
                             <ScrollViewer>
                                 <StackPanel>
-                                    <metroControls:ToggleSwitch Name="CreateNoWindow" Header="Disable CMD" Margin="20" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.CreateADBWindow}"/>
+                                    <metroControls:ToggleSwitch Name="CreateNoWindow" Header="Hide CMD" Margin="20" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.CreateADBWindow}"/>
                                     <TextBox Name="Target" Text="{Binding Source={StaticResource Settings}, Path=Default.ADBTarget}" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.IsWaitingForData="True" metroControls:TextboxHelper.Watermark="TARGET DEVICE ID"></TextBox>
                                 </StackPanel>
                             </ScrollViewer>
@@ -315,17 +315,24 @@
                                         <Binding ElementName="DevicesFlyout"/>
                                     </MultiBinding>
                                 </Button.CommandParameter>
-                                <Rectangle Width="16" Height="16" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1">
+                                <Rectangle Width="16" Height="16" Fill="Gray" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}"/>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>
-                            <Button Grid.Column="1" Margin="1" Command="{Binding DeviceInfoCommand}">
+                            <Button Grid.Column="1" Command="{Binding DeviceInfoCommand}">
                                 <Button.CommandParameter>
                                     <Binding ElementName="Target" Path="Text"/>
                                 </Button.CommandParameter>
-                                Details
+                                <DockPanel>
+                                    <Rectangle Width="12" Height="16" Fill="Gray" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_iphone}"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                    <TextBlock Foreground="Gray">details</TextBlock>
+                                </DockPanel>
                             </Button>
                         </Grid>
                     </StackPanel>

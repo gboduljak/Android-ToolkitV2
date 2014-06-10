@@ -2,7 +2,12 @@
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:behaviours="http://metro.mahapps.com/winfx/xaml/shared"
         Title="Device Details" Width="650" Height="370" AllowsTransparency="True" ResizeMode="NoResize">
+    <i:Interaction.Behaviors>
+        <behaviours:BorderlessWindowBehavior AllowsTransparency="True" AutoSizeToContent="True" EnableDWMDropShadow="True" />
+    </i:Interaction.Behaviors>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -163,18 +168,16 @@
                     </ScrollViewer>
                 </TabItem>
                 <TabItem Header="build.prop">
-                   <ScrollViewer>
-                     <DockPanel>
-                            <TextBox HorizontalAlignment="Center" x:Name="buildprop" Height="150" Width="260"/>
-                            <metroControls:Tile Name="ExportTile" Title="export">
-                                <Rectangle Width="80" Height="80" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}"/>
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                            </metroControls:Tile>
-                        </DockPanel>
-                   </ScrollViewer>
+                    <DockPanel>
+                        <TextBox HorizontalAlignment="Center" x:Name="buildprop" Height="150" Width="260"/>
+                        <metroControls:Tile Name="ExportTile" Title="export">
+                            <Rectangle Width="80" Height="80" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </metroControls:Tile>
+                    </DockPanel>
                 </TabItem>
             </TabControl>
 

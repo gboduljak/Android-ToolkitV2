@@ -708,12 +708,13 @@ namespace AndroidToolkit.Wpf.ViewModel
                     {
                         DeviceDetails details = new DeviceDetails();
                         DeviceInfo info = await new AdbTools().DeviceInfo(true, param);
+                        AdbTools.KillAdb();
                         details.Title.Text = StringLinesRemover.FitString(info.Name);
                         details.Name.Text = StringLinesRemover.FitString(info.Name);
                         details.Codename.Text = StringLinesRemover.FitString(info.Codename);
                         details.Manufacturer.Text = StringLinesRemover.FitString(info.Manufacturer);
-                        details.AndroidOS.Text = StringLinesRemover.FitString(info.AndroidVersionName);
-                        details.AndroidOSCode.Text = StringLinesRemover.FitString(info.AndroidVersionCode);
+                        details.AndroidOS.Text = StringLinesRemover.FitString(info.AndroidVersionCode);
+                        details.AndroidOSCode.Text = StringLinesRemover.FitString(info.AndroidVersionName);
                         details.BuildProp.Text = StringLinesRemover.FitString(info.BuildProp);
                         if (info.IsRooted)
                         {
@@ -737,6 +738,7 @@ namespace AndroidToolkit.Wpf.ViewModel
                 }
             }
         }
+
         #endregion
 
         #region Properties
@@ -825,6 +827,7 @@ namespace AndroidToolkit.Wpf.ViewModel
                ? Application.Current.Windows.OfType<T>().Any()
                : Application.Current.Windows.OfType<T>().Any(w => w.Name.Equals(name));
         }
+
         ~AdbViewModel()
         {
             ThreeTextCommandParameters = null;

@@ -22,6 +22,34 @@
         <EventTrigger RoutedEvent="Window.Loaded">
             <BeginStoryboard>
                 <Storyboard>
+                    <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                                           Storyboard.TargetName="LayoutRoot">
+                        <EasingDoubleKeyFrame KeyTime="00:00:00.400"
+                                                      Value="0"
+                                                      x:Name="showFrame">
+                            <EasingDoubleKeyFrame.EasingFunction>
+                                <CubicEase EasingMode="EaseOut" />
+                            </EasingDoubleKeyFrame.EasingFunction>
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                                           Storyboard.TargetName="LayoutRoot">
+                        <EasingDoubleKeyFrame KeyTime="00:00:00.600"
+                                                      Value="0"
+                                                      x:Name="showFrameY">
+                            <EasingDoubleKeyFrame.EasingFunction>
+                                <CubicEase EasingMode="EaseOut" />
+                            </EasingDoubleKeyFrame.EasingFunction>
+                        </EasingDoubleKeyFrame>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimation From="0"
+                                             To="1"
+                                             BeginTime="00:00:00"
+                                             Duration="00:00:00.400"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             Storyboard.TargetName="LayoutRoot" />
                     <DoubleAnimation Storyboard.TargetProperty="Height" From="0" To="75" Duration="0:0:1"/>
                     <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontSize)" Duration="0:0:1" Storyboard.TargetName="TextBlock">
                         <EasingDoubleKeyFrame KeyTime="0:0:1" Value="16"/>
@@ -43,7 +71,7 @@
             </BeginStoryboard>
         </EventTrigger>
     </Window.Triggers>
-    <Grid Margin="3" Background="SlateGray">
+    <Grid Name="LayoutRoot" Margin="3" Background="SlateGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="0.3*"/>
             <RowDefinition Height="0.70*"/>

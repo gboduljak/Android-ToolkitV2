@@ -116,7 +116,18 @@ namespace AndroidToolkit.Infrastructure.Tools
             string os = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await DeviceOsVersion(createWindow, target), 4));
             string osDetails = string.Empty;
             string root = string.Empty;
-            Parallel.Invoke(async () => { root = await _executor.Execute(new Command("adb shell su"), createWindow); root = StringLinesRemover.RemoveLine(root, 4); root = StringLinesRemover.ForgetLastLine(root); }, () => { Thread.Sleep(200); KillAdb(); });
+                Parallel.Invoke(async () =>
+                {
+                    try
+                    {
+                        root = await _executor.Execute(new Command("adb shell su"), createWindow); root = StringLinesRemover.RemoveLine(root, 4); root = StringLinesRemover.ForgetLastLine(root);
+                    }
+                    catch
+                    {
+                        root = string.Empty;
+                    }
+                   
+                }, () => { Thread.Sleep(200); KillAdb(); });
             string buildprop = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await BuildProp(createWindow, target),5));
             bool isRoot = false;
             if (os.Contains("1.5"))
@@ -174,7 +185,14 @@ namespace AndroidToolkit.Infrastructure.Tools
             {
                 if (processes[i].ProcessName.ToLower().Contains("adb"))
                 {
-                    processes[i].Kill();
+                    try
+                    {
+                        processes[i].Kill();
+                    }
+                    catch
+                    {
+                        
+                    }
                     return;
                 }
             }

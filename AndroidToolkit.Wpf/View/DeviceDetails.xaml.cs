@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AndroidToolkit.Infrastructure.Helpers;
+using AndroidToolkit.Infrastructure.Tools;
 using MahApps.Metro.Controls;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -33,10 +34,10 @@ namespace AndroidToolkit.Wpf.View
             {
                 var dialog = new FolderBrowserDialog();
                 DialogResult result = dialog.ShowDialog();
-                File.CreateText(string.Format("{0}{1}.txt", dialog.SelectedPath, "build-prop"));
                 try
                 {
-                    File.WriteAllText(string.Format("{0}{1}.txt", dialog.SelectedPath, "build-prop"), buildprop.Text);
+                    AdbTools.KillAdb();
+                    File.WriteAllText(string.Format("{0}\\{1}.txt", dialog.SelectedPath, "build-prop"), buildprop.Text);
                     using (Toast toast = new Toast("build.prop exported"))
                     {
                         toast.Show();
@@ -44,7 +45,7 @@ namespace AndroidToolkit.Wpf.View
                 }
                 catch (Exception ex)
                 {
-                    using (Toast toast = new Toast(string.Format("Error:{0}",ex.Message)))
+                    using (Toast toast = new Toast(string.Format("Error:{0}", ex.Message)))
                     {
                         toast.Show();
                     }
