@@ -9,12 +9,12 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AndroidToolkit.Wpf</RootNamespace>
-    <AssemblyName>AndroidToolkit.Wpf</AssemblyName>
+    <AssemblyName>AndroidToolkit</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -172,6 +172,10 @@
     <ProjectReference Include="..\AndroidToolkit.Infrastructure\AndroidToolkit.Infrastructure.csproj">
       <Project>{76b1c57f-47c3-411d-adb5-3bbbdd15127d}</Project>
       <Name>AndroidToolkit.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AndroidToolkit.Memory\AndroidToolkit.Memory.csproj">
+      <Project>{99515722-8dc8-4eca-9dfa-055d285a716f}</Project>
+      <Name>AndroidToolkit.Memory</Name>
     </ProjectReference>
     <ProjectReference Include="..\AndroidToolkit.Wpf.Presentation\AndroidToolkit.Wpf.Presentation.csproj">
       <Project>{46354e65-501c-48ca-9dd8-cdb70e56681c}</Project>

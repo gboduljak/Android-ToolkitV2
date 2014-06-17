@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Infrastructure", "AndroidToolkit.Infrastructure\AndroidToolkit.Infrastructure.csproj", "{76B1C57F-47C3-411D-ADB5-3BBBDD15127D}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Data", "AndroidToolkit.Data\AndroidToolkit.Data.csproj", "{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8E9B9B18-C6AB-4742-85AB-99A01B3BBCDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Memory", "AndroidToolkit.Memory\AndroidToolkit.Memory.csproj", "{99515722-8DC8-4ECA-9DFA-055D285A716F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA4C6B3C-0B18-4E15-A5B3-75B7CEA2BD69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99515722-8DC8-4ECA-9DFA-055D285A716F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99515722-8DC8-4ECA-9DFA-055D285A716F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99515722-8DC8-4ECA-9DFA-055D285A716F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99515722-8DC8-4ECA-9DFA-055D285A716F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

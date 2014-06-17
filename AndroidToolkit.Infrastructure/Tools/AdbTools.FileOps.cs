@@ -156,7 +156,7 @@ namespace AndroidToolkit.Infrastructure.Tools
         {
             if (!string.IsNullOrEmpty(target))
             {
-                await Context.Dispatcher.InvokeAsync(async () =>
+                await Context.Dispatcher.InvokeAsync(() =>
                 {
                     using (BackgroundWorker worker = new BackgroundWorker())
                     {
@@ -202,7 +202,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             }
             else
             {
-                await Context.Dispatcher.InvokeAsync(async () =>
+                await Context.Dispatcher.InvokeAsync(() =>
                 {
                     using (BackgroundWorker worker = new BackgroundWorker())
                     {

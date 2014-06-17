@@ -73,6 +73,11 @@
     <Compile Include="Tools\AdbTools.FileOps.cs" />
     <Compile Include="Tools\AdbTools.Reboot.cs" />
     <Compile Include="Tools\AdbTools.Remote.cs" />
+    <Compile Include="Tools\FastbootTools.Boot.cs" />
+    <Compile Include="Tools\FastbootTools.CID.cs" />
+    <Compile Include="Tools\FastbootTools.cs" />
+    <Compile Include="Tools\FastbootTools.Flash.cs" />
+    <Compile Include="Tools\FastbootTools.Reboot.cs" />
     <Compile Include="Utilities\CommandExecutor.cs" />
     <Compile Include="Utilities\ICommandExecutor.cs" />
   </ItemGroup>
