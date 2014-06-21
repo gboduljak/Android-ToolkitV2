@@ -13,7 +13,7 @@ namespace AndroidToolkit.Wpf.Presentation.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            return new SingleCommandParameters() { Context = values[0] as TextBlock, Bool = (bool)values[1], Target = (string)values[2] };
+            return new SingleCommandParameters() { Context = values[0] as TextBlock, Bool = (bool)values[1], Target = (string)values[2]};
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

@@ -1,58 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
-using AndroidToolkit.Infrastructure;
-using AndroidToolkit.Infrastructure.Device;
-using AndroidToolkit.Infrastructure.Helpers;
-using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Memory;
-using AndroidToolkit.Wpf.Presentation.Converters;
-using AndroidToolkit.Wpf.Presentation.Presenter;
 using AndroidToolkit.Wpf.ViewModel;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using FileDialog = AndroidToolkit.Infrastructure.Helpers.FileDialog;
-using TextBox = System.Windows.Controls.TextBox;
 
 namespace AndroidToolkit.Wpf.View
 {
     /// <summary>
-    /// Interaction logic for AdbView.xaml
+    /// Interaction logic for FastbootView.xaml
     /// </summary>
-    public partial class AdbView : MetroWindow, IDisposable
+    public partial class FastbootView : MetroWindow, IDisposable
     {
-        private readonly AdbViewModel _viewModel;
+        private readonly FastbootViewModel _viewModel;
 
-        public AdbView()
+        public FastbootView()
         {
             InitializeComponent();
-            _viewModel = ((ViewModelLocator)Application.Current.Resources["Locator"]).Adb;
+            _viewModel = ((ViewModelLocator)Application.Current.Resources["Locator"]).Fastboot;
             this.DataContext = _viewModel;
-            Header.HeaderSubtitle.Text = "ADB";
-            AddEvents();
+            Header.HeaderSubtitle.Text = "FASTBOOT";
             _FlyoutPresenter = Presentation.Presenter.FlyoutPresenter.Present;
+            AddEvents();
         }
 
         #region AddEvents
-        private async void AddEvents()
+        private void AddEvents()
         {
             this.Closed += delegate
             {
@@ -61,7 +47,7 @@ namespace AndroidToolkit.Wpf.View
 
             this.Closing += delegate
             {
-                KillAdb.Command.Execute(null);
+                KillFastboot.Command.Execute(null);
                 Dispose();
             };
 
@@ -70,80 +56,10 @@ namespace AndroidToolkit.Wpf.View
                 Dispose();
             };
 
-            this.SideloadTile.IsEnabled = false;
-            this.SideloadFile.TextChanged += (sender, args) =>
-            {
-                this.SideloadTile.IsEnabled = !string.IsNullOrEmpty(this.SideloadFile.Text);
-            };
-
-            this.RebootButton.Click += ButtonClickHandler;
-            this.RebootRecoveryButton.Click += ButtonClickHandler;
-            this.RebootBootloaderButton.Click += ButtonClickHandler;
-            this.PushButton.Click += ButtonClickHandler;
-
-            this.PushFile.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.PushFile.Drop += TextBoxDropHandler1;
-
-            this.PullFile1.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.PullFile1.Drop += TextBoxDropHandler2;
-            this.PullFile2.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.PullFile2.Drop += TextBoxDropHandler2;
-            this.PullFile3.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.PullFile3.Drop += TextBoxDropHandler2;
-            this.PullFile4.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.PullFile4.Drop += TextBoxDropHandler2;
-            this.PullButton.Click += ButtonClickHandler;
-
-            this.SideloadFile.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.SideloadFile.Drop += TextBoxDropHandler4;
-
-
-            this.CopyButton.Click += ButtonClickHandler;
-            this.MoveButton.Click += ButtonClickHandler;
-
-            this.InstallButton.Click += ButtonClickHandler;
-            this.InstallApp.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.InstallApp.Drop += TextBoxDropHandler3;
-
-            this.UninstallButton.Click += ButtonClickHandler;
-
-            this.ListApps.Click += async (sender, args) =>
-            {
-                _FlyoutPresenter.Invoke(this, 2);
-                await this.Dispatcher.InvokeAsync(() =>
-                {
-                    _FlyoutPresenter.Invoke(this, 4);
-                    using (Toast toast = new Toast("Working in background...", "Android Toolkit - Notification"))
-                    {
-                        toast.Show();
-                    }
-                    var timer = new System.Timers.Timer(2048);
-                    timer.Elapsed += async (s, e) =>
-                    {
-                        await this.Dispatcher.InvokeAsync(() => StatusLabel.Content = "Working in background...");
-                        await this.Dispatcher.InvokeAsync(() => _FlyoutPresenter.Invoke(this, 4));
-                        timer.Dispose();
-                    };
-                    timer.Enabled = true;
-                });
-            };
-            this.RefreshApps.Click += ButtonClickHandler;
-
-            this.ListDevices.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 3);
-
-            this.ShowDevices.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 3);
-
-            this.ShowSettings.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 0);
-
-            this.ShowSettings2.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 0);
-
-            this.ShowReboot.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 1);
-
-            this.ShowBackup.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 5);
-
-            this.ShowRemoteAdb.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 6);
-
+            #region Theme
             UiSlider.MouseDoubleClick += RestoreScalingFactor;
+            this.ShowSettings.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 0);
+            this.ShowSettings2.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 0);
 
             bool themeLight = false;
 
@@ -206,22 +122,31 @@ namespace AndroidToolkit.Wpf.View
             };
 
 
-            this.RestoreFile.PreviewDragOver += (sender, args) => args.Handled = true;
-            this.RestoreFile.Drop += TextBoxDropHandler5;
 
-            foreach (var item in await _viewModel.RemoteInfoRepository.Get())
-            {
-                _viewModel.RemoteInfos.Add(item);
-            }
+            #endregion
+
+            #region Boot
+            this.BootImg.PreviewDragOver += (sender, args) => args.Handled = true;
+            this.BootImg.Drop += TextBoxDropHandler3;
+
+            #endregion
+
+            #region Devices
+
+            this.ListDevices.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 2);
+
+            this.ShowDevices.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 2);
 
             this.RefreshDevices.Click += (sender, args) =>
             {
-                _FlyoutPresenter.Invoke(this, 3);
-                _FlyoutPresenter.Invoke(this, 3);
+                _FlyoutPresenter.Invoke(this, 2);
+                _FlyoutPresenter.Invoke(this, 2);
             };
 
+            #endregion
+
         }
-      
+
         private Accent _newAccent = ThemeManager.Accents.First(x => x.Name == "Blue");
         private void TextBoxDropHandler1(object sender, DragEventArgs e)
         {
@@ -266,13 +191,13 @@ namespace AndroidToolkit.Wpf.View
             {
                 string temp = string.Format("{0}", ((string[])text)[0]);
                 string path = System.IO.Path.GetExtension(temp);
-                if (path == ".apk")
+                if (path == ".img")
                 {
                     tb.Text = temp;
                 }
                 else
                 {
-                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an android package file (.apk)");
+                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an Android Flashable Image (.img)");
                 }
 
 
@@ -306,13 +231,13 @@ namespace AndroidToolkit.Wpf.View
             {
                 string temp = string.Format("{0}", ((string[])text)[0]);
                 string path = System.IO.Path.GetExtension(temp);
-                if (path == ".ab")
+                if (path == ".bin")
                 {
                     tb.Text = temp;
                 }
                 else
                 {
-                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an android backup (.ab)");
+                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an android unlocktoken binary (.bin)");
                 }
 
 
@@ -369,10 +294,7 @@ namespace AndroidToolkit.Wpf.View
         private readonly FlyoutPresenter _FlyoutPresenter;
         private delegate void FlyoutPresenter(MetroWindow context, int index);
 
-        ~AdbView()
-        {
-            this.Dispose();
-        }
+        #region IDisposable
 
         public void Dispose()
         {
@@ -381,5 +303,13 @@ namespace AndroidToolkit.Wpf.View
             GC.SuppressFinalize(this);
             MemoryManager.SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
         }
+
+        ~FastbootView()
+        {
+            Dispose();
+        }
+
+        #endregion
+
     }
 }

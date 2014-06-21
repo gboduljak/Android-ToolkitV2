@@ -43,6 +43,34 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<MetroWindow> _showFastbootCommand;
+        public RelayCommand<MetroWindow> ShowFastbootCommand
+        {
+            get
+            {
+                return _showFastbootCommand ?? (_showFastbootCommand = new RelayCommand<MetroWindow>(async (window) =>
+                {
+                    if (!IsWindowOpen<FastbootView>())
+                    {
+                        new FastbootView().Show();
+                    }
+                    else
+                    {
+                        await window.ShowMessageAsync("Notification", "Fastboot is already opened.");
+                    }
+                }));
+            }
+            set
+            {
+                if (this._showFastbootCommand != value)
+                {
+                    RaisePropertyChanging(() => ShowFastbootCommand);
+                    this._showFastbootCommand = value;
+                    RaisePropertyChanged(() => ShowFastbootCommand);
+                }
+            }
+        }
+
         private static bool IsWindowOpen<T>(string name = "") where T : Window
         {
             return string.IsNullOrEmpty(name)

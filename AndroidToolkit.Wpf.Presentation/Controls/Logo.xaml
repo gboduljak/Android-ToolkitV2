@@ -45,7 +45,7 @@
                 <ColumnDefinition Width="0.3*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Name="headerTitle" Grid.Column="0" Style="{StaticResource BigTitle}" HorizontalAlignment="Center" VerticalAlignment="Center">Android Toolkit</TextBlock>
-            <DockPanel Grid.Column="1">
+            <DockPanel Grid.Column="1" Margin="20,0,0,0">
                 <Rectangle Width="60" Height="60" Margin="0,0,10,0" Fill="{StaticResource FlatButtonBackgroundBrush}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Visual="{StaticResource appbar_cog}"></VisualBrush>

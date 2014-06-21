@@ -126,6 +126,7 @@
     <Compile Include="Converters\UIParameters.cs" />
     <Compile Include="Converters\UIParametersConverter.cs" />
     <Compile Include="Presenter\AdbPresenter.cs" />
+    <Compile Include="Presenter\FastbootPresenter.cs" />
     <Compile Include="Presenter\FlyoutPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

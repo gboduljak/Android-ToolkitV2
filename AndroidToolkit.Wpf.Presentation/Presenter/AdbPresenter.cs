@@ -59,7 +59,6 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
 
         #region UI
 
-
         public static async void ExecuteClearImmediate(object parameter)
         {
             TextBlock context = (TextBlock)parameter;

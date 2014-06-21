@@ -1,4 +1,4 @@
-﻿<metroControls:MetroWindow x:Class="AndroidToolkit.Wpf.View.AdbView"
+﻿<metroControls:MetroWindow Name="AdbWindow" x:Class="AndroidToolkit.Wpf.View.AdbView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:AndroidToolkit.Wpf.ViewModel"
@@ -157,6 +157,10 @@
                         <Expander Header="UI Settings" Name="UiSettings">
                             <ScrollViewer>
                                 <StackPanel>
+                                    <DockPanel Margin="5">
+                                        <Label Style="{StaticResource TileTitleLabel}" Margin="2" Content="UI Scaling"/>
+                                        <Slider x:Name="UiSlider" HorizontalAlignment="Center" VerticalAlignment="Bottom" ToolTip="Determines the UI scale factor. Double-click to revert scaling back to 100%."  Height="100" Value="1" Minimum="0.1" Maximum="3" Orientation="Vertical" Ticks="1" IsSnapToTickEnabled="False" TickPlacement="BottomRight" AutoToolTipPlacement="BottomRight" AutoToolTipPrecision="2" />
+                                    </DockPanel>
                                     <metroControls:ToggleSwitch Name="LightTheme" Header="Light Theme" Margin="5" />
                                     <ComboBox Name="AccentsComboBox" ItemsSource="{Binding Accents}">
                                         <ComboBox.ItemTemplate>
@@ -185,8 +189,11 @@
                     </StackPanel>
                 </ScrollViewer>
             </metroControls:Flyout>
-            <metroControls:Flyout Header="REBOOT" Position="Left" Theme="Adapt" Width="250" IsModal="False" IsPinned="True">
+            <metroControls:Flyout Header="REBOOT" Position="Left" Theme="Adapt" IsModal="False" IsPinned="True">
                 <StackPanel Margin="10">
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+                    </StackPanel.LayoutTransform>
                     <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_reset}"></VisualBrush>
@@ -254,6 +261,9 @@
             <metroControls:Flyout Name="ListAppsFlyout" Header="APPS" Position="Left" Theme="Adapt" Width="250" IsModal="False" IsPinned="True">
                 <ScrollViewer>
                     <StackPanel Margin="10">
+                        <StackPanel.LayoutTransform>
+                            <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+                        </StackPanel.LayoutTransform>
                         <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Rectangle.OpacityMask>
                                 <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_app}"></VisualBrush>
@@ -286,6 +296,9 @@
             <metroControls:Flyout Name="DevicesFlyout" Header="DEVICES" Position="Right" Width="500" Theme="Accent" IsPinned="True">
                 <ScrollViewer CanContentScroll="True">
                     <StackPanel Margin="20">
+                        <StackPanel.LayoutTransform>
+                            <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+                        </StackPanel.LayoutTransform>
                         <Grid>
                             <Rectangle Width="80" Height="128" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Rectangle.OpacityMask>
@@ -344,6 +357,9 @@
             <metroControls:Flyout Position="Left" Header="ADB BACKUP TOOL" IsModal="False" Theme="Adapt" IsPinned="True" MinWidth="600">
                 <ScrollViewer Margin="10">
                     <StackPanel>
+                        <StackPanel.LayoutTransform>
+                            <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+                        </StackPanel.LayoutTransform>
                         <DockPanel HorizontalAlignment="Center">
                             <Rectangle Width="128" Height="128" Margin="10" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <Rectangle.OpacityMask>
@@ -436,6 +452,9 @@
             </metroControls:Flyout>
             <metroControls:Flyout Position="Right" Header="Remote ADB" IsModal="True" Theme="Adapt" IsPinned="False">
                 <Grid>
+                    <Grid.LayoutTransform>
+                        <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+                    </Grid.LayoutTransform>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.50*"></ColumnDefinition>
                         <ColumnDefinition Width="0.50*"></ColumnDefinition>
@@ -581,6 +600,9 @@
 
     <metroControls:MetroContentControl>
         <Grid x:Name="LayoutRoot">
+            <Grid.LayoutTransform>
+                <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+            </Grid.LayoutTransform>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.225*"/>
                 <RowDefinition Height="0.725*"/>
@@ -648,7 +670,7 @@
                                 </Rectangle>
                             </StackPanel>
 
-                            <GroupBox Header="push" Grid.Column="1">
+                            <GroupBox VerticalAlignment="Top" Header="push" Grid.Column="1">
                                 <StackPanel>
                                     <Button Name="PushChoose" CommandParameter="{Binding ElementName=PushFile}" Command="{Binding OpenFileCommand}" Width="80" Height="80" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Rectangle Width="40" Height="40" Fill="DarkGray">
@@ -658,7 +680,7 @@
                                         </Rectangle>
                                     </Button>
                                     <TextBox AllowDrop="True" Style="{StaticResource TextBoxOpenStyle}" TextWrapping="Wrap" Name="PushFile" Margin="5" Text="{Binding Path=ThreeTextCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenFileCommand}" metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=PushFile}"  metroControls:TextboxHelper.Watermark="ENTER OR CHOOSE FILE/S" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
-                                    <TextBox  Name="PushLocation" Margin="5" Text="{Binding Path=ThreeTextCommandParameters.Text2, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER PUSH LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
+                                    <TextBox Name="PushLocation" Margin="5" Text="{Binding Path=ThreeTextCommandParameters.Text2, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER PUSH LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
                                     <Button Margin="5" Name="PushButton" Command="{Binding PushCommand}" Style="{StaticResource PushButtonStyle}">
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource ThreeTextCommandParametersConverter}">
@@ -682,7 +704,7 @@
                                     </Button>
                                 </StackPanel>
                             </GroupBox>
-                            <GroupBox Header="PULL" Grid.Column="2">
+                            <GroupBox VerticalAlignment="Top"  Header="PULL" Grid.Column="2">
                                 <StackPanel>
                                     <Button Name="PullChoose" Command="{Binding SaveFileCommand}" CommandParameter="{Binding ElementName=PullLocation}" Width="80" Height="80" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <Rectangle Width="40" Height="40" Fill="DarkGray">
@@ -743,7 +765,7 @@
                                 <VisualBrush Visual="{StaticResource appbar_cabinet_files}" Stretch="Fill"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
-                        <GroupBox Header="Copy" Grid.Column="1">
+                        <GroupBox VerticalAlignment="Top"  Header="Copy" Grid.Column="1">
                             <StackPanel>
                                 <TextBox Name="CopyFrom" Margin="5" Text="{Binding Path=CopyCommandParameters.Text, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER 'FROM' LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
                                 <TextBox Name="CopyTo" Margin="5" Text="{Binding Path=CopyCommandParameters.Text2, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER 'TO' LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
@@ -765,7 +787,7 @@
                                 </Button>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="Move" Grid.Column="2">
+                        <GroupBox VerticalAlignment="Top"  Header="Move" Grid.Column="2">
                             <StackPanel>
                                 <TextBox Name="MoveFrom" Margin="5" Text="{Binding Path=MoveCommandParameters.Text, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER 'FROM' LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
                                 <TextBox Name="MoveTo" Margin="5" Text="{Binding Path=MoveCommandParameters.Text2, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER 'TO' LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
@@ -787,7 +809,7 @@
                                 </Button>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="Delete" Grid.Column="3">
+                        <GroupBox VerticalAlignment="Top"  Header="Delete" Grid.Column="3">
                             <StackPanel>
                                 <TextBox Name="DeletePath" Margin="5" Text="{Binding Path=DeleteCommandParameters.Text, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER DELETE LOCATION" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
                                 <Button x:Name="DeleteButton" Command="{Binding DeleteCommand}" Width="80" Height="80" Style="{DynamicResource DeleteButtonStyle}" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -845,7 +867,7 @@
                         </ScrollViewer>
 
 
-                        <GroupBox Header="install" Grid.Column="1">
+                        <GroupBox  VerticalAlignment="Top"  Header="install" Grid.Column="1">
                             <StackPanel>
                                 <metroControls:ToggleSwitch Name="InstallSystemApp" Header="System App" IsChecked="{Binding InstallTwoCommandParameters.Bool}"/>
                                 <Button Name="InstallChoose" CommandParameter="{Binding ElementName=InstallApp}" Command="{Binding OpenAppCommand}"  Width="80" Height="80" Style="{DynamicResource MetroCircleButtonStyle}" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -879,7 +901,7 @@
                                 </Button>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="uninstall" Grid.Column="2">
+                        <GroupBox VerticalAlignment="Top"  Header="uninstall" Grid.Column="2">
                             <StackPanel>
                                 <metroControls:ToggleSwitch Name="UninstallSystemApp" Header="System App" IsChecked="{Binding UninstallTwoCommandParameters.Bool}"/>
                                 <TextBox TextWrapping="Wrap" Name="UninstallApp" Margin="5" Text="{Binding Path=UninstallTwoCommandParameters.Text, ValidatesOnDataErrors=True, NotifyOnValidationError=True, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.ButtonCommand="{Binding OpenAppCommand}"  metroControls:TextboxHelper.ButtonCommandParameter="{Binding ElementName=UninstallApp}"  metroControls:TextboxHelper.Watermark="ENTER THE APP NAME OR PATH" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}" />
@@ -919,7 +941,7 @@
                                 <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_download}"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
-                        <GroupBox Grid.Column="1" Header="Sideload">
+                        <GroupBox  VerticalAlignment="Top"  Grid.Column="1" Header="Sideload">
                             <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Auto">
                                 <Grid>
                                     <StackPanel>
@@ -1005,7 +1027,7 @@
                                 </Rectangle.OpacityMask>
                             </Rectangle>
                         </StackPanel>
-                        <GroupBox Header="Execute" Grid.Column="1">
+                        <GroupBox  VerticalAlignment="Top"  Header="Execute" Grid.Column="1">
                             <ScrollViewer>
                                 <StackPanel>
                                     <DockPanel>

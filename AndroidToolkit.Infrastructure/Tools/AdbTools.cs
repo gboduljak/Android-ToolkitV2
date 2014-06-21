@@ -99,6 +99,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             }
             return await _executor.Execute(new Command("adb shell getprop ro.product.name"), createWindow);
         }
+
         public async Task<DeviceInfo> DeviceInfo(bool createWindow, string target = null)
         {
             string name =
@@ -172,6 +173,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             }
             return new DeviceInfo() { Name = name, AndroidVersionCode = os, AndroidVersionName = osDetails, BuildProp = buildprop, Codename = codename, Manufacturer = manufacturer, IsRooted = isRoot };
         }
+
         public async Task ListDevices(TextBox context, bool createNoWindow)
         {
             await context.Dispatcher.InvokeAsync(async () =>

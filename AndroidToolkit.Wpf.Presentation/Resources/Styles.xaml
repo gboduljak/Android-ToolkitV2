@@ -102,7 +102,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
+    <!-- ADB-->
     <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MetroTextBlock}">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Margin" Value="0,2,40,2" />
@@ -404,6 +404,32 @@
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="BorderBrush" Value="White"/>
                 <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+
+    </Style>
+
+   <!-- FASTBOOT-->
+
+    <Style x:Key="BootTileStyle" TargetType="{x:Type controls:Tile}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=BootImg, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Red"/>
+                <Setter Property="BorderThickness" Value="2"/>
             </Trigger>
             <Trigger Property="Button.IsPressed"
                                  Value="True">

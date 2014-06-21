@@ -76,7 +76,7 @@
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
                                 </metroControls:Tile>
-                                <metroControls:Tile Width="470" Height="180" Title="fastboot" TitleFontSize="24">
+                                <metroControls:Tile Width="470" Height="180" Title="fastboot" TitleFontSize="24" Command="{Binding ShowFastbootCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                                     <Rectangle Width="120" Height="120" Fill="White">
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Visual="{StaticResource appbar_settings}" Stretch="Fill"></VisualBrush>

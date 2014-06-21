@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Utilities;
 
 namespace AndroidToolkit.Infrastructure.Tools
@@ -26,9 +27,34 @@ namespace AndroidToolkit.Infrastructure.Tools
             _cmds = new List<Command>();
         }
 
+        public async Task ListDevices(TextBox context, bool createNoWindow)
+        {
+            await context.Dispatcher.InvokeAsync(async () =>
+                context.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("fastboot devices")), 5)));
+        }
+
         public Task Prepare(bool createNoWindow = true)
         {
             return Task.Run(async () => await Context.Dispatcher.InvokeAsync(async () => await _executor.Execute(new Command("fastboot devices"), Context, createNoWindow)));
+        }
+
+        public Task Execute(string cmd, bool createNoWindow = true)
+        {
+            return Task.Run(() => Context.Dispatcher.InvokeAsync(async () =>
+            {
+                await _executor.Execute(new Command(cmd), Context, createNoWindow);
+            }));
+        }
+
+        public Task Execute(IEnumerable<string> cmds, bool createNoWindow = true)
+        {
+            return Task.Run(() => Context.Dispatcher.InvokeAsync(async () =>
+            {
+                foreach (var cmd in cmds)
+                {
+                    await _executor.Execute(new Command(cmd), Context, createNoWindow); 
+                }
+            }));
         }
 
         public static void Kill()
@@ -74,6 +100,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             this._cmds = null;
             GC.Collect();
         }
+
         #endregion
     }
 }

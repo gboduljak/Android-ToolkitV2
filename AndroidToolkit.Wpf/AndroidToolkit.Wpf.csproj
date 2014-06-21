@@ -100,6 +100,7 @@
     </ApplicationDefinition>
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\AdbViewModel.cs" />
+    <Compile Include="ViewModel\FastbootViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AdbView.xaml.cs">
@@ -107,6 +108,9 @@
     </Compile>
     <Compile Include="View\DeviceDetails.xaml.cs">
       <DependentUpon>DeviceDetails.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FastbootView.xaml.cs">
+      <DependentUpon>FastbootView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Toast.xaml.cs">
       <DependentUpon>Toast.xaml</DependentUpon>
@@ -128,6 +132,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DeviceDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\FastbootView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

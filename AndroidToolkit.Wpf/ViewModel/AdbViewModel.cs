@@ -474,7 +474,7 @@ namespace AndroidToolkit.Wpf.ViewModel
                 {
                     RaisePropertyChanging(() => this.ClearImmediateCommand);
                     _clearImmediateCommand = value;
-                    RaisePropertyChanged(() => this.PrepareCommand);
+                    RaisePropertyChanged(() => this.ClearImmediateCommand);
                 }
             }
         }
@@ -488,9 +488,9 @@ namespace AndroidToolkit.Wpf.ViewModel
             {
                 if (_openFileCommand != value)
                 {
-                    RaisePropertyChanging(() => this.ClearImmediateCommand);
+                    RaisePropertyChanging(() => this.OpenFileCommand);
                     _openFileCommand = value;
-                    RaisePropertyChanged(() => this.PrepareCommand);
+                    RaisePropertyChanged(() => this.OpenFileCommand);
                 }
             }
         }
@@ -697,7 +697,6 @@ namespace AndroidToolkit.Wpf.ViewModel
         #endregion
 
         private RelayCommand<string> _deviceInfoCommand;
-
         public RelayCommand<string> DeviceInfoCommand
         {
             get

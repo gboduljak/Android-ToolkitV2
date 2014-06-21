@@ -46,6 +46,7 @@ namespace AndroidToolkit.Wpf.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<AdbViewModel>();
+            SimpleIoc.Default.Register<FastbootViewModel>();
             SimpleIoc.Default.Register<ICommandExecutor, CommandExecutor>();
             SimpleIoc.Default.Register<ITextBlockAdapter, TextBlockAdapter>();
             SimpleIoc.Default.Register<IRemoteInfoRepository, RemoteInfoRepository>();
@@ -64,6 +65,14 @@ namespace AndroidToolkit.Wpf.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<AdbViewModel>();
+            }
+        }
+
+        public FastbootViewModel Fastboot
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<FastbootViewModel>();
             }
         }
 
