@@ -76,6 +76,7 @@
     <Compile Include="Tools\FastbootTools.Boot.cs" />
     <Compile Include="Tools\FastbootTools.CID.cs" />
     <Compile Include="Tools\FastbootTools.cs" />
+    <Compile Include="Tools\FastbootTools.Erase.cs" />
     <Compile Include="Tools\FastbootTools.Flash.cs" />
     <Compile Include="Tools\FastbootTools.Reboot.cs" />
     <Compile Include="Utilities\CommandExecutor.cs" />

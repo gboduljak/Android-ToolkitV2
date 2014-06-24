@@ -27,7 +27,7 @@ namespace AndroidToolkit.Wpf.View
     {
         private readonly FastbootViewModel _viewModel;
 
-        public FastbootView()
+        public FastbootView()                                    
         {
             InitializeComponent();
             _viewModel = ((ViewModelLocator)Application.Current.Resources["Locator"]).Fastboot;
@@ -131,6 +131,15 @@ namespace AndroidToolkit.Wpf.View
 
             #endregion
 
+            #region Flash
+            this.FlashImage.PreviewDragOver += (sender, args) =>
+            {
+                FlashDragBorder.Brush = (Brush)base.Resources["AccentColorBrush"];
+                args.Handled = true;
+            };
+            this.FlashImage.Drop += FlashTextBoxHandler;
+            #endregion
+
             #region Devices
 
             this.ListDevices.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 2);
@@ -198,6 +207,38 @@ namespace AndroidToolkit.Wpf.View
                 else
                 {
                     await this.ShowMessageAsync("Invalid file", "Dropped file must be an Android Flashable Image (.img)");
+                }
+
+
+            }
+        }
+        private async void FlashTextBoxHandler(object sender, DragEventArgs e)
+        {
+            object text = e.Data.GetData(DataFormats.FileDrop);
+            var tb = sender as TextBox;
+            if (tb != null)
+            {
+                string temp = string.Format("{0}", ((string[])text)[0]);
+                string path = System.IO.Path.GetExtension(temp);
+                if (path == ".img")
+                {
+                    tb.Text = temp;
+                    FlashDragBorder.Brush = Brushes.Gray;
+                }
+                else if (path == ".zip")
+                {
+                    tb.Text = temp;
+                    FlashDragBorder.Brush = Brushes.Gray;
+                }
+                else if (path == ".bin")
+                {
+                    tb.Text = temp;
+                    FlashDragBorder.Brush = Brushes.Gray;
+                }
+                else
+                {
+                    await this.ShowMessageAsync("Invalid file", "Dropped file must be an Android Flashable File (.img, .zip, .bin)");
+                    FlashDragBorder.Brush = Brushes.Gray;
                 }
 
 

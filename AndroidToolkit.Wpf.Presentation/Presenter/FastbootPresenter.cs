@@ -17,8 +17,6 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
 {
     public static class FastbootPresenter
     {
-
-
         public static void Prepare(object parameter)
         {
             BackgroundWorker worker = new BackgroundWorker();
@@ -75,7 +73,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
         public static void OpenImg(object parameter)
         {
             TextBox context = parameter as TextBox;
-            string file = FileDialog.ShowDialog("Android Flashable Image (.img)|*.img", false);
+            string file = FileDialog.ShowDialog("Android Flashable Image (*.img)|*.img;*|Android Flashable Zip (*.zip)|*.zip;|Android Unlocktoken Binary (*.bin)|*.bin;", false);
             if (context != null) context.Dispatcher.Invoke(() => { context.Text = file; });
         }
 
@@ -102,6 +100,235 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 {
                     Fastboot = new FastbootTools(Context);
                     await Fastboot.Boot(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        #endregion
+
+        #region Flash
+
+        public static void FlashSystem(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashSystem(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void FlashBoot(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashBoot(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void FlashBootloader(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashBootloader(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void FlashRecovery(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashRecovery(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void FlashRadio(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashRadio(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void FlashUserdata(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashUserdata(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void FlashUnlockToken(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashUnlockToken(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void FlashZip(object parameter)
+        {
+            TwoCommandParameters parameters = (TwoCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.FlashZip(parameters.Text, parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        #endregion
+
+        #region Erase
+
+        public static void EraseBoot(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.EraseBoot(parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void EraseSystem(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.EraseSystem(parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void EraseRecovery(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.EraseRecovery(parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void EraseCache(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.EraseCache(parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void EraseUserdata(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.EraseUserdata(parameters.Bool);
                 });
             };
             worker.RunWorkerCompleted += (sender, args) => worker.Dispose();

@@ -181,6 +181,7 @@ namespace AndroidToolkit.Infrastructure.Tools
                             await process.StandardInput.WriteLineAsync(string.Format("adb -s {0} logcat > logcat.txt", target));
                             await process.StandardInput.FlushAsync();
                             Thread.Sleep(3000);
+                            process.Kill();
                             process.StandardInput.Dispose();
                             process.Dispose();
                             KillAdb();
@@ -228,6 +229,7 @@ namespace AndroidToolkit.Infrastructure.Tools
                             await process.StandardInput.FlushAsync();
                             Thread.Sleep(3000);
                             KillAdb();
+                            process.Kill();
                             process.StandardInput.Dispose();
                             process.Dispose();
                           

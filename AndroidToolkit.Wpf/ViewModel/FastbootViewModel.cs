@@ -153,6 +153,248 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #endregion
 
+        #region Erase
+
+        private RelayCommand<SingleCommandParameters> _eraseBootCommand;
+        public RelayCommand<SingleCommandParameters> EraseBootCommand
+        {
+            get
+            {
+                return _eraseBootCommand ?? (_eraseBootCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.EraseBoot));
+            }
+            set
+            {
+                if (_eraseBootCommand != value)
+                {
+                    RaisePropertyChanging(() => EraseBootCommand);
+                    _eraseBootCommand = value;
+                    RaisePropertyChanged(() => EraseBootCommand);
+                }
+            }
+        }
+
+        private RelayCommand<SingleCommandParameters> _eraseSystemCommand;
+        public RelayCommand<SingleCommandParameters> EraseSystemCommand
+        {
+            get
+            {
+                return _eraseSystemCommand ?? (_eraseSystemCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.EraseSystem));
+            }
+            set
+            {
+                if (_eraseSystemCommand != value)
+                {
+                    RaisePropertyChanging(() => EraseSystemCommand);
+                    _eraseSystemCommand = value;
+                    RaisePropertyChanged(() => EraseSystemCommand);
+                }
+            }
+        }
+
+        private RelayCommand<SingleCommandParameters> _eraseRecoveryCommand;
+        public RelayCommand<SingleCommandParameters> EraseRecoveryCommand
+        {
+            get
+            {
+                return _eraseRecoveryCommand ?? (_eraseRecoveryCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.EraseRecovery));
+            }
+            set
+            {
+                if (_eraseRecoveryCommand != value)
+                {
+                    RaisePropertyChanging(() => EraseRecoveryCommand);
+                    _eraseRecoveryCommand = value;
+                    RaisePropertyChanged(() => EraseRecoveryCommand);
+                }
+            }
+        }
+
+        private RelayCommand<SingleCommandParameters> _eraseCacheCommand;
+        public RelayCommand<SingleCommandParameters> EraseCacheCommand
+        {
+            get
+            {
+                return _eraseCacheCommand ?? (_eraseCacheCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.EraseCache));
+            }
+            set
+            {
+                if (_eraseCacheCommand != value)
+                {
+                    RaisePropertyChanging(() => EraseCacheCommand);
+                    _eraseCacheCommand = value;
+                    RaisePropertyChanged(() => EraseCacheCommand);
+                }
+            }
+        }
+
+        private RelayCommand<SingleCommandParameters> _eraseUserdataCommand;
+        public RelayCommand<SingleCommandParameters> EraseUserdataCommand
+        {
+            get
+            {
+                return _eraseUserdataCommand ?? (_eraseUserdataCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.EraseUserdata));
+            }
+            set
+            {
+                if (_eraseUserdataCommand != value)
+                {
+                    RaisePropertyChanging(() => EraseUserdataCommand);
+                    _eraseUserdataCommand = value;
+                    RaisePropertyChanged(() => EraseUserdataCommand);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Flash
+
+        private RelayCommand<TwoCommandParameters> _flashSystemCommand;
+        public RelayCommand<TwoCommandParameters> FlashSystemCommand
+        {
+            get
+            {
+                return _flashSystemCommand ?? (_flashSystemCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashSystem));
+            }
+            set
+            {
+                if (_flashSystemCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashSystemCommand);
+                    _flashSystemCommand = value;
+                    RaisePropertyChanged(() => FlashSystemCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _flashBootCommand;
+        public RelayCommand<TwoCommandParameters> FlashBootCommand
+        {
+            get
+            {
+                return _flashBootCommand ?? (_flashBootCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashBoot));
+            }
+            set
+            {
+                if (_flashBootCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashBootCommand);
+                    _flashBootCommand = value;
+                    RaisePropertyChanged(() => FlashBootCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _flashRecoveryCommand;
+        public RelayCommand<TwoCommandParameters> FlashRecoveryCommand
+        {
+            get
+            {
+                return _flashRecoveryCommand ?? (_flashRecoveryCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashRecovery));
+            }
+            set
+            {
+                if (_flashRecoveryCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashRecoveryCommand);
+                    _flashRecoveryCommand = value;
+                    RaisePropertyChanged(() => FlashRecoveryCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _flashBootloaderCommand;
+        public RelayCommand<TwoCommandParameters> FlashBootloaderCommand
+        {
+            get
+            {
+                return _flashBootloaderCommand ?? (_flashBootloaderCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashBootloader));
+            }
+            set
+            {
+                if (_flashBootloaderCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashBootloaderCommand);
+                    _flashBootloaderCommand = value;
+                    RaisePropertyChanged(() => FlashBootloaderCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _flashRadioCommand;
+        public RelayCommand<TwoCommandParameters> FlashRadioCommand
+        {
+            get
+            {
+                return _flashRadioCommand ?? (_flashRadioCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashRadio));
+            }
+            set
+            {
+                if (_flashRadioCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashRadioCommand);
+                    _flashRadioCommand = value;
+                    RaisePropertyChanged(() => FlashRadioCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _flashUnlocktokenCommand;
+        public RelayCommand<TwoCommandParameters> FlashUnlocktokenCommand
+        {
+            get
+            {
+                return _flashUnlocktokenCommand ?? (_flashUnlocktokenCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashUnlockToken));
+            }
+            set
+            {
+                if (_flashUnlocktokenCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashUnlocktokenCommand);
+                    _flashUnlocktokenCommand = value;
+                    RaisePropertyChanged(() => FlashUnlocktokenCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _flashUserdataCommand;
+        public RelayCommand<TwoCommandParameters> FlashUserdataCommand
+        {
+            get
+            {
+                return _flashUserdataCommand ?? (_flashUserdataCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashUserdata));
+            }
+            set
+            {
+                if (_flashUserdataCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashUserdataCommand);
+                    _flashUserdataCommand = value;
+                    RaisePropertyChanged(() => FlashUserdataCommand);
+                }
+            }
+        }
+
+        private RelayCommand<TwoCommandParameters> _flashZipCommand;
+        public RelayCommand<TwoCommandParameters> FlashZipCommand
+        {
+            get
+            {
+                return _flashZipCommand ?? (_flashZipCommand = new RelayCommand<TwoCommandParameters>(FastbootPresenter.FlashZip));
+            }
+            set
+            {
+                if (_flashZipCommand != value)
+                {
+                    RaisePropertyChanging(() => FlashZipCommand);
+                    _flashZipCommand = value;
+                    RaisePropertyChanged(() => FlashZipCommand);
+                }
+            }
+        }
+
+        #endregion
+
         #region ListDevices
 
         private RelayCommand<UIParameters> _listDevicesCommand;
@@ -232,6 +474,23 @@ namespace AndroidToolkit.Wpf.ViewModel
                     RaisePropertyChanging(() => BootParameters);
                     this._bootParameters = value;
                     RaisePropertyChanged(() => BootParameters);
+                }
+            }
+
+
+        }
+
+        private TwoCommandParameters _flashParameters;
+        public TwoCommandParameters FlashParameters
+        {
+            get { return _flashParameters ?? (_flashParameters = new TwoCommandParameters()); }
+            set
+            {
+                if (_flashParameters != value)
+                {
+                    RaisePropertyChanging(() => FlashParameters);
+                    this._flashParameters = value;
+                    RaisePropertyChanged(() => FlashParameters);
                 }
             }
 

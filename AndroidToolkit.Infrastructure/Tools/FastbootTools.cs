@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using AndroidToolkit.Infrastructure.Helpers;
@@ -38,6 +39,27 @@ namespace AndroidToolkit.Infrastructure.Tools
             return Task.Run(async () => await Context.Dispatcher.InvokeAsync(async () => await _executor.Execute(new Command("fastboot devices"), Context, createNoWindow)));
         }
 
+        #region Bootloader
+
+        public Task Lock(bool createNoWindow = true)
+        {
+            return Task.Run(async () => await Context.Dispatcher.InvokeAsync(async () => await _executor.Execute(new Command("fastboot oem lock"), Context, createNoWindow)));
+        }
+
+        public Task Unlock(bool createNoWindow = true)
+        {
+            return Task.Run(async () => await Context.Dispatcher.InvokeAsync(async () => await _executor.Execute(new Command("fastboot oem unlock"), Context, createNoWindow)));
+        }
+
+        public async Task<string> GetIdentifierToken(bool createNoWindow = true)
+        {
+            string token = string.Empty;
+            await Task.Run(() => Parallel.Invoke(async () => await Context.Dispatcher.InvokeAsync(async () => token = StringLinesRemover.FitString(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("fastboot oem get_identifier_token"), createNoWindow), 5)))), () => Thread.Sleep(1000), Kill));
+            return token;
+        }
+
+        #endregion
+
         public Task Execute(string cmd, bool createNoWindow = true)
         {
             return Task.Run(() => Context.Dispatcher.InvokeAsync(async () =>
@@ -52,7 +74,7 @@ namespace AndroidToolkit.Infrastructure.Tools
             {
                 foreach (var cmd in cmds)
                 {
-                    await _executor.Execute(new Command(cmd), Context, createNoWindow); 
+                    await _executor.Execute(new Command(cmd), Context, createNoWindow);
                 }
             }));
         }

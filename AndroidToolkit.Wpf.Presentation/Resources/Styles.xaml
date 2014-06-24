@@ -276,7 +276,6 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
-
     </Style>
 
     <Style x:Key="UninstallButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
@@ -446,4 +445,26 @@
 
     </Style>
 
+    <Style x:Key="FlashButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroFlatButton}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=FlashImage, Path=(Validation.HasError)}" Value="True">
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+            <Trigger Property="Button.IsPressed"
+                                 Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.98"
+                                                    ScaleY="0.98"
+                                                    CenterX="0.5"
+                                                    CenterY="0.5" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
