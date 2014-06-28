@@ -6,7 +6,7 @@
         xmlns:behaviours="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
         xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:controls="clr-namespace:AndroidToolkit.Wpf.Presentation.Controls;assembly=AndroidToolkit.Wpf.Presentation"
-        Title="Android Toolkit - Home" Height="410" Width="775" MinHeight="350" MinWidth="525" MaxHeight="550" MaxWidth="1100" ShowMinButton="True" ShowInTaskbar="True" ResizeMode="CanResizeWithGrip" WindowTransitionsEnabled="True" WindowStartupLocation="CenterScreen">
+        Title="Android Toolkit - Home" Height="410" Width="775" ShowMinButton="True" ShowInTaskbar="True" ResizeMode="NoResize" WindowTransitionsEnabled="True" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -87,6 +87,52 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
 
         #endregion
 
+        #region Reboot   
+
+        public static void ExecuteReboot(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { Fastboot = new FastbootTools(Context); });
+                await Task.Run(async () => await Fastboot.Reboot(parameters.Bool));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void ExecuteRebootRecovery(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { Fastboot = new FastbootTools(Context); });
+                await Task.Run(async () => await Fastboot.RebootRecovery(parameters.Bool));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void ExecuteRebootBootloader(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { Fastboot = new FastbootTools(Context); });
+                await Task.Run(async () => await Fastboot.RebootBootloader(parameters.Bool));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        #endregion
+
         #region Boot
 
         public static void Boot(object parameter)

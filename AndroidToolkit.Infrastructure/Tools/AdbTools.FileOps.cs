@@ -156,98 +156,21 @@ namespace AndroidToolkit.Infrastructure.Tools
         {
             if (!string.IsNullOrEmpty(target))
             {
-                await Context.Dispatcher.InvokeAsync(() =>
+                await Context.Dispatcher.InvokeAsync(async () =>
                 {
-                    using (BackgroundWorker worker = new BackgroundWorker())
-                    {
-                        worker.DoWork += async (sender, args) =>
-                        {
-                            var processStartInfo = new ProcessStartInfo
-                            {
-                                UseShellExecute = false,
-                                RedirectStandardInput = true,
-                                RedirectStandardOutput = true,
-                                RedirectStandardError = true,
-                                FileName = "cmd.exe",
-                                CreateNoWindow = createNoWindow
-                            };
-                            var process = new Process { StartInfo = processStartInfo };
-                            var adapter = new TextBlockAdapter();
-                            process.OutputDataReceived += (s, e) => adapter.Adapt(Context, e.Data);
-                            process.ErrorDataReceived += (s, e) => adapter.Adapt(Context, e.Data);
-                            process.Start();
-                            process.BeginErrorReadLine();
-                            process.BeginOutputReadLine();
-                            await process.StandardInput.WriteLineAsync(string.Format("adb -s {0} logcat > logcat.txt", target));
-                            await process.StandardInput.FlushAsync();
-                            Thread.Sleep(3000);
-                            process.Kill();
-                            process.StandardInput.Dispose();
-                            process.Dispose();
-                            KillAdb();
-                        };
-                        worker.RunWorkerCompleted += (sender, args) => logcatText.Dispatcher.Invoke(() =>
-                        {
-                            try
-                            {
-                                logcatText.Text = File.ReadAllText("logcat.txt");
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-                        });
-                        worker.RunWorkerAsync();
-                    }
+                    string logcat =
+                        StringLinesRemover.FitString(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb -s {0} logcat -d > logcat.txt", target)), createNoWindow), 5)));
+                    await logcatText.Dispatcher.InvokeAsync(() => logcatText.Text = logcat);
                 });
             }
             else
             {
-                await Context.Dispatcher.InvokeAsync(() =>
-                {
-                    using (BackgroundWorker worker = new BackgroundWorker())
-                    {
-                        worker.DoWork += async (sender, args) =>
-                        {
-                            var processStartInfo = new ProcessStartInfo
-                             {
-                                 UseShellExecute = false,
-                                 RedirectStandardInput = true,
-                                 RedirectStandardOutput = true,
-                                 RedirectStandardError = true,
-                                 FileName = "cmd.exe",
-                                 CreateNoWindow = createNoWindow
-                             };
-                            var process = new Process { StartInfo = processStartInfo };
-                            var adapter = new TextBlockAdapter();
-                            process.OutputDataReceived += (s, e) => adapter.Adapt(Context, e.Data);
-                            process.ErrorDataReceived += (s, e) => adapter.Adapt(Context, e.Data);
-                            process.Start();
-                            process.BeginErrorReadLine();
-                            process.BeginOutputReadLine();
-                            await process.StandardInput.WriteLineAsync("adb logcat > logcat.txt");
-                            await process.StandardInput.FlushAsync();
-                            Thread.Sleep(3000);
-                            KillAdb();
-                            process.Kill();
-                            process.StandardInput.Dispose();
-                            process.Dispose();
-                          
-                        };
-                        worker.RunWorkerCompleted += (sender, args) => logcatText.Dispatcher.Invoke(() =>
-                        {
-                            try
-                            {
-                                logcatText.Text = File.ReadAllText("logcat.txt");
-                            }
-                            catch (Exception)
-                            {
-                               
-                            }
-                        });
-                        worker.RunWorkerAsync();
-                    }
-                });
+                await Context.Dispatcher.InvokeAsync(async () =>
+                 {
+                     string logcat =
+                      StringLinesRemover.FitString(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb logcat -d > logcat.txt")), createNoWindow), 5)));
+                     await logcatText.Dispatcher.InvokeAsync(() => logcatText.Text = logcat);
+                 });
             }
         }
     }

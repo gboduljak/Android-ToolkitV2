@@ -1,12 +1,13 @@
 ﻿using System.Threading.Tasks;
+using AndroidToolkit.Infrastructure.Helpers;
 
 namespace AndroidToolkit.Infrastructure.Tools
 {
     public partial class FastbootTools
     {
-        public Task<string> GetCid(bool createNoWindow = true)
+        public async Task<string> GetCid(bool createNoWindow = true)
         {
-            return Task.Run(async () => await _executor.Execute(new Command("fastboot oem getvar cid")));
+            return StringLinesRemover.FitString(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await Task.Run(async () => await _executor.Execute(new Command("fastboot oem getvar cid"))), 5)));
         }
 
         public Task WriteCid(string cid, bool createNoWindow = true)

@@ -187,8 +187,11 @@
                     </StackPanel>
                 </ScrollViewer>
             </metroControls:Flyout>
-            <metroControls:Flyout Header="REBOOT" Position="Left" Theme="Adapt" Width="250" IsModal="False" IsPinned="True">
+            <metroControls:Flyout Header="REBOOT" Position="Left" Theme="Adapt" IsModal="False" IsPinned="True">
                 <StackPanel Margin="10">
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+                    </StackPanel.LayoutTransform>
                     <Rectangle Width="90" Height="90" Margin="0,0,0,25" Fill="{StaticResource FlatButtonBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_reset}"></VisualBrush>

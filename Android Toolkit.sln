@@ -15,6 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8E9B9B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Memory", "AndroidToolkit.Memory\AndroidToolkit.Memory.csproj", "{99515722-8DC8-4ECA-9DFA-055D285A716F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Web.Api", "AndroidToolkit.Web.Api\AndroidToolkit.Web.Api.csproj", "{0F172DC7-D896-45E2-B3E7-A208A7B6787C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Web.SPA", "AndroidToolkit.Web.SPA\AndroidToolkit.Web.SPA.csproj", "{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,14 @@ Global
 		{99515722-8DC8-4ECA-9DFA-055D285A716F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99515722-8DC8-4ECA-9DFA-055D285A716F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99515722-8DC8-4ECA-9DFA-055D285A716F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F172DC7-D896-45E2-B3E7-A208A7B6787C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F172DC7-D896-45E2-B3E7-A208A7B6787C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F172DC7-D896-45E2-B3E7-A208A7B6787C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F172DC7-D896-45E2-B3E7-A208A7B6787C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

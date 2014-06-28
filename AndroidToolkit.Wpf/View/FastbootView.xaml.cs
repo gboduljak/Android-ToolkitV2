@@ -125,6 +125,12 @@ namespace AndroidToolkit.Wpf.View
 
             #endregion
 
+            #region Reboot
+
+            this.ShowReboot.Click += (sender, args) => _FlyoutPresenter.Invoke(this,1);
+
+            #endregion
+
             #region Boot
             this.BootImg.PreviewDragOver += (sender, args) => args.Handled = true;
             this.BootImg.Drop += TextBoxDropHandler3;

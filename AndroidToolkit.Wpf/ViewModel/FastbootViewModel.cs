@@ -130,6 +130,65 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #endregion
 
+        #region Reboot
+
+        private RelayCommand<SingleCommandParameters> _rebootCommand;
+        public RelayCommand<SingleCommandParameters> RebootCommand
+        {
+            get
+            {
+                return _rebootCommand ?? (_rebootCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.ExecuteReboot));
+
+            }
+            set
+            {
+                if (_rebootCommand != value)
+                {
+                    RaisePropertyChanging(() => this.RebootCommand);
+                    _rebootCommand = value;
+                    RaisePropertyChanged(() => this.RebootCommand);
+                }
+            }
+        }
+
+        private RelayCommand<SingleCommandParameters> _rebootRecoveryCommand;
+        public RelayCommand<SingleCommandParameters> RebootRecoveryCommand
+        {
+            get
+            {
+                return _rebootRecoveryCommand ?? (_rebootRecoveryCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.ExecuteRebootRecovery));
+            }
+            set
+            {
+                if (_rebootRecoveryCommand != value)
+                {
+                    RaisePropertyChanging(() => this.RebootRecoveryCommand);
+                    _rebootRecoveryCommand = value;
+                    RaisePropertyChanged(() => this.RebootRecoveryCommand);
+                }
+            }
+        }
+
+        private RelayCommand<SingleCommandParameters> _rebootBootloaderCommand;
+        public RelayCommand<SingleCommandParameters> RebootBootloaderCommand
+        {
+            get
+            {
+                return _rebootBootloaderCommand ?? (_rebootBootloaderCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.ExecuteRebootBootloader));
+            }
+            set
+            {
+                if (_rebootBootloaderCommand != value)
+                {
+                    RaisePropertyChanging(() => this.RebootBootloaderCommand);
+                    _rebootBootloaderCommand = value;
+                    RaisePropertyChanged(() => this.RebootBootloaderCommand);
+                }
+            }
+        }
+
+        #endregion
+
         #region Boot
 
         private RelayCommand<TwoCommandParameters> _bootCommand;
@@ -513,6 +572,24 @@ namespace AndroidToolkit.Wpf.ViewModel
 
 
         }
+
+        private TwoCommandParameters _executeSingleCommandParameters;
+        public TwoCommandParameters ExecuteSingleCommandParameters
+        {
+            get { return _executeSingleCommandParameters ?? (_executeSingleCommandParameters = new TwoCommandParameters()); }
+            set
+            {
+                if (_executeSingleCommandParameters != value)
+                {
+                    RaisePropertyChanging(() => ExecuteSingleCommand);
+                    this._executeSingleCommandParameters = value;
+                    RaisePropertyChanged(() => ExecuteSingleCommand);
+                }
+            }
+
+
+        }
+
 
         #endregion
 
