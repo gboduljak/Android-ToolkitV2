@@ -156,21 +156,26 @@ namespace AndroidToolkit.Infrastructure.Tools
         {
             if (!string.IsNullOrEmpty(target))
             {
-                await Context.Dispatcher.InvokeAsync(async () =>
+                await logcatText.Dispatcher.InvokeAsync(async () =>
                 {
-                    string logcat =
-                        StringLinesRemover.FitString(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb -s {0} logcat -d > logcat.txt", target)), createNoWindow), 5)));
-                    await logcatText.Dispatcher.InvokeAsync(() => logcatText.Text = logcat);
+                    logcatText.Text = string.Empty;
+                    logcatText.Text = "Getting logcat. Please wait...";
+                    string temp = await _executor.Execute(new Command(string.Format("adb -s {0} logcat", target)), createNoWindow);
+                    logcatText.Text = string.Empty;
+                    logcatText.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(temp,5));
                 });
             }
             else
             {
-                await Context.Dispatcher.InvokeAsync(async () =>
-                 {
-                     string logcat =
-                      StringLinesRemover.FitString(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command(string.Format("adb logcat -d > logcat.txt")), createNoWindow), 5)));
-                     await logcatText.Dispatcher.InvokeAsync(() => logcatText.Text = logcat);
-                 });
+                await logcatText.Dispatcher.InvokeAsync(async () =>
+                {
+                    logcatText.Text = string.Empty;
+                    logcatText.Text = "Getting logcat. Please wait...";
+                    string temp = await _executor.Execute(new Command(string.Format("adb logcat")), createNoWindow);
+                    MessageBox.Show(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(temp, 5)));
+                    logcatText.Text = string.Empty;
+                    logcatText.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(temp, 5));
+                });
             }
         }
     }
