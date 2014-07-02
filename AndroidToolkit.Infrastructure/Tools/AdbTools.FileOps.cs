@@ -6,13 +6,15 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using AndroidToolkit.Infrastructure.Adapters;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Utilities;
+using System.Timers;
 
 namespace AndroidToolkit.Infrastructure.Tools
 {
@@ -158,25 +160,54 @@ namespace AndroidToolkit.Infrastructure.Tools
             {
                 await logcatText.Dispatcher.InvokeAsync(async () =>
                 {
-                    logcatText.Text = string.Empty;
-                    logcatText.Text = "Getting logcat. Please wait...";
-                    string temp = await _executor.Execute(new Command(string.Format("adb -s {0} logcat", target)), createNoWindow);
-                    logcatText.Text = string.Empty;
-                    logcatText.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(temp,5));
+                    BackgroundWorker worker = new BackgroundWorker();
+                    worker.DoWork += async (sender, e) => await this.ExecuteLogcat(new Command(string.Format("adb -s {0} shell logcat",target)), logcatText, createNoWindow);
+                    worker.RunWorkerAsync();
                 });
             }
             else
             {
-                await logcatText.Dispatcher.InvokeAsync(async () =>
+                await logcatText.Dispatcher.InvokeAsync(() =>
                 {
-                    logcatText.Text = string.Empty;
-                    logcatText.Text = "Getting logcat. Please wait...";
-                    string temp = await _executor.Execute(new Command(string.Format("adb logcat")), createNoWindow);
-                    MessageBox.Show(StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(temp, 5)));
-                    logcatText.Text = string.Empty;
-                    logcatText.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(temp, 5));
+                    BackgroundWorker worker = new BackgroundWorker();
+                    worker.DoWork += async (sender, e) => await this.ExecuteLogcat(new Command(string.Format("adb shell logcat")), logcatText, createNoWindow);
+                    worker.RunWorkerAsync();
                 });
             }
+        }
+
+        private Task ExecuteLogcat(Command cmd, TextBox ctx, bool createNoWindow = true)
+        {
+            return Task.Run(async () =>
+            {
+                Process process = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = "cmd.exe",
+                        UseShellExecute = false,
+                        CreateNoWindow = createNoWindow,
+                        RedirectStandardOutput = true,
+                        RedirectStandardInput = true
+                    }
+                };
+                process.OutputDataReceived += async (sender, args) =>
+                {
+                    try
+                    {
+                        await ctx.Dispatcher.InvokeAsync(() => ctx.Text = ctx.Text + "\n" + StringLinesRemover.RemoveCmdData(args.Data), DispatcherPriority.Background);
+                    }
+                    catch 
+                    {
+                       
+                    }
+                };
+                process.Start();
+                process.BeginOutputReadLine();
+                await ctx.Dispatcher.InvokeAsync(() => ctx.Text = string.Empty);
+                process.StandardInput.WriteLine(cmd.Text);
+                process.WaitForExit();
+            });
         }
     }
 }

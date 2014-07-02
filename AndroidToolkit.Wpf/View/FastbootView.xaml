@@ -295,6 +295,16 @@
             <metroControls:Flyout Position="Bottom" Header="Working..." Width="{Binding}" Height="90" Theme="Adapt" Background="#9f000000">
                 <metroControls:ProgressRing IsActive="True" IsLarge="True" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </metroControls:Flyout>
+            <metroControls:Flyout Header="IDENTIFIER TOKEN" Position="Left" Theme="Adapt" IsModal="False" IsPinned="True">
+                <StackPanel Margin="10">
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=UiSlider,Path=Value}" ScaleY="{Binding ElementName=UiSlider,Path=Value}"/>
+                    </StackPanel.LayoutTransform>
+                    <ScrollViewer>
+                        <TextBox Name="TokenText" Margin="20"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </metroControls:Flyout>
         </metroControls:FlyoutsControl>
     </metroControls:MetroWindow.Flyouts>
 
@@ -419,6 +429,91 @@
                         </GroupBox>
                     </Grid>
                 </TabItem>
+                <TabItem Header="Bootloader">
+                    <Grid>
+                        <GroupBox Header="bootloader" VerticalAlignment="Top">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.4*"/>
+                                    <ColumnDefinition Width="0.6*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="128" Height="128" Fill="#FFD6D6D6" Margin="10">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_box_layered}"></VisualBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                    <Rectangle Width="{Binding}" Height="1" Fill="#FFD6D6D6"/>
+                                    <DockPanel Margin="0,10,0,0">
+                                        <Rectangle Width="64" Height="64" Fill="{DynamicResource AccentColorBrush}" >
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Visual="{StaticResource appbar_alert}"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                        <TextBlock Style="{StaticResource TileTitle}" FontSize="16" Margin="5,0,0,0" TextWrapping="Wrap" Text="This tool can damage your device.&#x0a;Use it if you know what are you doing."/>
+                                    </DockPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <Button Command="{Binding LockCommand}" Style="{StaticResource FlatMetroAccentButton}" Margin="1">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource SingleCommandParametersConverter}">
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="ExecuteCmd" Path="Text"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                        <Button.Content>
+                                            <DockPanel>
+                                                <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="20" Height="20" Fill="White">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_lock}"/>
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </DockPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button Command="{Binding UnlockCommand}" Style="{StaticResource FlatMetroAccentButton}" Margin="1">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource SingleCommandParametersConverter}">
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="ExecuteCmd" Path="Text"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                        <Button.Content>
+                                            <DockPanel>
+                                                <Rectangle HorizontalAlignment="Center" VerticalAlignment="Center" Width="20" Height="20" Fill="White">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_unlock}"/>
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </DockPanel>
+                                        </Button.Content>
+                                    </Button>
+                                    <Button Name="StartIdentifierToken" Command="{Binding TokenCommand}" Width="128" Height="128" Style="{DynamicResource MetroCircleButtonStyle}">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource UIParametersConverter}">
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="TokenText"/>
+                                                <Binding ElementName="Target" Path="Text"></Binding>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="ListDevicesFlyout"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Rectangle Margin="0,0,0,5" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="60" Fill="White">
+                                                <Rectangle.OpacityMask>
+                                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_barcode}"/>
+                                                </Rectangle.OpacityMask>
+                                            </Rectangle>
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">token</TextBlock>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
                 <TabItem Header="Erase">
                     <GroupBox VerticalAlignment="Top" Header="Erase">
                         <Grid>
@@ -445,7 +540,7 @@
                             </StackPanel>
 
                             <ScrollViewer Grid.Column="1">
-                               <WrapPanel>
+                                <WrapPanel>
                                     <metroControls:Tile Title="boot" Command="{Binding EraseBootCommand}">
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource SingleCommandParametersConverter}">

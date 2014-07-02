@@ -133,6 +133,61 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
 
         #endregion
 
+        #region Bootloader
+
+        public static void Lock(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.Lock(parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void Unlock(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(async () =>
+                {
+                    Fastboot = new FastbootTools(Context);
+                    await Fastboot.Unlock(parameters.Bool);
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        public static void ExecuteToken(object parameter)
+        {
+            UIParameters parameters = (UIParameters)parameter;
+            Context = parameters.Context;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await Context.Dispatcher.InvokeAsync(() => { Fastboot = new FastbootTools(Context); });
+                await
+                    Task.Run(
+                        async () =>
+                            await Fastboot.GetIdentiferToken(parameters.Context2, parameters.Bool));
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        #endregion
+
         #region Boot
 
         public static void Boot(object parameter)

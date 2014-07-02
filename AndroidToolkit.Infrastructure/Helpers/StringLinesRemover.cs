@@ -27,5 +27,16 @@ namespace AndroidToolkit.Infrastructure.Helpers
             lines.ForEach(str => newText += str + Environment.NewLine);
             return newText;
         }
+
+        public static string RemoveCmdData(string input)
+        {
+            String newText = String.Empty;
+            List<String> lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            lines.RemoveAll(str => str.ToLower().Contains("androidtoolkit"));
+            lines.RemoveAll(str => str.ToLower().Contains("mic"));
+            lines.RemoveAll(str => str.ToLower().Contains("daemon"));
+            lines.ForEach(str => newText += str + Environment.NewLine);
+            return newText;
+        }
     }
 }

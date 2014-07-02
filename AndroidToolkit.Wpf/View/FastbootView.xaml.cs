@@ -137,6 +137,11 @@ namespace AndroidToolkit.Wpf.View
 
             #endregion
 
+            #region Bootloder
+
+            this.StartIdentifierToken.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 4);
+            #endregion
+
             #region Flash
             this.FlashImage.PreviewDragOver += (sender, args) =>
             {

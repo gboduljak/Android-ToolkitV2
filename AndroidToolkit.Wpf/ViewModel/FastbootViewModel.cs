@@ -212,6 +212,66 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #endregion
 
+        #region Bootloader
+
+        private RelayCommand<SingleCommandParameters> _lockCommand;
+        public RelayCommand<SingleCommandParameters> LockCommand
+        {
+            get
+            {
+                return _lockCommand ?? (_lockCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.Lock));
+            }
+            set
+            {
+                if (_lockCommand != value)
+                {
+                    RaisePropertyChanging(() => LockCommand);
+                    _lockCommand = value;
+                    RaisePropertyChanged(() => LockCommand);
+                }
+            }
+        }
+
+        private RelayCommand<SingleCommandParameters> _unlockCommand;
+        public RelayCommand<SingleCommandParameters> UnlockCommand
+        {
+            get
+            {
+                return _unlockCommand ?? (_unlockCommand = new RelayCommand<SingleCommandParameters>(FastbootPresenter.Unlock));
+            }
+            set
+            {
+                if (_unlockCommand != value)
+                {
+                    RaisePropertyChanging(() => UnlockCommand);
+                    _unlockCommand = value;
+                    RaisePropertyChanged(() => UnlockCommand);
+                }
+            }
+        }
+
+        private RelayCommand<UIParameters> _tokenCommand;
+        public RelayCommand<UIParameters> TokenCommand
+        {
+            get
+            {
+                return _tokenCommand ?? (_tokenCommand = new RelayCommand<UIParameters>(FastbootPresenter.ExecuteToken));
+            }
+            set
+            {
+                if (_tokenCommand != value)
+                {
+                    RaisePropertyChanging(() => this.TokenCommand);
+                    _tokenCommand = value;
+                    RaisePropertyChanged(() => this.TokenCommand);
+                }
+            }
+        }
+
+
+
+        #endregion
+
         #region Erase
 
         private RelayCommand<SingleCommandParameters> _eraseBootCommand;

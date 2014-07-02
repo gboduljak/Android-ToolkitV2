@@ -479,6 +479,23 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<TextBox> _clearLogcatCommand;
+
+        public RelayCommand<TextBox> ClearLogcatCommand
+        {
+            get { return _clearLogcatCommand ?? (_clearLogcatCommand = new RelayCommand<TextBox>(AdbPresenter.ExecuteClearLogcat)); }
+            set
+            {
+                if (_clearLogcatCommand != value)
+                {
+                    RaisePropertyChanging(() => this.ClearLogcatCommand);
+                    _clearLogcatCommand = value;
+                    RaisePropertyChanged(() => this.ClearLogcatCommand);
+                }
+            }
+        }
+
+
         private RelayCommand<TextBox> _openFileCommand;
 
         public RelayCommand<TextBox> OpenFileCommand

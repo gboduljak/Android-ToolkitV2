@@ -978,20 +978,20 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Logcat">
-                    <ScrollViewer>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.35*"/>
-                                <ColumnDefinition Width="0.65*"/>
-                            </Grid.ColumnDefinitions>
-                            <Rectangle Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Top" Fill="DarkGray">
-                                <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_barcode}"></VisualBrush>
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                            <GroupBox Grid.Column="1" Header="logcat">
-                                <DockPanel>
-                                    <metroControls:Tile DockPanel.Dock="Left" Command="{Binding LogcatCommand}" Title="LOGCAT" Width="180" Height="180" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.35*"/>
+                            <ColumnDefinition Width="0.65*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Top" Fill="DarkGray">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_barcode}"></VisualBrush>
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                        <GroupBox Grid.Column="1" Header="logcat">
+                            <DockPanel DockPanel.Dock="Left">
+                              <StackPanel>
+                                    <metroControls:Tile Command="{Binding LogcatCommand}" Title="START LOGCAT" Width="180" Height="180" HorizontalAlignment="Left" VerticalAlignment="Top" >
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource UIParametersConverter}">
                                                 <Binding ElementName="Context"/>
@@ -1007,11 +1007,25 @@
                                             </Rectangle.OpacityMask>
                                         </Rectangle>
                                     </metroControls:Tile>
+                                    <Button Command="{Binding ClearLogcatCommand}" CommandParameter="{Binding ElementName=LogcatText}" VerticalAlignment="Top" Style="{StaticResource MetroFlatButton}">
+                                        <Button.Content>
+                                            <DockPanel>
+                                                <Rectangle Width="16" Height="16" Fill="{StaticResource WindowBackgroundBrush}">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Visual="{StaticResource appbar_delete}" Stretch="Fill"/>
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                                <TextBlock Margin="5,0,0,0" Text="CLEAR" />
+                                            </DockPanel>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                                <ScrollViewer>
                                     <TextBox Name="LogcatText" DockPanel.Dock="Right"/>
-                                </DockPanel>
-                            </GroupBox>
-                        </Grid>
-                    </ScrollViewer>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </GroupBox>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Execute">
                     <Grid>

@@ -65,6 +65,12 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             await context.Dispatcher.InvokeAsync(() => context.Text = string.Empty);
         }
 
+        public static async void ExecuteClearLogcat(object parameter)
+        {
+            TextBox context = (TextBox)parameter;
+            await context.Dispatcher.InvokeAsync(() => context.Text = string.Empty);
+        }
+
         public static void ExecutePrepare(object parameter)
         {
             Context = (TextBlock)parameter;

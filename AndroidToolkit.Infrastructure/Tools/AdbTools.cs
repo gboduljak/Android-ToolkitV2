@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -182,24 +183,14 @@ namespace AndroidToolkit.Infrastructure.Tools
 
         public static void KillAdb()
         {
-            Process[] processes = Process.GetProcesses();
-            for (int i = 0; i < processes.Count(); i++)
+            foreach (Process proc in Process.GetProcessesByName("adb"))
             {
-                if (processes[i].ProcessName.ToLower().Contains("adb"))
-                {
-                    try
-                    {
-                        processes[i].Kill();
-                    }
-                    catch
-                    {
-                        
-                    }
-                    return;
-                }
+                TerminateProcess(proc.Handle, 0);
             }
         }
-
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+       private static extern bool TerminateProcess(IntPtr hProcess, uint uExitCode);
         ~AdbTools()
         {
             this._executor = null;
