@@ -727,13 +727,14 @@ namespace AndroidToolkit.Wpf.ViewModel
             {
                 return _deviceInfoCommand ?? (_deviceInfoCommand = new RelayCommand<string>(async (param) =>
                 {
+                    Adb = new AdbTools();
                     if (!IsWindowOpen<DeviceDetails>())
                     {
                         DeviceDetails details = new DeviceDetails();
                         DeviceInfo info = await new AdbTools().DeviceInfo(true, param);
                         AdbTools.KillAdb();
                         details.Title.Text = StringLinesRemover.FitString(info.Name);
-                        details.DeviceName.Text = StringLinesRemover.FitString(info.Name);
+                        details.Name.Text = StringLinesRemover.FitString(info.Name);
                         details.Codename.Text = StringLinesRemover.FitString(info.Codename);
                         details.Manufacturer.Text = StringLinesRemover.FitString(info.Manufacturer);
                         details.AndroidOS.Text = StringLinesRemover.FitString(info.AndroidVersionCode);

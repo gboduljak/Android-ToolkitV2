@@ -240,7 +240,14 @@ namespace AndroidToolkit.Infrastructure.Tools
         {
             foreach (Process proc in Process.GetProcessesByName("adb"))
             {
-                TerminateProcess(proc.Handle, 0);
+                try
+                {
+                    TerminateProcess(proc.Handle, 0);
+                }
+                catch 
+                {
+                    
+                }
             }
         }
         [DllImport("kernel32.dll", SetLastError = true)]

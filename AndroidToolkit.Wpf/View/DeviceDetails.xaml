@@ -77,7 +77,7 @@
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_iphone}"></VisualBrush>
                     </Rectangle.OpacityMask>
                 </Rectangle>
-                <TextBlock x:Name="Title" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Style="{StaticResource SubHeaderTextBlockStyle}" Foreground="White"></TextBlock>
+                <TextBlock x:Name="Title"  Text="{Binding ElementName=name, Path=Text}"  VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Style="{StaticResource SubHeaderTextBlockStyle}" Foreground="White"></TextBlock>
             </DockPanel>
         </Grid>
 

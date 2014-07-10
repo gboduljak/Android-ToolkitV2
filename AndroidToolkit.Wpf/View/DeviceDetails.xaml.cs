@@ -17,7 +17,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
-using AndroidToolkit.Memory;
 using MahApps.Metro.Controls;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -52,93 +51,48 @@ namespace AndroidToolkit.Wpf.View
                     }
                 }
             };
-
-            HasRoot = hasRoot;
-            NoRoot = noRoot;
-            DeviceName = name;
-            Codename = codename;
-            Manufacturer = manufacturer;
-            AndroidOS = androidOS;
-            AndroidOSCode = androidOSCode;
-            BuildProp = buildprop;
         }
-
-        #region Dependency Properties
-
-        public static readonly DependencyProperty HasRootProperty = DependencyProperty.Register(
-            "HasRoot", typeof(Rectangle), typeof(DeviceDetails), new PropertyMetadata(default(TextBlock)));
-
-        public static readonly DependencyProperty NoRootProperty = DependencyProperty.Register(
-            "NoRoot", typeof(Rectangle), typeof(DeviceDetails), new PropertyMetadata(default(TextBlock)));
-
-        public static readonly DependencyProperty DeviceNameProperty = DependencyProperty.Register(
-            "DeviceName", typeof(TextBlock), typeof(DeviceDetails), new PropertyMetadata(default(TextBlock)));
-
-        public static readonly DependencyProperty CodenameProperty = DependencyProperty.Register(
-            "Codename", typeof(TextBlock), typeof(DeviceDetails), new PropertyMetadata(default(TextBlock)));
-
-        public static readonly DependencyProperty ManufacturerProperty = DependencyProperty.Register(
-            "Manufacturer", typeof(TextBlock), typeof(DeviceDetails), new PropertyMetadata(default(TextBlock)));
-
-        public static readonly DependencyProperty AndroidOSProperty = DependencyProperty.Register(
-            "AndroidOS", typeof(TextBlock), typeof(DeviceDetails), new PropertyMetadata(default(TextBlock)));
-
-        public static readonly DependencyProperty AndroidOSCodeProperty = DependencyProperty.Register(
-            "AndroidOSCode", typeof(TextBlock), typeof(DeviceDetails), new PropertyMetadata(default(TextBlock)));
-
-        public static readonly DependencyProperty BuildPropProperty = DependencyProperty.Register(
-            "BuildProp", typeof(TextBox), typeof(DeviceDetails), new PropertyMetadata(default(TextBox)));
-
-        #endregion
 
         #region Properties
 
         public Rectangle HasRoot
         {
-            get { return (Rectangle)GetValue(HasRootProperty); }
-            set { SetValue(HasRootProperty, value); }
+            get { return hasRoot; }
         }
 
         public Rectangle NoRoot
         {
-            get { return (Rectangle)GetValue(NoRootProperty); }
-            set { SetValue(NoRootProperty, value); }
+            get { return noRoot; }
         }
 
-        public TextBlock DeviceName
+        public new TextBlock Name
         {
-            get { return (TextBlock)GetValue(DeviceNameProperty); }
-            set { SetValue(DeviceNameProperty, value); }
+            get { return name; }
         }
 
         public TextBlock Codename
         {
-            get { return (TextBlock)GetValue(CodenameProperty); }
-            set { SetValue(CodenameProperty, value); }
+            get { return codename; }
         }
 
         public TextBlock Manufacturer
         {
-            get { return (TextBlock)GetValue(ManufacturerProperty); }
-            set { SetValue(ManufacturerProperty, value); }
+            get { return manufacturer; }
         }
 
         public TextBlock AndroidOS
         {
-            get { return (TextBlock)GetValue(AndroidOSProperty); }
-            set { SetValue(AndroidOSProperty, value); }
+            get { return androidOS; }
         }
 
         public TextBlock AndroidOSCode
         {
-            get { return (TextBlock)GetValue(AndroidOSCodeProperty); }
-            set { SetValue(AndroidOSCodeProperty, value); }
+            get { return androidOSCode; }
         }
 
         public TextBox BuildProp
         {
-            get { return (TextBox)GetValue(BuildPropProperty); }
-            set { SetValue(BuildPropProperty, value); }
+            get { return buildprop; }
         }
         #endregion
 
@@ -146,19 +100,16 @@ namespace AndroidToolkit.Wpf.View
         {
             this.Dispose();
         }
+
+        [DllImport("kernel32.dll", EntryPoint = "SetProcessWorkingSetSize", ExactSpelling = true, CharSet = CharSet.Ansi, SetLastError = true)]
+        private static extern int SetProcessWorkingSetSize(
+          IntPtr process, int minimumWorkingSetSize, int maximumWorkingSetSize);
+
         public void Dispose()
         {
-            HasRoot = null;
-            NoRoot = null;
-            DeviceName = null;
-            Codename = null;
-            Manufacturer = null;
-            AndroidOS = null;
-            AndroidOSCode = null;
-            BuildProp = null;
             GC.Collect();
             GC.SuppressFinalize(this);
-            MemoryManager.SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
+            SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
         }
     }
 }
