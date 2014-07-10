@@ -36,6 +36,11 @@ namespace AndroidToolkit.Infrastructure.Tools
                 context.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("fastboot devices")), 5)));
         }
 
+        public async Task<string> ListDevices(bool createNoWindow)
+        {
+            return StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("fastboot devices")), 5));
+        }
+
         public Task Prepare(bool createNoWindow = true)
         {
             return Task.Run(async () => await Context.Dispatcher.InvokeAsync(async () => await _executor.Execute(new Command("fastboot devices"), Context, createNoWindow)));

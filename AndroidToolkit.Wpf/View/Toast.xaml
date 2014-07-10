@@ -93,7 +93,7 @@
             </Rectangle>
         </Grid>
         <TextBlock Margin="5" Name="TextBlock" Grid.Column="1" Grid.Row="1" Style="{StaticResource TileTitle}" Foreground="White" FontSize="1"/>
-        <Button Click="ButtonBase_OnClick" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Margin="0,0,0,39" Grid.RowSpan="2">
+        <Button Name="ExitButton" Click="ButtonBase_OnClick" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Height="30" Margin="0,0,0,39" Grid.RowSpan="2">
            <Button.Content>
                 <TextBlock VerticalAlignment="Top">X</TextBlock>
            </Button.Content>

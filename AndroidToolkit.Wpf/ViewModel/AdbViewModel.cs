@@ -2,7 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +17,7 @@ using AndroidToolkit.Infrastructure.Device;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation;
+using AndroidToolkit.Wpf.Presentation.Controls;
 using AndroidToolkit.Wpf.Presentation.Converters;
 using AndroidToolkit.Wpf.Presentation.Presenter;
 using AndroidToolkit.Wpf.View;
@@ -20,6 +25,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace AndroidToolkit.Wpf.ViewModel
 {
@@ -365,6 +371,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
 
         }
+
         private RelayCommand<UIParameters> _refreshDevicesCommand;
         public RelayCommand<UIParameters> RefreshDevicesCommand
         {
@@ -726,7 +733,7 @@ namespace AndroidToolkit.Wpf.ViewModel
                         DeviceInfo info = await new AdbTools().DeviceInfo(true, param);
                         AdbTools.KillAdb();
                         details.Title.Text = StringLinesRemover.FitString(info.Name);
-                        details.Name.Text = StringLinesRemover.FitString(info.Name);
+                        details.DeviceName.Text = StringLinesRemover.FitString(info.Name);
                         details.Codename.Text = StringLinesRemover.FitString(info.Codename);
                         details.Manufacturer.Text = StringLinesRemover.FitString(info.Manufacturer);
                         details.AndroidOS.Text = StringLinesRemover.FitString(info.AndroidVersionCode);
@@ -755,9 +762,62 @@ namespace AndroidToolkit.Wpf.ViewModel
             }
         }
 
+        private RelayCommand<RootParameters> _rootCommand;
+        public RelayCommand<RootParameters> RootCommand
+        {
+            get
+            {
+                return _rootCommand ?? (_rootCommand = new RelayCommand<RootParameters>(AdbPresenter.ExecuteRoot));
+            }
+            set
+            {
+                if (_rootCommand != value)
+                {
+                    RaisePropertyChanging(() => RootCommand);
+                    _rootCommand = value;
+                    RaisePropertyChanged(() => RootCommand);
+                }
+            }
+        }
+
+
+        private RelayCommand<SingleCommandParameters> _unrootCommand;
+        public RelayCommand<SingleCommandParameters> UnrootCommand
+        {
+            get
+            {
+                return _unrootCommand ?? (_unrootCommand = new RelayCommand<SingleCommandParameters>(AdbPresenter.ExecuteUnroot));
+            }
+            set
+            {
+                if (_unrootCommand != value)
+                {
+                    RaisePropertyChanging(() => UnrootCommand);
+                    _unrootCommand = value;
+                    RaisePropertyChanged(() => UnrootCommand);
+                }
+            }
+        }
+
         #endregion
 
         #region Properties
+
+        private AdbTools _adb;
+        public AdbTools Adb
+        {
+            get { return _adb ?? (_adb = new AdbTools()); }
+            set
+            {
+                if (_adb != value)
+                {
+                    RaisePropertyChanging(() => Adb);
+                    this._adb = value;
+                    RaisePropertyChanged(() => Adb);
+                }
+            }
+        }
+
 
         private ObservableCollection<Accent> _accents;
 
@@ -794,6 +854,23 @@ namespace AndroidToolkit.Wpf.ViewModel
         public IEnumerable AdbBackupModes
         {
             get { return typeof(AdbBackupMode).ToList(); }
+        }
+
+        private RootParameters _rootParameters;
+        public RootParameters RootParameters
+        {
+            get { return _rootParameters ?? (_rootParameters = new RootParameters()); }
+            set
+            {
+                if (_rootParameters != value)
+                {
+                    RaisePropertyChanging(() => RootParameters);
+                    _rootParameters = value;
+                    RaisePropertyChanged(() => RootParameters);
+                }
+            }
+
+
         }
 
         public UIParameters UiParameters { get; set; }
@@ -861,6 +938,7 @@ namespace AndroidToolkit.Wpf.ViewModel
             RestoreParameters = null;
             RemoteConnectParameters = null;
             RemoteDisconnectParameters = null;
+            RootParameters = null;
             _remoteInfoRepository = null;
         }
     }

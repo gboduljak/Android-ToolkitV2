@@ -27,19 +27,34 @@ namespace AndroidToolkit.Wpf.View
     {
         private readonly FastbootViewModel _viewModel;
 
-        public FastbootView()                                    
+        public FastbootView()
         {
             InitializeComponent();
             _viewModel = ((ViewModelLocator)Application.Current.Resources["Locator"]).Fastboot;
             this.DataContext = _viewModel;
-            Header.HeaderSubtitle.Text = "FASTBOOT";
             _FlyoutPresenter = Presentation.Presenter.FlyoutPresenter.Present;
             AddEvents();
+        }
+
+        public FastbootView(int flyout)
+        {
+            InitializeComponent();
+            _viewModel = ((ViewModelLocator)Application.Current.Resources["Locator"]).Fastboot;
+            this.DataContext = _viewModel;
+            _FlyoutPresenter = Presentation.Presenter.FlyoutPresenter.Present;
+            AddEvents();
+            _FlyoutPresenter.Invoke(this,flyout);
         }
 
         #region AddEvents
         private void AddEvents()
         {
+            this.SizeChanged += (sender, e) =>
+            {
+                this.DeviceRestoreFlyout.Width = ActualWidth;
+
+            };
+
             this.Closed += delegate
             {
                 Dispose();
@@ -86,7 +101,6 @@ namespace AndroidToolkit.Wpf.View
                         themeLight
                             ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
                             : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
-                    Header.HeaderTitle.Foreground = Brushes.Gray;
                     if (themeLight)
                     {
                         Right.Background = Brushes.White;
@@ -104,7 +118,6 @@ namespace AndroidToolkit.Wpf.View
                       themeLight
                           ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
                           : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
-                    Header.HeaderTitle.Foreground = Brushes.Gray;
                     if (themeLight)
                     {
                         Right.Background = Brushes.White;
@@ -127,7 +140,7 @@ namespace AndroidToolkit.Wpf.View
 
             #region Reboot
 
-            this.ShowReboot.Click += (sender, args) => _FlyoutPresenter.Invoke(this,1);
+            this.ShowReboot.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 1);
 
             #endregion
 
@@ -140,6 +153,14 @@ namespace AndroidToolkit.Wpf.View
             #region Bootloder
 
             this.StartIdentifierToken.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 4);
+            #endregion
+
+            #region HardReset
+
+            this.ShowDeviceRestore.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 5);
+
+            RestoreTile.Click += (sender, args) => _FlyoutPresenter.Invoke(this, 6);
+
             #endregion
 
             #region Flash
@@ -299,7 +320,7 @@ namespace AndroidToolkit.Wpf.View
         {
             await this.Dispatcher.InvokeAsync(() =>
             {
-                _FlyoutPresenter.Invoke(this, 4);
+                _FlyoutPresenter.Invoke(this, 7);
                 using (Toast toast = new Toast("Working in background...", "Android Toolkit - Notification"))
                 {
                     toast.Show();
@@ -308,7 +329,7 @@ namespace AndroidToolkit.Wpf.View
                 timer.Elapsed += async (s, args) =>
                 {
                     await this.Dispatcher.InvokeAsync(() => StatusLabel.Content = "Working in background...");
-                    await this.Dispatcher.InvokeAsync(() => _FlyoutPresenter.Invoke(this, 4));
+                    await this.Dispatcher.InvokeAsync(() => _FlyoutPresenter.Invoke(this, 7));
                     timer.Dispose();
                 };
                 timer.Enabled = true;

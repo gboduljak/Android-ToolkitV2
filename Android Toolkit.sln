@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Web.Api", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Web.SPA", "AndroidToolkit.Web.SPA\AndroidToolkit.Web.SPA.csproj", "{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AndroidToolkit.Log", "AndroidToolkit.Log\AndroidToolkit.Log.csproj", "{FDAC34B1-2444-46D3-9DB8-7C843EC61153}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCE74E01-37C9-483F-9FF1-8801C7E8B6F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDAC34B1-2444-46D3-9DB8-7C843EC61153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDAC34B1-2444-46D3-9DB8-7C843EC61153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDAC34B1-2444-46D3-9DB8-7C843EC61153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDAC34B1-2444-46D3-9DB8-7C843EC61153}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

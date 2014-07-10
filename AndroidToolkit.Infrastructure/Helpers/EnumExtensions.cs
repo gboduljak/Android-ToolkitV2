@@ -36,7 +36,7 @@ namespace AndroidToolkit.Infrastructure.Helpers
             {
                 throw new ArgumentNullException("type");
             }
-            return (from Enum value in Enum.GetValues(type) select new { Text = GetDescription(value) }).ToList();
+            return (Enum.GetValues(type).Cast<Enum>().Select(value => new {Text = GetDescription(value)})).ToList();
         }
     }
 }

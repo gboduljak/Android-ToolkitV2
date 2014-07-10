@@ -181,6 +181,10 @@
       <Project>{76b1c57f-47c3-411d-adb5-3bbbdd15127d}</Project>
       <Name>AndroidToolkit.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AndroidToolkit.Log\AndroidToolkit.Log.csproj">
+      <Project>{fdac34b1-2444-46d3-9db8-7c843ec61153}</Project>
+      <Name>AndroidToolkit.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AndroidToolkit.Memory\AndroidToolkit.Memory.csproj">
       <Project>{99515722-8dc8-4eca-9dfa-055d285a716f}</Project>
       <Name>AndroidToolkit.Memory</Name>

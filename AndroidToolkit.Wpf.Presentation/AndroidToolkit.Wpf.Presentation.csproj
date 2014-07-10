@@ -98,6 +98,9 @@
     <Compile Include="Controls\AdbReboot.xaml.cs">
       <DependentUpon>AdbReboot.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Error.xaml.cs">
+      <DependentUpon>Error.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Immediate.xaml.cs">
       <DependentUpon>Immediate.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,10 @@
     <Compile Include="Converters\FileOpsParametersConverter.cs" />
     <Compile Include="Converters\FiveTextCommandParameters.cs" />
     <Compile Include="Converters\FiveTextCommandParametersConverter.cs" />
+    <Compile Include="Converters\HardResetParameters.cs" />
+    <Compile Include="Converters\HardResetParametersConverter.cs" />
+    <Compile Include="Converters\RootParameters.cs" />
+    <Compile Include="Converters\RootParametersConverter.cs" />
     <Compile Include="Converters\SingleCommandParameters.cs" />
     <Compile Include="Converters\SingleCommandParametersConverter.cs" />
     <Compile Include="Converters\ThreeCommandParameters.cs" />
@@ -159,6 +166,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Error.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Immediate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -196,6 +207,10 @@
     <ProjectReference Include="..\AndroidToolkit.Infrastructure\AndroidToolkit.Infrastructure.csproj">
       <Project>{76B1C57F-47C3-411D-ADB5-3BBBDD15127D}</Project>
       <Name>AndroidToolkit.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AndroidToolkit.Memory\AndroidToolkit.Memory.csproj">
+      <Project>{99515722-8DC8-4ECA-9DFA-055D285A716F}</Project>
+      <Name>AndroidToolkit.Memory</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

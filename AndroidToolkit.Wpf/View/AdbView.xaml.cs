@@ -46,7 +46,6 @@ namespace AndroidToolkit.Wpf.View
             InitializeComponent();
             _viewModel = ((ViewModelLocator)Application.Current.Resources["Locator"]).Adb;
             this.DataContext = _viewModel;
-            Header.HeaderSubtitle.Text = "ADB";
             AddEvents();
             _FlyoutPresenter = Presentation.Presenter.FlyoutPresenter.Present;
         }
@@ -170,7 +169,6 @@ namespace AndroidToolkit.Wpf.View
                         themeLight
                             ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
                             : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
-                    Header.HeaderTitle.Foreground = Brushes.Gray;
                     if (themeLight)
                     {
                         Right.Background = Brushes.White;
@@ -188,7 +186,6 @@ namespace AndroidToolkit.Wpf.View
                       themeLight
                           ? ThemeManager.AppThemes.First(x => x.Name == "BaseLight")
                           : ThemeManager.AppThemes.First(x => x.Name == "BaseDark"));
-                    Header.HeaderTitle.Foreground = Brushes.Gray;
                     if (themeLight)
                     {
                         Right.Background = Brushes.White;

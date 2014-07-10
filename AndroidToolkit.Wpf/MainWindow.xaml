@@ -41,7 +41,7 @@
             </Grid.RowDefinitions>
             <ScrollViewer CanContentScroll="True" Width="{Binding}" Height="{Binding}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="2">
                 <controls:MainLogo x:Name="Logo" Width="{Binding Path=Width, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Height="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Top"  MinWidth="775" />
-           </ScrollViewer>
+            </ScrollViewer>
             <ScrollViewer Grid.Column="0" Grid.Row="1" CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="5" >
                     <Rectangle Width="200" Height="220"  Fill="{StaticResource FlatButtonBackgroundBrush}">
@@ -97,7 +97,7 @@
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
                                 </metroControls:Tile>
-                                <metroControls:Tile Width="470" Height="180" Title="device restore" TitleFontSize="24">
+                                <metroControls:Tile Width="470" Height="180" Title="device restore" TitleFontSize="24" Command="{Binding ShowDeviceRestoreCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                                     <Rectangle Width="120" Height="120" Fill="White">
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Visual="{StaticResource appbar_reset}" Stretch="Fill"></VisualBrush>
@@ -113,12 +113,52 @@
                                 </metroControls:Tile>
                             </metroControls:FlipView>
                         </TabItem>
-                        <TabItem Header="DEVICES"></TabItem>
+                        <TabItem Header="DEVICES">
+                            <GroupBox VerticalAlignment="Top" Header="Devices">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <DockPanel HorizontalAlignment="Center">
+                                            <Button Name="RefreshAdb" Width="40" Command="{Binding ListAdbDevicesCommand}" CommandParameter="{Binding ElementName=AdbDevices}">
+                                                <Rectangle Width="20" Height="20" Fill="White">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Visual="{StaticResource appbar_refresh}" Stretch="Fill"></VisualBrush>
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </Button>
+                                            <Label Style="{StaticResource TileTitleLabel}">ADB</Label>
+                                        </DockPanel>
+                                        <metroControls:TransitioningContentControl Name="AdbDevices" Transition="RightReplace" Margin="0,10,0,0" MinHeight="100">
+                                            <TextBlock Style="{StaticResource FooterTextStyle}">GETTING LIST...</TextBlock>
+                                        </metroControls:TransitioningContentControl>
+                                    </StackPanel>
+                                    <GridSplitter Background="Gray" Grid.Column="0" Width="5" Margin="5"></GridSplitter>
+                                    <StackPanel Grid.Column="1">
+                                        <DockPanel HorizontalAlignment="Center">
+                                            <Button Name="RefreshFastboot" Width="40" Command="{Binding ListFastbootDevicesCommand}" CommandParameter="{Binding ElementName=FastbootDevices}">
+                                                <Rectangle Width="20" Height="20" Fill="White">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Visual="{StaticResource appbar_refresh}" Stretch="Fill"></VisualBrush>
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                            </Button>
+                                            <Label Style="{StaticResource TileTitleLabel}">FASTBOOT</Label>
+                                        </DockPanel>
+                                        <metroControls:TransitioningContentControl Name="FastbootDevices" Transition="RightReplace" Margin="0,10,0,0" MinHeight="100">
+                                            <TextBlock Style="{StaticResource FooterTextStyle}">GETTING LIST...</TextBlock>
+                                        </metroControls:TransitioningContentControl>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                        </TabItem>
                         <TabItem Header="INFO"></TabItem>
                     </TabControl>
                 </Grid>
             </ScrollViewer>
-          
+
         </Grid>
     </metroControls:MetroContentControl>
 </metroControls:MetroWindow>

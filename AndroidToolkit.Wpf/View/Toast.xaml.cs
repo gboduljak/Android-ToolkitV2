@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using AndroidToolkit.Memory;
+using AndroidToolkit.Wpf.Presentation.Controls;
 
 namespace AndroidToolkit.Wpf.View
 {
@@ -52,9 +53,10 @@ namespace AndroidToolkit.Wpf.View
             };
             timer.Enabled = true;
         }
-     
+
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
+            ExitButton.RenderTransform = new ScaleTransform(scaleX: 0.98, scaleY: 0.98, centerX: 0.5, centerY: 0.5);
             this.Close();
         }
 

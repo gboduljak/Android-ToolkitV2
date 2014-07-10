@@ -2,120 +2,115 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Baml2006;
 using System.Windows.Controls;
 using AndroidToolkit.Data;
 using MahApps.Metro.Controls;
 
 namespace AndroidToolkit.Wpf.Presentation.Converters
 {
-    public class FiveTextCommandParameters : EntityBase, IDataErrorInfo
+    public class RootParameters : EntityBase, IDataErrorInfo
     {
+        #region Fields
 
-        private string _text;
-        private string _text2;
-        private string _text3;
-        private string _text4;
-        private string _text5;
+        private bool _superUser;
+        private bool _superSU;
+        private MetroWindow _window;
+        private bool _createNoWindow;
+        private TextBlock _context;
+        private string _target;
 
-        private bool _bool = true;
+        #endregion
 
-        public TextBlock Context { get; set; }
+        #region Properties
 
-        [Required(ErrorMessage = @"Please fill this field.")]
-        public string Text
+        public bool SuperUser
         {
-            get { return _text; }
+            get { return _superUser; }
             set
             {
-                if (this._text != value)
+                if (_superUser != value)
                 {
                     NotifyPropertyChanging();
-                    this._text = value;
-                    NotifyPropertyChanged();
-
-                }
-            }
-        }
-
-        [Required(ErrorMessage = @"Please fill this field.")]
-        public string Text2
-        {
-            get { return _text2; }
-            set
-            {
-                if (this._text2 != value)
-                {
-                    NotifyPropertyChanging();
-                    this._text2 = value;
+                    _superUser = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string Text3
+        public bool SuperSU
         {
-            get { return _text3; }
+            get { return _superSU; }
             set
             {
-                if (this._text3 != value)
+                if (_superSU != value)
                 {
                     NotifyPropertyChanging();
-                    this._text3 = value;
+                    _superSU = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string Text4
+        public MetroWindow Window
         {
-            get { return _text4; }
+            get { return _window; }
             set
             {
-                if (this._text4 != value)
+                if (_window != value)
                 {
                     NotifyPropertyChanging();
-                    this._text4 = value;
+                    _window = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string Text5
+        public bool CreateNoWindow
         {
-            get { return _text5; }
+            get { return _createNoWindow; }
             set
             {
-                if (this._text5 != value)
+                if (_createNoWindow != value)
                 {
                     NotifyPropertyChanging();
-                    this._text5 = value;
+                    _createNoWindow = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public bool Bool
+        public TextBlock Context
         {
-            get { return _bool; }
+            get { return _context; }
             set
             {
-                if (this._bool != value)
+                if (_context != value)
                 {
                     NotifyPropertyChanging();
-                    this._bool = value;
+                    _context = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public string Target { get; set; }
+        public string Target
+        {
+            get { return _target; }
+            set
+            {
+                if (_target != value)
+                {
+                    NotifyPropertyChanging();
+                    _target = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
 
         #region IDataErrorInfo Members
 

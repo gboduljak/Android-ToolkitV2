@@ -1,0 +1,47 @@
+﻿<metroControls:MetroWindow x:Class="AndroidToolkit.Wpf.Presentation.Controls.Error"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:controls="clr-namespace:AndroidToolkit.Wpf.Presentation.Controls;assembly=AndroidToolkit.Wpf.Presentation"
+             xmlns:converters="clr-namespace:AndroidToolkit.Wpf.Presentation.Converters"
+             Title="Error" Height="300" Width="600" ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/red.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Text.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/AndroidToolkit.Wpf.Presentation;component/Resources/CustomButtonStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.85*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="0.7*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Margin="20,0,0,0" Foreground="{DynamicResource AccentColorBrush}" FontSize="24" Name="TitleTextBlock" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=metroControls:MetroWindow}, Path=ErrorTitle}" Grid.ColumnSpan="2"/>
+        <Rectangle Margin="0,10,0,0" Grid.Column="0" Grid.Row="1" Width="130" Height="150" HorizontalAlignment="Center" VerticalAlignment="Top"  Fill="{DynamicResource FlatButtonBackgroundBrush}">
+            <Rectangle.OpacityMask>
+                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_alert}"></VisualBrush>
+            </Rectangle.OpacityMask>
+        </Rectangle>
+        <ScrollViewer Grid.Column="1" Grid.Row="1" Margin="10">
+            <TextBox Name="ErrorTextBox" Foreground="DarkGray" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=metroControls:MetroWindow}, Path=ErrorContent}"/>
+        </ScrollViewer>
+    </Grid>
+</metroControls:MetroWindow>

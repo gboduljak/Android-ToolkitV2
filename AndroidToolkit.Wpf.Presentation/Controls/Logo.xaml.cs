@@ -24,25 +24,33 @@ namespace AndroidToolkit.Wpf.Presentation.Controls
         public Logo()
         {
             InitializeComponent();
+            Title = "Android Toolkit";
         }
 
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-            "Header", typeof (TextBlock), typeof (Logo), new PropertyMetadata(default(TextBlock)));
+        #region Dependency Properties
 
-        public TextBlock Header
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title", typeof(string), typeof(Logo));
+
+        public static readonly DependencyProperty SubtitleProperty = DependencyProperty.Register(
+            "Subtitle", typeof(string), typeof(Logo));
+
+        #endregion
+
+        #region Properties
+
+        public string Title
         {
-            get { return (TextBlock) GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
-        public TextBlock HeaderTitle
+        public string Subtitle
         {
-            get { return this.headerTitle; }
+            get { return (string)GetValue(SubtitleProperty); }
+            set { SetValue(SubtitleProperty, value); }
         }
+        #endregion
 
-        public TextBlock HeaderSubtitle
-        {
-            get { return this.headerSubitle; }
-        }
     }
 }

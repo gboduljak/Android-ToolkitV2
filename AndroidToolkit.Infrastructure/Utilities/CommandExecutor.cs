@@ -90,9 +90,7 @@ namespace AndroidToolkit.Infrastructure.Utilities
                 }
                 await _process.StandardInput.FlushAsync();
                 _process.StandardInput.Dispose();
-                _process.Close();
-                _process.Kill();
-                _process.Dispose();
+                _process.WaitForExit();
             });
         }
 

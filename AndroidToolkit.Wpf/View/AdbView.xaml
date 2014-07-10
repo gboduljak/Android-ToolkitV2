@@ -30,6 +30,7 @@
             <converters:UIParametersConverter x:Key="UIParametersConverter"/>
             <converters:ExecuteCommandParametersConverter x:Key="ExecuteCommandParametersConverter"/>
             <converters:BackupParametersConverter x:Key="BackupParametersConverter"/>
+            <converters:RootParametersConverter x:Key="RootParametersConverter"/>
             <Storyboard x:Key="OnLoaded">
                 <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.FontSize)" Storyboard.TargetName="OverviewText">
                     <EasingDoubleKeyFrame KeyTime="0:0:1" Value="20"/>
@@ -613,7 +614,7 @@
                 <ColumnDefinition Width="0.25*"/>
             </Grid.ColumnDefinitions>
             <ScrollViewer Grid.Column="0" Grid.Row="0" CanContentScroll="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Auto">
-                <controls:Logo Name="Header" Height="{Binding}" Width="{Binding}"/>
+                <controls:Logo Name="Header" Height="{Binding}" Width="{Binding}" Subtitle="ADB"/>
             </ScrollViewer>
             <GridSplitter Background="Gray" Grid.Column="0" Grid.Row="1" Width="8"/>
 
@@ -990,8 +991,8 @@
                         </Rectangle>
                         <GroupBox Grid.Column="1" Header="logcat">
                             <DockPanel DockPanel.Dock="Left">
-                              <StackPanel>
-                                    <metroControls:Tile Command="{Binding LogcatCommand}" Title="START LOGCAT" Width="180" Height="180" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                <StackPanel>
+                                    <metroControls:Tile Command="{Binding LogcatCommand}" Title="START LOGCAT" Width="180" Height="180" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ButtonClickHandler">
                                         <Button.CommandParameter>
                                             <MultiBinding Converter="{StaticResource UIParametersConverter}">
                                                 <Binding ElementName="Context"/>
@@ -1060,7 +1061,7 @@
                                             <TextBox Name="Command10" Margin="5" Text="{Binding Path=ExecuteCommandsParameters.Text10, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" metroControls:TextboxHelper.Watermark="ENTER THE COMMAND TEXT" metroControls:TextboxHelper.ClearTextButton="True" metroControls:TextboxHelper.FocusBorderBrush="{DynamicResource AccentColorBrush}"/>
                                         </StackPanel>
                                     </DockPanel>
-                                    <metroControls:Tile Command="{Binding ExecuteCommands}" Style="{StaticResource ExecuteButtonStyle}">
+                                    <metroControls:Tile Command="{Binding ExecuteCommands}" Style="{StaticResource ExecuteButtonStyle}" Click="ButtonClickHandler">
                                         <metroControls:Tile.CommandParameter>
                                             <MultiBinding Converter="{StaticResource ExecuteCommandParametersConverter}">
                                                 <Binding ElementName="Context"/>
@@ -1090,6 +1091,85 @@
 
 
                     </Grid>
+                </TabItem>
+                <TabItem Header="Root / Unroot">
+                    <GroupBox Header="ROOT / UNROOT" VerticalAlignment="Top">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.4*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="128" Height="128" Background="#FFD6D6D6" Margin="10">
+                                    <Grid.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_os_android}"/>
+                                    </Grid.OpacityMask>
+                                    <Rectangle Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,20,10,5" Fill="Gray">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_alien}"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Grid>
+                                <Rectangle Width="{Binding}" Height="1" Fill="#FFD6D6D6"/>
+                                <DockPanel Margin="0,10,0,0">
+                                    <Rectangle Width="64" Height="64" Fill="{DynamicResource AccentColorBrush}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Visual="{StaticResource appbar_new}"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                    <TextBlock Style="{StaticResource TileTitle}" FontSize="16" Margin="5,0,0,0" TextWrapping="Wrap" Text="This tool will only install Superuser.apk and su binary."/>
+                                </DockPanel>
+                            </StackPanel>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" >
+                                    <RadioButton Name="Superuser" Margin="5">
+                                        <TextBlock Style="{StaticResource TileTitle}">Superuser</TextBlock>
+                                    </RadioButton>
+                                    <RadioButton Name="Supersu" Margin="5">
+                                        <TextBlock Style="{StaticResource TileTitle}">SuperSU</TextBlock>
+                                    </RadioButton>
+                                    <metroControls:Tile Title="ROOT" Command="{Binding RootCommand}" HorizontalAlignment="Left" Click="ButtonClickHandler">
+                                        <metroControls:Tile.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource RootParametersConverter}">
+                                                <Binding ElementName="Superuser" Path="IsChecked"/>
+                                                <Binding ElementName="Supersu" Path="IsChecked"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=metroControls:MetroWindow}"/>
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="Target" Path="Text"/>
+                                            </MultiBinding>
+                                        </metroControls:Tile.CommandParameter>
+                                        <Rectangle Width="80" Height="80" Fill="White">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cog}"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </metroControls:Tile>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <metroControls:Tile Title="UNROOT" Command="{Binding UnrootCommand}" HorizontalAlignment="Left" Click="ButtonClickHandler">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource SingleCommandParametersConverter}">
+                                                <Binding ElementName="Context"/>
+                                                <Binding ElementName="CreateNoWindow" Path="IsChecked"/>
+                                                <Binding ElementName="Target" Path="Text"/>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                        <Rectangle Width="80" Height="80" Fill="White">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_stop}"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </metroControls:Tile>
+                                </StackPanel>
+                            </Grid>
+
+                        </Grid>
+                    </GroupBox>
                 </TabItem>
             </TabControl>
             <ScrollViewer Name="RightTop" Background="{StaticResource FlyoutBackgroundBrush}" Grid.Column="1" Grid.Row="0" CanContentScroll="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -1134,7 +1214,7 @@
                             <Button Name="ShowReboot" Width="64" Height="64" Grid.Column="0" Style="{StaticResource MetroCircleButtonStyle}">
                                 <Rectangle Width="32" Height="32" Fill="{StaticResource FlatButtonBackgroundBrush}">
                                     <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_reset}"></VisualBrush>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}"></VisualBrush>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>

@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using AndroidToolkit.Infrastructure.DataAccess;
 using AndroidToolkit.Infrastructure.Device;
@@ -12,6 +15,7 @@ using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation.Converters;
 using AndroidToolkit.Wpf.Presentation.Presenter;
+using AndroidToolkit.Wpf.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MahApps.Metro;
@@ -558,6 +562,77 @@ namespace AndroidToolkit.Wpf.ViewModel
 
         #endregion
 
+        #region Restore
+
+        private RelayCommand<HardResetParameters> _restoreCommand;
+
+        public RelayCommand<HardResetParameters> RestoreCommand
+        {
+            get
+            {
+                return _restoreCommand ?? (_restoreCommand = new RelayCommand<HardResetParameters>(
+                    (parameter) =>
+                    {
+                        HardResetParameters parameters = parameter;
+                        BackgroundWorker worker = new BackgroundWorker();
+                        var fastboot = new FastbootTools(parameters.Context);
+                        worker.DoWork += async (sender, args) =>
+                        {
+                            string[] imgs = new string[4];
+                            imgs[0] = parameters.Text;
+                            imgs[1] = parameters.Text2;
+                            imgs[2] = parameters.Text3;
+                            imgs[3] = parameters.Text4;
+                            await Application.Current.Dispatcher.InvokeAsync(() =>
+                            {
+                                using (Toast toast = new Toast("flashing images..."))
+                                {
+                                    toast.Show();
+                                }
+                            });
+                            try
+                            {
+                                await fastboot.HardReset(imgs, parameters.Bool);
+
+                                await Application.Current.Dispatcher.InvokeAsync(() =>
+                                {
+                                    parameters.Flyout.IsOpen = !parameters.Flyout.IsOpen;
+                                    using (Toast toast = new Toast("completed :)"))
+                                    {
+                                        toast.Show();
+                                    }
+                                });
+                            }
+                            catch (InvalidOperationException)
+                            {
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    using (Toast toast = new Toast("fastboot process has been terminated :("))
+                                    {
+                                        toast.Show();
+                                    }
+                                    parameters.Flyout.IsOpen = !parameters.Flyout.IsOpen;
+                                });
+                            }
+
+                        };
+                        worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                        worker.RunWorkerAsync();
+                    }));
+            }
+            set
+            {
+                if (_restoreCommand != value)
+                {
+                    RaisePropertyChanging(() => RestoreCommand);
+                    _restoreCommand = value;
+                    RaisePropertyChanged(() => RestoreCommand);
+                }
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region Properties
@@ -595,8 +670,6 @@ namespace AndroidToolkit.Wpf.ViewModel
                     RaisePropertyChanged(() => BootParameters);
                 }
             }
-
-
         }
 
         private TwoCommandParameters _flashParameters;
@@ -651,6 +724,20 @@ namespace AndroidToolkit.Wpf.ViewModel
         }
 
 
+        private HardResetParameters _deviceRestoreParameters;
+        public HardResetParameters DeviceRestoreParameters
+        {
+            get { return _deviceRestoreParameters ?? (_deviceRestoreParameters = new HardResetParameters()); }
+            set
+            {
+                if (_deviceRestoreParameters != value)
+                {
+                    RaisePropertyChanging(() => DeviceRestoreParameters);
+                    this._deviceRestoreParameters = value;
+                    RaisePropertyChanged(() => DeviceRestoreParameters);
+                }
+            }
+        }
         #endregion
 
         #endregion

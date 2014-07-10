@@ -4,14 +4,19 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using AndroidToolkit.Infrastructure;
+using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Tools;
 using AndroidToolkit.Wpf.Presentation.Converters;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using Xceed.Wpf.DataGrid.Converters;
 using FileDialog = AndroidToolkit.Infrastructure.Helpers.FileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 using TextBox = System.Windows.Controls.TextBox;
@@ -43,7 +48,7 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
                 worker.RunWorkerAsync();
             }
         }
-     
+
         public async static void ExecuteKillAdb(object parameter)
         {
             await Task.Factory.StartNew(async () =>
@@ -306,6 +311,119 @@ namespace AndroidToolkit.Wpf.Presentation.Presenter
             worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
             worker.RunWorkerAsync();
         }
+        #endregion
+
+        #region Root / Unroot
+
+        public static void ExecuteUnroot(object parameter)
+        {
+            SingleCommandParameters parameters = (SingleCommandParameters)parameter;
+            if (parameters != null)
+            {
+                Context = parameters.Context;
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += async (sender, args) =>
+                {
+                    await Context.Dispatcher.InvokeAsync(async () =>
+                    {
+                        _adb = new AdbTools(Context);
+                        await _adb.Unroot(parameters.Bool, parameters.Target);
+                    });
+                };
+                worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+                worker.RunWorkerAsync();
+            }
+        }
+
+        public static void ExecuteRoot(object parameter)
+        {
+            var parameters = (RootParameters)parameter;
+            Context = parameters.Context;
+            AdbTools adb = new AdbTools(Context);
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += async (sender, args) =>
+            {
+                await parameters.Window.Dispatcher.InvokeAsync(async () =>
+                {
+                    if (parameters.SuperSU || parameters.SuperUser)
+                    {
+                        if (ConnectionChecker.IsConnectedToInternet)
+                        {
+                            var controller = await parameters.Window.ShowProgressAsync("Please wait", "Downloading...", false, new MetroDialogSettings() { AnimateShow = true, AnimateHide = true, ColorScheme = MetroDialogColorScheme.Theme });
+                            if (parameters.SuperUser)
+                            {
+                                await DownloadFile("http://www.file.appsapk.com/download/Superuser.apk", "Superuser.apk", parameters.Window, controller);
+                                if (File.Exists("Superuser.apk"))
+                                {
+                                    await adb.Root(parameters.CreateNoWindow, parameters.Target);
+                                }
+                                else
+                                {
+                                    await parameters.Window.ShowMessageAsync("Unknown error", null);
+                                }
+
+                            }
+                            if (parameters.SuperSU)
+                            {
+                                await DownloadFile("http://www.file.appsapk.com/download/SuperSU.apk", "Superuser.apk", parameters.Window, controller);
+                                if (File.Exists("Superuser.apk"))
+                                {
+                                    await adb.Root(parameters.CreateNoWindow, parameters.Target);
+                                }
+                                else
+                                {
+                                    await parameters.Window.ShowMessageAsync("Unknown error", null);
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            await parameters.Window.ShowMessageAsync("Error", "You must have an internet connection.");
+                        }
+                    }
+                    else
+                    {
+                        await parameters.Window.ShowMessageAsync("Error", "You must select app");
+                    }
+                });
+            };
+            worker.RunWorkerCompleted += (sender, args) => worker.Dispose();
+            worker.RunWorkerAsync();
+        }
+
+        private static Task DownloadFile(string uri, string filename, MetroWindow window, ProgressDialogController controller)
+        {
+            return Task.Run(() =>
+            {
+                WebClient client = new WebClient();
+                client.DownloadProgressChanged += async (sender, e) =>
+                {
+                    double bytesIn = double.Parse(e.BytesReceived.ToString());
+                    double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+                    double percentage = bytesIn / totalBytes * 100;
+                    try
+                    {
+                        await window.Dispatcher.InvokeAsync(() =>
+                        {
+                            controller.SetProgress(int.Parse(Math.Truncate(percentage).ToString()));
+                        });
+                    }
+                    catch
+                    {
+
+                    }
+                };
+                client.DownloadFileCompleted += async (sender, e) =>
+                {
+                    await controller.CloseAsync();
+                    client.Dispose();
+                };
+                client.DownloadFileAsync(new Uri(uri), Environment.CurrentDirectory + filename);
+            });
+        }
+
+
         #endregion
 
         public static void ExecutePush(object parameter)

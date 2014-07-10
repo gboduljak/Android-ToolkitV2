@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using AndroidToolkit.Wpf.View;
+using System.Windows;
+using System.Windows.Input;
+using AndroidToolkit.Infrastructure.Tools;
+using AndroidToolkit.Memory;
+using AndroidToolkit.Wpf.Presentation.Controls;
 using AndroidToolkit.Wpf.ViewModel;
-using MahApps.Metro.Controls;
-
+using GalaSoft.MvvmLight.Command;
 
 namespace AndroidToolkit.Wpf
 {
@@ -13,27 +15,33 @@ namespace AndroidToolkit.Wpf
     /// </summary>
     public partial class MainWindow : IDisposable
     {
-
         private readonly MainViewModel _viewModel;
 
         public MainWindow()
         {
             InitializeComponent();
-            _viewModel = new ViewModelLocator().Main;
+            _viewModel = ((ViewModelLocator)Application.Current.Resources["Locator"]).Main;
             this.DataContext = _viewModel;
             this.Logo.HeaderSubtitle.Text = "HOME";
-            this.Closing += delegate { _viewModel.Cleanup(); };
+            this.Loaded += delegate
+            {
+                RefreshAdb.Command.Execute(this.AdbDevices);
+                RefreshFastboot.Command.Execute(this.FastbootDevices);
+            };
+            this.Closing += delegate
+            {
+                _viewModel.Cleanup();
+                FastbootTools.Kill();
+                AdbTools.KillAdb();
+            };
+            this.Closed += delegate { Application.Current.Shutdown(0); };
         }
-
-        [DllImport("kernel32.dll", EntryPoint = "SetProcessWorkingSetSize", ExactSpelling = true, CharSet = CharSet.Ansi, SetLastError = true)]
-        private static extern int SetProcessWorkingSetSize(
-          IntPtr process, int minimumWorkingSetSize, int maximumWorkingSetSize);
 
         public void Dispose()
         {
             GC.Collect();
             GC.SuppressFinalize(this);
-            SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
+            MemoryManager.SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
         }
     }
 }

@@ -118,19 +118,19 @@ namespace AndroidToolkit.Infrastructure.Tools
             string os = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await DeviceOsVersion(createWindow, target), 4));
             string osDetails = string.Empty;
             string root = string.Empty;
-                Parallel.Invoke(async () =>
+            Parallel.Invoke(async () =>
+            {
+                try
                 {
-                    try
-                    {
-                        root = await _executor.Execute(new Command("adb shell su"), createWindow); root = StringLinesRemover.RemoveLine(root, 4); root = StringLinesRemover.ForgetLastLine(root);
-                    }
-                    catch
-                    {
-                        root = string.Empty;
-                    }
-                   
-                }, () => { Thread.Sleep(200); KillAdb(); });
-            string buildprop = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await BuildProp(createWindow, target),5));
+                    root = await _executor.Execute(new Command("adb shell su"), createWindow); root = StringLinesRemover.RemoveLine(root, 4); root = StringLinesRemover.ForgetLastLine(root);
+                }
+                catch
+                {
+                    root = string.Empty;
+                }
+
+            }, () => { Thread.Sleep(200); KillAdb(); });
+            string buildprop = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await BuildProp(createWindow, target), 5));
             bool isRoot = false;
             if (os.Contains("1.5"))
             {
@@ -180,6 +180,61 @@ namespace AndroidToolkit.Infrastructure.Tools
             await context.Dispatcher.InvokeAsync(async () =>
                 context.Text = StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("adb devices")), 5)));
         }
+        public async Task<string> ListDevices(bool createNoWindow)
+        {
+            return StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(await _executor.Execute(new Command("adb devices")), 5));
+        }
+
+        public Task Root(bool createNoWindow, string target)
+        {
+            if (!string.IsNullOrEmpty(target))
+            {
+                _cmds = new List<Command>(5)
+                {
+                    new Command(string.Format("adb -s {0} push Superuser.apk /system/app", target)),
+                    new Command(string.Format("adb -s {0} push su /system/bin", target)),
+                    new Command(string.Format("adb -s {0} push su /system/xbin", target)),
+                    new Command(string.Format("adb -s {0} push busybox /system/xbin", target)),
+                    new Command(string.Format("adb -s {0} reboot", target))
+                };
+                return _executor.Execute(_cmds, Context, createNoWindow);
+            }
+            _cmds = new List<Command>(5)
+                {
+                    new Command(string.Format("adb push Superuser.apk /system/app")),
+                    new Command(string.Format("adb push su /system/bin")),
+                    new Command(string.Format("adb push su /system/xbin")),
+                    new Command(string.Format("adb push busybox /system/xbin")),
+                    new Command(string.Format("adb reboot"))
+                };
+            return _executor.Execute(_cmds, Context, createNoWindow);
+        }
+
+        public Task Unroot(bool createNoWindow, string target)
+        {
+            if (!string.IsNullOrEmpty(target))
+            {
+                _cmds = new List<Command>(5)
+                {
+                    new Command(string.Format("adb -s {0} shell rm /system/app/Superuser.apk ", target)),
+                    new Command(string.Format("adb -s {0} shell rm /system/bin/su", target)),
+                    new Command(string.Format("adb -s {0} shell rm /system/xbin/su", target)),
+                    new Command(string.Format("adb -s {0} shell rm /system/xbin/busybox", target)),
+                    new Command(string.Format("adb -s {0} reboot", target))
+                };
+                return _executor.Execute(_cmds, Context, createNoWindow);
+            }
+            _cmds = new List<Command>(5)
+                {
+                    new Command(string.Format("adb shell rm /system/app/Superuser.apk ")),
+                    new Command(string.Format("adb shell rm /system/bin/su")),
+                    new Command(string.Format("adb shell rm /system/xbin/su")),
+                    new Command(string.Format("adb shell rm /system/xbin/busybox")),
+                    new Command(string.Format("adb reboot"))
+                };
+            return _executor.Execute(_cmds, Context, createNoWindow);
+        }
+
 
         public static void KillAdb()
         {
@@ -190,7 +245,7 @@ namespace AndroidToolkit.Infrastructure.Tools
         }
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-       private static extern bool TerminateProcess(IntPtr hProcess, uint uExitCode);
+        private static extern bool TerminateProcess(IntPtr hProcess, uint uExitCode);
         ~AdbTools()
         {
             this._executor = null;
