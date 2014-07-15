@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using AndroidToolkit.Infrastructure.Device;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Utilities;
+using Timer = System.Timers.Timer;
 
 namespace AndroidToolkit.Infrastructure.Tools
 {
@@ -103,6 +104,15 @@ namespace AndroidToolkit.Infrastructure.Tools
 
         public async Task<DeviceInfo> DeviceInfo(bool createWindow, string target = null)
         {
+            Timer timer = new Timer(6000);
+
+            timer.Elapsed += (sender, e) =>
+            {
+                KillAdb();
+                timer.Dispose();
+            };
+
+            timer.Enabled = true;
             string name =
                 StringLinesRemover.ForgetLastLine(StringLinesRemover.RemoveLine(
                    await DeviceName(createWindow, target), 4));
@@ -244,9 +254,9 @@ namespace AndroidToolkit.Infrastructure.Tools
                 {
                     TerminateProcess(proc.Handle, 0);
                 }
-                catch 
+                catch
                 {
-                    
+
                 }
             }
         }

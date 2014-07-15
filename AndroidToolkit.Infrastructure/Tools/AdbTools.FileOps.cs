@@ -14,7 +14,6 @@ using System.Windows.Threading;
 using AndroidToolkit.Infrastructure.Adapters;
 using AndroidToolkit.Infrastructure.Helpers;
 using AndroidToolkit.Infrastructure.Utilities;
-using System.Timers;
 
 namespace AndroidToolkit.Infrastructure.Tools
 {
@@ -158,7 +157,7 @@ namespace AndroidToolkit.Infrastructure.Tools
         {
             if (!string.IsNullOrEmpty(target))
             {
-                await logcatText.Dispatcher.InvokeAsync(async () =>
+                await logcatText.Dispatcher.InvokeAsync(() =>
                 {
                     BackgroundWorker worker = new BackgroundWorker();
                     worker.DoWork += async (sender, e) => await this.ExecuteLogcat(new Command(string.Format("adb -s {0} shell logcat",target)), logcatText, createNoWindow);

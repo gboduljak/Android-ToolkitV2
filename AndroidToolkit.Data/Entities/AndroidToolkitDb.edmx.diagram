@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0fbd78ea84664fcb9dfc8e910222fbf2" Name="Diagram1">
+        <EntityTypeShape EntityType="AndroidToolkitDBModel.Device" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="AndroidToolkitDBModel.Recovery" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <AssociationConnector Association="AndroidToolkitDBModel.FK_DeviceRecovery" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="AndroidToolkitDBModel.Help" Width="1.5" PointX="0.75" PointY="3.625" FillColor="0, 192, 192" />
+        <EntityTypeShape EntityType="AndroidToolkitDBModel.BugReport" Width="1.5" PointX="3" PointY="3.625" FillColor="0, 192, 192" />
+        <EntityTypeShape EntityType="AndroidToolkitDBModel.Review" Width="1.5" PointX="0.75" PointY="5.75" FillColor="0, 192, 192" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

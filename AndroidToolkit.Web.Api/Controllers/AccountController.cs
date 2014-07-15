@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
@@ -49,7 +52,7 @@ namespace AndroidToolkit.Web.Api.Controllers
                 _userManager = value;
             }
         }
-
+     
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         // GET api/Account/UserInfo
@@ -290,7 +293,7 @@ namespace AndroidToolkit.Web.Api.Controllers
                 State = state
             }).ToList();
         }
-
+     
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
@@ -301,7 +304,7 @@ namespace AndroidToolkit.Web.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Username, Email = model.Email};
+            var user = new ApplicationUser() { UserName = model.Username, Email = model.Email, DateRegistered = DateTime.Now, Name = model.Name, Surname = model.Surname, ProfilePhoto = model.ProfilePhoto };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -325,7 +328,7 @@ namespace AndroidToolkit.Web.Api.Controllers
                 return InternalServerError();
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email};
 
             IdentityResult result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)
