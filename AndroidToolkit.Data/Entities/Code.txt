@@ -29,3 +29,66 @@ namespace AndroidToolkit.Data.Entities
         public virtual DbSet<Recovery> Recoveries { get; set; }
     }
 }
+
+
+--------------------------------------------------
+
+<input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
+<div id="imgTest"></div>
+<script type='text/javascript'>
+function encodeImageFileAsURL(){
+
+    var filesSelected = document.getElementById("inputFileToLoad").files;
+    if (filesSelected.length > 0)
+    {
+        var fileToLoad = filesSelected[0];
+
+        var fileReader = new FileReader();
+
+        fileReader.onload = function(fileLoadedEvent) {
+            var srcData = fileLoadedEvent.target.result; // <--- data: base64
+
+            var newImage = document.createElement('img');
+            newImage.src = srcData;
+
+            document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+            alert("Converted Base64 version is "+document.getElementById("imgTest").innerHTML);
+            console.log("Converted Base64 version is "+document.getElementById("imgTest").innerHTML);
+        }
+        fileReader.readAsDataURL(fileToLoad);
+    }
+}
+</script>
+
+------------------------------------------------------
+
+.directive('imgUpload', [function () {
+return {
+ restrict: 'A',
+ link: function (scope, elem, attrs) {
+  var reader = new FileReader();
+  reader.onload = function (e) {
+            scope.image = e.target.result;
+            scope.$apply();
+        }
+
+        elem.on('change', function() {
+         reader.readAsDataURL(elem[0].files[0]);
+        });
+ }
+};
+}]);
+
+<img ng-if="image" src="{{image}}" alt="">
+<input img-upload type="file" name="upload">
+
+
+
+
+
+
+
+
+
+
+

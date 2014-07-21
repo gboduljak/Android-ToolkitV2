@@ -1,68 +1,123 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.OData;
 using AndroidToolkit.Data.Entities;
 using AndroidToolkit.Data.Logic;
 using AndroidToolkit.Web.Api.Models;
+using Ninject;
 
 namespace AndroidToolkit.Web.Api.Controllers
 {
     [RoutePrefix("api/devices")]
     public class DevicesController : ApiController
     {
-        public DevicesController()
+        [Inject]
+        public DevicesController(IDeviceRepository repo, IRecoveriesRepository repo2)
         {
-            _repo = new DeviceRepository();
-            _repo2 = new RecoveriesRepository();
+            _repo = repo;
+            _repo2 = repo2;
         }
 
         [Route("get")]
         [AllowAnonymous]
         [EnableQuery]
-        public IQueryable<Device> Get()
+        public async Task<List<ShowDeviceModel>> Get()
         {
-            return _repo.Get();
+            List<ShowDeviceModel> viewModels = new List<ShowDeviceModel>();
+            foreach (var vm in _repo.Get().Select(device => new ShowDeviceModel()
+            {
+                Id = device.Id,
+                Image = device.Image,
+                Manufacturer = device.Manufacturer,
+                Name = device.Name,
+                Year = device.Year
+            }))
+            {
+                var recoveries = await _repo.GetRecoveries(vm.Id);
+                foreach (var recovery in recoveries)
+                {
+                    vm.Recoveries.Add(new { Name = recovery.Name, Version = recovery.Version, Download = recovery.Download });
+                }
+                viewModels.Add(vm);
+            }
+            return viewModels;
+        }
+
+
+        [Route("get")]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> Get(int id)
+        {
+            Device device = await _repo.Get(id);
+            if (device != null)
+            {
+                ShowDeviceModel vm = new ShowDeviceModel()
+                {
+                    Id = device.Id,
+                    Image = device.Image,
+                    Manufacturer = device.Manufacturer,
+                    Name = device.Name,
+                    Year = device.Year
+                };
+                var recoveries = await _repo.GetRecoveries(vm.Id);
+                foreach (var recovery in recoveries)
+                {
+                    vm.Recoveries.Add(new { Name = recovery.Name, Version = recovery.Version, Download = recovery.Download });
+                }
+                return Ok(vm);
+            }
+            return BadRequest();
         }
 
         [Route("get")]
         [AllowAnonymous]
-        public Task<Device> Get(int id)
+        public async Task<IHttpActionResult> Get(string name)
         {
-            return _repo.Get(id);
-        }
-
-        [Route("get")]
-        [AllowAnonymous]
-        public Task<Device> Get(string name)
-        {
-            return _repo.Get(name);
+            Device device = await _repo.Get(name);
+            if (device != null)
+            {
+                ShowDeviceModel vm = new ShowDeviceModel()
+                {
+                    Id = device.Id,
+                    Image = device.Image,
+                    Manufacturer = device.Manufacturer,
+                    Name = device.Name,
+                    Year = device.Year
+                };
+                var recoveries = await _repo.GetRecoveries(vm.Id);
+                foreach (var recovery in recoveries)
+                {
+                    vm.Recoveries.Add(new { Name = recovery.Name, Version = recovery.Version, Download = recovery.Download });
+                }
+                return Ok(vm);
+            }
+            return BadRequest();
         }
 
         [Route("get-recoveries")]
         [AllowAnonymous]
         [HttpGet]
         [EnableQuery]
-        public async Task<IEnumerable> GetRecoveries(int deviceId)
+        public async Task<IHttpActionResult> GetRecoveries(int deviceId)
         {
             var device = await _repo.Get(deviceId);
-            IList recoveries = new List<object>();
             if (device != null)
             {
+                IList recoveries = new List<object>();
+
                 foreach (var recovery in device.Recoveries)
                 {
-                    recoveries.Add(new { recovery.Id, recovery.Name, recovery.Version });
+                    recoveries.Add(new { Id = recovery.Id, Name = recovery.Name, Version = recovery.Version });
                 }
+
+                return Ok(recoveries);
             }
-            return recoveries;
+            return BadRequest();
         }
 
         [Route("create")]
@@ -70,17 +125,26 @@ namespace AndroidToolkit.Web.Api.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Create(CreateDeviceBindingModel model)
         {
-            var device = new Device() { Name = model.Name, Manufacturer = model.Manufacturer, Year = model.Year };
-            foreach (int recoveryId in model.RecoveryIds)
+            if (model != null)
             {
-                Recovery temp = await _repo2.Get(recoveryId);
-                device.Recoveries.Add(temp);
+                var device = new Device { Name = model.Name, Manufacturer = model.Manufacturer, Year = model.Year, Image = model.Image };
+                if (model.RecoveryIds != null)
+                {
+                    foreach (int recoveryId in model.RecoveryIds)
+                    {
+                        Recovery temp = await _repo2.Get(recoveryId);
+                        if (temp != null)
+                        {
+                            device.Recoveries.Add(temp);
+                        }
+                    }
+                }
+                if (await _repo.Create(device))
+                {
+                    return Ok();
+                }
             }
-            if (await _repo.Create(device))
-            {
-                return Ok(device);
-            }
-            return BadRequest("Unknown error");
+            return BadRequest("Model error.");
         }
 
         [Route("edit")]
@@ -88,19 +152,32 @@ namespace AndroidToolkit.Web.Api.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> Edit(EditDeviceBindingModel model)
         {
-            var device = await _repo.Get(model.Id);
-            device.Name = model.Name;
-            device.Manufacturer = model.Manufacturer;
-            device.Year = model.Year;
-            device.Image = model.Image;
-            foreach (int recoveryId in model.RecoveryIds)
+            if (model != null)
             {
-                Recovery temp = await _repo2.Get(recoveryId);
-                device.Recoveries.Clear();
-                device.Recoveries.Add(temp);
+                var device = await _repo.Get(model.Id);
+                if (device != null)
+                {
+                    device.Name = model.Name;
+                    device.Manufacturer = model.Manufacturer;
+                    device.Year = model.Year;
+                    device.Image = model.Image;
+                    foreach (int recoveryId in model.RecoveryIds)
+                    {
+                        Recovery temp = await _repo2.Get(recoveryId);
+                        if (temp != null)
+                        {
+                            device.Recoveries.Clear();
+                            device.Recoveries.Add(temp);
+                        }
+                    }
+                    if (await _repo.Edit(device))
+                    {
+                        return Ok();
+                    }
+                    return NotFound();
+                }
             }
-            await _repo.Edit(device);
-            return Ok(device);
+            return BadRequest("Model error.");
         }
 
         [Route("delete")]
@@ -108,8 +185,15 @@ namespace AndroidToolkit.Web.Api.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            await _repo.Delete(id);
-            return Ok();
+            if (id > 0)
+            {
+                if (await _repo.Delete(id))
+                {
+                    return Ok();
+                }
+                return InternalServerError(new Exception("An server error occured while deleting recovery."));
+            }
+            return BadRequest("Parameter 'id' is required.");
         }
 
         #region Fields

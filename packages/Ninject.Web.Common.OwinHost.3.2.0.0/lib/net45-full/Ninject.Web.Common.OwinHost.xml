@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ninject.Web.Common.OwinHost</name>
+    </assembly>
+    <members>
+        <member name="T:Ninject.Web.Common.OwinHost.OwinAppBuilderExtensions">
+            <summary>
+            The OWIN app builder extensions.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.Common.OwinHost.OwinAppBuilderExtensions.NinjectOwinBootstrapperKey">
+            <summary>
+            The ninject OWIN bootstrapper.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.Common.OwinHost.OwinAppBuilderExtensions.UseNinjectMiddleware(Owin.IAppBuilder,System.Func{Ninject.IKernel})">
+            <summary>
+            Use ninject middleware.
+            </summary>
+            <param name="app">
+            The app.
+            </param>
+            <param name="createKernel">
+            The function pointer.
+            </param>
+            <returns>
+            The <see cref="T:Owin.IAppBuilder"/>.
+            </returns>
+        </member>
+        <member name="T:Ninject.Web.Common.OwinHost.OwinBootstrapper">
+            <summary>
+            The OWIN bootstrapper.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.Common.OwinHost.OwinBootstrapper.NinjectOwinRequestScope">
+            <summary>
+            The ninject OWIN request scope.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.Common.OwinHost.OwinBootstrapper.modules">
+            <summary>
+            The modules.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.Common.OwinHost.OwinBootstrapper.createKernel">
+            <summary>
+            The create kernel.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.Common.OwinHost.OwinBootstrapper.bootstrapper">
+            <summary>
+            The bootstrapper.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.Common.OwinHost.OwinBootstrapper.#ctor(System.Func{Ninject.IKernel})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.Common.OwinHost.OwinBootstrapper"/> class.
+            </summary>
+            <param name="createKernel">
+            The create kernel.
+            </param>
+        </member>
+        <member name="M:Ninject.Web.Common.OwinHost.OwinBootstrapper.Execute(Microsoft.Owin.IOwinContext,System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            The execute.
+            </summary>
+            <param name="context">
+            The context.
+            </param>
+            <param name="next">
+            The next.
+            </param>
+            <returns>
+            The <see cref="T:System.Threading.Tasks.Task"/>.
+            </returns>
+        </member>
+        <member name="M:Ninject.Web.Common.OwinHost.OwinBootstrapper.AddModule(Ninject.Modules.NinjectModule)">
+            <summary>
+            Add a new module.
+            </summary>
+            <param name="ninjectModule">
+            The module.
+            </param>
+        </member>
+        <member name="M:Ninject.Web.Common.OwinHost.OwinBootstrapper.CreateKernel">
+            <summary>
+            Create the kernel.
+            </summary>
+            <returns>
+            The <see cref="T:Ninject.IKernel"/>.
+            </returns>
+        </member>
+        <member name="T:Ninject.Web.Common.OwinHost.OwinRequestScope">
+            <summary>
+            The OWIN request scope.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.Common.OwinHost.OwinRequestScope.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.Common.OwinHost.OwinRequestScope"/> class.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.Common.OwinHost.OwinRequestScope.Dispose">
+            <summary>
+            The dispose.
+            </summary>
+        </member>
+        <member name="E:Ninject.Web.Common.OwinHost.OwinRequestScope.Disposed">
+            <summary>
+            The disposed event.
+            </summary>
+        </member>
+        <member name="P:Ninject.Web.Common.OwinHost.OwinRequestScope.IsDisposed">
+            <summary>
+            Gets a value indicating whether is disposed.
+            </summary>
+        </member>
+    </members>
+</doc>

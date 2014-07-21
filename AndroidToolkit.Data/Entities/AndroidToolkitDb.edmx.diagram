@@ -11,6 +11,7 @@
         <EntityTypeShape EntityType="AndroidToolkitDBModel.Help" Width="1.5" PointX="0.75" PointY="3.625" FillColor="0, 192, 192" />
         <EntityTypeShape EntityType="AndroidToolkitDBModel.BugReport" Width="1.5" PointX="3" PointY="3.625" FillColor="0, 192, 192" />
         <EntityTypeShape EntityType="AndroidToolkitDBModel.Review" Width="1.5" PointX="0.75" PointY="5.75" FillColor="0, 192, 192" />
+        <EntityTypeShape EntityType="AndroidToolkitDBModel.Post" Width="1.5" PointX="3" PointY="5.75" FillColor="0, 192, 192" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

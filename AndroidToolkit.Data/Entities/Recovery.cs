@@ -18,6 +18,7 @@ namespace AndroidToolkit.Data.Entities
         public string Name { get; set; }
         public string Version { get; set; }
         public int DeviceId { get; set; }
+        public string Download { get; set; }
     
         public virtual Device Device { get; set; }
     }

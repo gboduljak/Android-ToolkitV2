@@ -10,9 +10,9 @@ namespace AndroidToolkit.Data.Logic
 {
     public class DeviceRepository : IDeviceRepository
     {
-        public DeviceRepository()
+        public DeviceRepository(AndroidToolkitDB db)
         {
-            _db = new AndroidToolkitDB();
+            _db = db;
         }
 
         public IQueryable<Device> Get()
@@ -32,13 +32,22 @@ namespace AndroidToolkit.Data.Logic
 
         public async Task<IEnumerable<Recovery>> GetRecoveries(int id)
         {
-            Device device = await Get(id);
+            var device = await Get(id);
+            await _db.Entry(device).Collection(d => d.Recoveries).LoadAsync();
             return device.Recoveries;
         }
 
         public async Task<bool> Create(Device device)
         {
             _db.Devices.Add(device);
+            await Save();
+            return true;
+        }
+
+        public async Task<bool> AddRecovery(int deviceId, int recoveryId)
+        {
+            Device device = await Get(deviceId);
+            device.Recoveries.Add(await _db.Recoveries.FindAsync(recoveryId));
             await Save();
             return true;
         }

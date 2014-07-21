@@ -11,6 +11,7 @@
     <EntitySet Name="Helps" EntityType="AndroidToolkitDBModel.Store.Helps" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="BugReports" EntityType="AndroidToolkitDBModel.Store.BugReports" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Reviews" EntityType="AndroidToolkitDBModel.Store.Reviews" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Posts" EntityType="AndroidToolkitDBModel.Store.Posts" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_DeviceRecovery" Association="AndroidToolkitDBModel.Store.FK_DeviceRecovery">
       <End Role="Devices" EntitySet="Devices" />
       <End Role="Recoveries" EntitySet="Recoveries" />
@@ -34,6 +35,7 @@
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Version" Type="nvarchar(max)" Nullable="false" />
     <Property Name="DeviceId" Type="int" Nullable="false" />
+    <Property Name="Download" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="Helps">
     <Key>
@@ -62,6 +64,16 @@
     <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Rating" Type="int" Nullable="false" />
     <Property Name="Author" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Posts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="Tags" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <Association Name="FK_DeviceRecovery">
     <End Role="Devices" Type="AndroidToolkitDBModel.Store.Devices" Multiplicity="1" />
@@ -99,6 +111,7 @@
           <Property Name="Version" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DeviceId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Device" Relationship="Self.FK_DeviceRecovery" FromRole="Recoveries" ToRole="Devices" />
+          <Property Name="Download" Type="String" Nullable="false" />
         </EntityType>
         <Association Name="FK_DeviceRecovery">
           <End Role="Devices" Type="AndroidToolkitDBModel.Device" Multiplicity="1" />
@@ -122,6 +135,7 @@
           <EntitySet Name="Helps" EntityType="AndroidToolkitDBModel.Help" />
           <EntitySet Name="BugReports" EntityType="AndroidToolkitDBModel.BugReport" />
           <EntitySet Name="Reviews" EntityType="AndroidToolkitDBModel.Review" />
+          <EntitySet Name="Posts" EntityType="AndroidToolkitDBModel.Post" />
         </EntityContainer>
         <EntityType Name="Help">
           <Key>
@@ -151,6 +165,16 @@
           <Property Name="Rating" Type="Int32" Nullable="false" />
           <Property Name="Author" Type="String" Nullable="false" />
         </EntityType>
+        <EntityType Name="Post">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" />
+          <Property Name="Content" Type="String" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" />
+          <Property Name="Tags" Type="String" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -175,6 +199,7 @@
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Version" ColumnName="Version" />
           <ScalarProperty Name="DeviceId" ColumnName="DeviceId" />
+          <ScalarProperty Name="Download" ColumnName="Download" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -206,6 +231,17 @@
           <ScalarProperty Name="Content" ColumnName="Content" />
           <ScalarProperty Name="Rating" ColumnName="Rating" />
           <ScalarProperty Name="Author" ColumnName="Author" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Posts">
+      <EntityTypeMapping TypeName="IsTypeOf(AndroidToolkitDBModel.Post)">
+        <MappingFragment StoreEntitySet="Posts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Tags" ColumnName="Tags" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

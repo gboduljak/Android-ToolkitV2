@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ninject.Web.WebApi.OwinHost</name>
+    </assembly>
+    <members>
+        <member name="T:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyResolver">
+            <summary>
+            Ninject dependency resolver for self hosting
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyResolver.#ctor(Ninject.Syntax.IResolutionRoot)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyResolver"/> class.
+            </summary>
+            <param name="resolutionRoot">The resolution root.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyResolver.BeginScope">
+            <summary>
+            Begins the scope.
+            </summary>
+            <returns>The new scope</returns>
+        </member>
+        <member name="T:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyScope">
+            <summary>
+            Dependency scope for self hosting.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyScope.#ctor(Ninject.Syntax.IResolutionRoot)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyScope"/> class.
+            </summary>
+            <param name="resolutionRoot">The resolution root.</param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinNinjectDependencyScope.Dispose(System.Boolean)">
+            <summary>
+            Releases resources held by the object.
+            </summary>
+            <param name="disposing">true if the object is being disposed, false if it it finalized.</param>
+        </member>
+        <member name="T:Ninject.Web.WebApi.OwinHost.OwinWebApiAppBuilderExtensions">
+            <summary>
+            The OWIN web API app builder extensions.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinWebApiAppBuilderExtensions.UseNinjectWebApi(Owin.IAppBuilder,System.Web.Http.HttpConfiguration)">
+            <summary>
+            The use ninject web API.
+            </summary>
+            <param name="app">
+            The app.
+            </param>
+            <param name="configuration">
+            The configuration.
+            </param>
+            <returns>
+            The <see cref="T:Owin.IAppBuilder"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            An exception when a argument is null.
+            </exception>
+        </member>
+        <member name="T:Ninject.Web.WebApi.OwinHost.OwinWebApiModule">
+            <summary>
+            The OWIN web API module.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.OwinHost.OwinWebApiModule.configuration">
+            <summary>
+            The configuration.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinWebApiModule.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Ninject.Web.WebApi.OwinHost.OwinWebApiModule"/> class.
+            </summary>
+            <param name="configuration">
+            The configuration.
+            </param>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinWebApiModule.Load">
+            <summary>
+            Loads the module.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinWebApiModule.VerifyRequiredModulesAreLoaded">
+            <summary>
+            Called after loading the modules. A module can verify here if all other required modules are loaded.
+            </summary>
+        </member>
+        <member name="T:Ninject.Web.WebApi.OwinHost.OwinWebApiRequestScopeProvider">
+            <summary>
+            Provides the request scope.
+            </summary>
+        </member>
+        <member name="F:Ninject.Web.WebApi.OwinHost.OwinWebApiRequestScopeProvider.WebApiScopeName">
+            <summary>
+            The web API scope name for named scope.
+            </summary>
+        </member>
+        <member name="M:Ninject.Web.WebApi.OwinHost.OwinWebApiRequestScopeProvider.GetRequestScope(Ninject.Activation.IContext)">
+            <summary>
+            Gets the request scope.
+            </summary>
+            <param name="context">The activation context.</param>
+            <returns>The request scope</returns>
+        </member>
+    </members>
+</doc>

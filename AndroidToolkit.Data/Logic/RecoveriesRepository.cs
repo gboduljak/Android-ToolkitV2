@@ -11,10 +11,14 @@ namespace AndroidToolkit.Data.Logic
 {
     public class RecoveriesRepository : IRecoveriesRepository
     {
+        public RecoveriesRepository(AndroidToolkitDB db)
+        {
+            _db = db;
+        }
 
         public IQueryable<Recovery> Get()
         {
-            return _db.Recoveries.AsQueryable();
+            return _db.Recoveries;
         }
 
         public Task<Recovery> Get(int id)
@@ -24,12 +28,13 @@ namespace AndroidToolkit.Data.Logic
 
         public Task<Recovery> Get(string name)
         {
-            return _db.Recoveries.FirstAsync(x => x.Name == name);
+            return _db.Recoveries.SingleOrDefaultAsync(x => x.Name == name);
         }
 
         public async Task<Device> GetDevice(int id)
         {
             Recovery recovery = await Get(id);
+            await _db.Entry(recovery).Reference(x => x.Device).LoadAsync();
             return recovery.Device;
         }
 
@@ -41,15 +46,8 @@ namespace AndroidToolkit.Data.Logic
         public async Task<bool> Create(Recovery recovery)
         {
             _db.Recoveries.Add(recovery);
-            try
-            {
-                await Save();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            await Save();
+            return true;
         }
 
         public async Task<bool> Edit(Recovery recovery)

@@ -14,6 +14,7 @@ namespace AndroidToolkit.Data.Logic
         Task<Device> Get(string name);
         Task<IEnumerable<Recovery>> GetRecoveries(int id);
         Task<bool> Create(Device device);
+        Task<bool> AddRecovery(int deviceId, int recoveryId);
         Task<bool> Edit(Device device);
         Task<bool> Delete(int id);
     }

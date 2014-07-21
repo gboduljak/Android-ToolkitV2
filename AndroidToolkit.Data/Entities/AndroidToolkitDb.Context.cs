@@ -30,5 +30,6 @@ namespace AndroidToolkit.Data.Entities
         public virtual DbSet<Help> Helps { get; set; }
         public virtual DbSet<BugReport> BugReports { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
     }
 }

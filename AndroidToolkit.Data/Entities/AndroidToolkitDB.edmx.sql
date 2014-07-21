@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 07/15/2014 14:00:50
+-- Date Created: 07/21/2014 12:40:17
 -- Generated from EDMX file: F:\Projects\AndroidToolkitV2\AndroidToolkit\AndroidToolkit.Data\Entities\AndroidToolkitDb.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [F:\Projects\AndroidToolkitV2\AndroidToolkit\AndroidToolkit.Data\AndroidToolkitDb.mdf];
+USE [AndroidToolkitDB];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -31,6 +31,18 @@ GO
 IF OBJECT_ID(N'[dbo].[Recoveries]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Recoveries];
 GO
+IF OBJECT_ID(N'[dbo].[Helps]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Helps];
+GO
+IF OBJECT_ID(N'[dbo].[BugReports]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[BugReports];
+GO
+IF OBJECT_ID(N'[dbo].[Reviews]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Reviews];
+GO
+IF OBJECT_ID(N'[dbo].[Posts]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Posts];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -51,7 +63,8 @@ CREATE TABLE [dbo].[Recoveries] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
     [Version] nvarchar(max)  NOT NULL,
-    [DeviceId] int  NOT NULL
+    [DeviceId] int  NOT NULL,
+    [Download] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -80,6 +93,16 @@ CREATE TABLE [dbo].[Reviews] (
     [Content] nvarchar(max)  NOT NULL,
     [Rating] int  NOT NULL,
     [Author] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'Posts'
+CREATE TABLE [dbo].[Posts] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Title] nvarchar(max)  NOT NULL,
+    [Content] nvarchar(max)  NOT NULL,
+    [Date] datetime  NOT NULL,
+    [Tags] nvarchar(max)  NOT NULL
 );
 GO
 
@@ -114,6 +137,12 @@ GO
 -- Creating primary key on [Id] in table 'Reviews'
 ALTER TABLE [dbo].[Reviews]
 ADD CONSTRAINT [PK_Reviews]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Posts'
+ALTER TABLE [dbo].[Posts]
+ADD CONSTRAINT [PK_Posts]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 

@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
@@ -52,8 +48,17 @@ namespace AndroidToolkit.Web.Api.Controllers
                 _userManager = value;
             }
         }
-     
+
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("HashPwd")]
+        public string HashPwd(string pwd)
+        {
+            return UserManager.PasswordHasher.HashPassword(pwd);
+        }
+
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -91,7 +96,8 @@ namespace AndroidToolkit.Web.Api.Controllers
 
             List<UserLoginInfoViewModel> logins = user.Logins.Select(linkedAccount => new UserLoginInfoViewModel
             {
-                LoginProvider = linkedAccount.LoginProvider, ProviderKey = linkedAccount.ProviderKey
+                LoginProvider = linkedAccount.LoginProvider,
+                ProviderKey = linkedAccount.ProviderKey
             }).ToList();
 
             if (user.PasswordHash != null)
@@ -123,7 +129,7 @@ namespace AndroidToolkit.Web.Api.Controllers
 
             IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
                 model.NewPassword);
-            
+
             return !result.Succeeded ? GetErrorResult(result) : Ok();
         }
 
@@ -246,9 +252,9 @@ namespace AndroidToolkit.Web.Api.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
+
+                ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+                   OAuthDefaults.AuthenticationType);
                 ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
                     CookieAuthenticationDefaults.AuthenticationType);
 
@@ -286,14 +292,19 @@ namespace AndroidToolkit.Web.Api.Controllers
 
             return descriptions.Select(description => new ExternalLoginViewModel
             {
-                Name = description.Caption, Url = Url.Route("ExternalLogin", new
-                {
-                    provider = description.AuthenticationType, response_type = "token", client_id = Startup.PublicClientId, redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri, state = state
-                }),
+                Name = description.Caption,
+                Url = Url.Route("ExternalLogin", new
+                    {
+                        provider = description.AuthenticationType,
+                        response_type = "token",
+                        client_id = Startup.PublicClientId,
+                        redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
+                        state = state
+                    }),
                 State = state
             }).ToList();
         }
-     
+
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
@@ -328,7 +339,7 @@ namespace AndroidToolkit.Web.Api.Controllers
                 return InternalServerError();
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email};
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user);
             if (!result.Succeeded)

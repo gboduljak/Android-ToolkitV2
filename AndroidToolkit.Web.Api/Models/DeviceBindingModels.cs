@@ -7,6 +7,26 @@ using System.Web;
 
 namespace AndroidToolkit.Web.Api.Models
 {
+    public class ShowDeviceModel
+    {
+        public ShowDeviceModel()
+        {
+            Recoveries=new List<object>();
+        }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Manufacturer { get; set; }
+
+        public string Year { get; set; }
+
+        public string Image { get; set; }
+
+        public IList<object> Recoveries { get; set; }
+    }
+
+
     public class CreateDeviceBindingModel
     {
         [Required]
@@ -15,6 +35,8 @@ namespace AndroidToolkit.Web.Api.Models
         public string Manufacturer { get; set; }
         [Required]
         public string Year { get; set; }
+
+        public string Image { get; set; }
 
         public int[] RecoveryIds { get; set; }
     }
