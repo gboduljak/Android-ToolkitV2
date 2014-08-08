@@ -29,6 +29,8 @@ namespace AndroidToolkit.Web.Api.Providers
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
             ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
@@ -39,15 +41,15 @@ namespace AndroidToolkit.Web.Api.Providers
                 return;
             }
 
-            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-               OAuthDefaults.AuthenticationType);
-            ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
+            ClaimsIdentity oAuthIdentity = await userManager.CreateIdentityAsync(user,
+                context.Options.AuthenticationType);
+            ClaimsIdentity cookiesIdentity = await userManager.CreateIdentityAsync(user,
                 CookieAuthenticationDefaults.AuthenticationType);
-
             AuthenticationProperties properties = CreateProperties(user.UserName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
+
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)

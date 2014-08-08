@@ -1,6 +1,9 @@
 using System.Web.Http;
 using AndroidToolkit.Data.Entities;
 using AndroidToolkit.Data.Logic;
+using AndroidToolkit.Web.Api.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(AndroidToolkit.Web.Api.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(AndroidToolkit.Web.Api.App_Start.NinjectWebCommon), "Stop")]
@@ -68,6 +71,10 @@ namespace AndroidToolkit.Web.Api.App_Start
             kernel.Bind<AndroidToolkitDB>().ToSelf();
             kernel.Bind<IDeviceRepository>().To<DeviceRepository>().WithConstructorArgument("db", kernel.Get<AndroidToolkitDB>());
             kernel.Bind<IRecoveriesRepository>().To<RecoveriesRepository>().WithConstructorArgument("db", kernel.Get<AndroidToolkitDB>());
+            kernel.Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>();
+            kernel.Bind<UserManager<ApplicationUser>>()
+                .ToSelf()
+                .WithConstructorArgument(kernel.Get<IUserStore<ApplicationUser>>());
         }
     }
 }

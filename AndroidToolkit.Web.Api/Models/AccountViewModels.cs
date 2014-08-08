@@ -22,6 +22,14 @@ namespace AndroidToolkit.Web.Api.Models
 
         public string Email { get; set; }
 
+        public string Name { get; set; }
+
+        public string Surname { get; set; }
+
+        public string ProfilePhoto { get; set; }
+
+        public DateTime DateRegistered { get; set; }
+
         public IEnumerable<UserLoginInfoViewModel> Logins { get; set; }
 
         public IEnumerable<ExternalLoginViewModel> ExternalLoginProviders { get; set; }

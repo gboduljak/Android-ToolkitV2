@@ -1,0 +1,132 @@
+﻿
+<div ng-hide="isBusy">
+    <header id="blue" class="page-header">
+        <h1>
+            User - {{user.Username}}
+            <small>Manage account</small>
+        </h1>
+    </header>
+
+    <div class="container">
+        <div class="row well-lg">
+            <div class="col-md-8">
+                <h2>Account Details</h2>
+                <hr />
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="lead">
+                            Username : {{user.Username}}
+                        </p>
+                        <br />
+                        <p class="lead">
+                            Name : {{user.Name}}
+                        </p>
+                        <br />
+                        <p class="lead">
+                            Surname : {{user.Surname}}
+                        </p>
+                        <br />
+                        <p class="lead">
+                            Email : {{user.Email}}
+                        </p>
+                        <br />
+                        <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#accessTokenModal">
+                            <i class="fa fa-info-circle"></i>
+                            Access Token
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <h2>Profile Photo</h2>
+                        <hr />
+                        <img alt="Profile Photo" title="Profile Photo" class="img-thumbnail img-responsive" ng-src="{{user.ProfilePhoto}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h2>Change Password</h2>
+                <hr />
+                <form class="form-login" role="form" name="userForm">
+                    <div ng-hide="message == ''" class="alert alert-danger">
+                        {{message}}
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.oldPassword.$invalid && !userForm.oldPassword.$pristine }">
+                        <label>Old Password</label>
+                        <input type="password" name="oldPassword" class="form-control input-lg" ng-model="user.oldPassword" ng-minlength="3" password-verify="authData.password">
+                        <p ng-show="userForm.oldPassword.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Old Password is required.
+                        </p>
+                        <p ng-show="userForm.oldPassword.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Old Password is too short.
+                        </p>
+                        <p ng-show="userForm.oldPassword.$error.passwordVerify" class="help-block">
+                            Old Password is wrong.
+                        </p>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.newPassword.$invalid && !userForm.newPassword.$pristine }">
+                        <label>New Password</label>
+                        <input type="password" name="newPassword" class="form-control input-lg" ng-model="user.newPassword" ng-minlength="3">
+                        <p ng-show="userForm.newPassword.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            New Password is required.
+                        </p>
+                        <p ng-show="userForm.newPassword.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            New Password is too short.
+                        </p>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.confirmPassword.$invalid && !userForm.confirmPassword.$pristine }">
+                        <label>Confirm Password</label>
+                        <input type="password" name="confirmPassword" class="form-control input-lg" ng-model="user.confirmPassword" ng-minlength="6" password-verify="user.newPassword">
+                        <p ng-show="userForm.confirmPassword.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Confirm  Password is required.
+                        </p>
+                        <p ng-show="userForm.confirmPassword.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Confirm  Password is too short.
+                        </p>
+                        <p ng-show="userForm.confirmPassword.$error.passwordVerify" class="help-block">
+                            <i class="fa fa-warning"></i>   New Password and Confirm Password have to be same.
+                        </p>
+                    </div>
+
+                    <button ng-disabled="userForm.$invalid || userForm.$pristine" class="btn btn-lg btn-info btn-block" type="submit" ng-click="changePassword()">
+                        <div>
+                            <i class="fa fa-check-square-o"></i>  Change Password
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="accessTokenModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Access Token</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        <small>{{access_token}}</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info" ng-show="isBusy">
+    <i class="fa fa-5x fa-spinner fa-spin"></i>
+    <h2>Loading...</h2>
+</div>
+<div ng-include src="'/app/views/partials/footer.html'"></div>

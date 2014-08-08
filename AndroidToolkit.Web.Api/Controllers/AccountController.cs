@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
@@ -19,6 +25,7 @@ using AndroidToolkit.Web.Api.Results;
 
 namespace AndroidToolkit.Web.Api.Controllers
 {
+    [EnableCustomCors]
     [Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
@@ -52,13 +59,21 @@ namespace AndroidToolkit.Web.Api.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpGet]
         [Route("HashPwd")]
         public string HashPwd(string pwd)
         {
             return UserManager.PasswordHasher.HashPassword(pwd);
         }
+       
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("users")]
+        public IEnumerable Users()
+        {
+            return new ApplicationDbContext().Users.ToList();
+        }
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
@@ -75,6 +90,35 @@ namespace AndroidToolkit.Web.Api.Controllers
             };
         }
 
+
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<IHttpActionResult> Login(LoginBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            ApplicationUser user = await UserManager.FindAsync(model.Username, model.Password);
+            if (user != null)
+            {
+                var identity = new ClaimsIdentity(Startup.OAuthOptions.AuthenticationType);
+                identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+                AuthenticationTicket ticket = new AuthenticationTicket(identity, new AuthenticationProperties());
+                var currentUtc = new SystemClock().UtcNow;
+                ticket.Properties.IssuedUtc = currentUtc;
+                ticket.Properties.ExpiresUtc = currentUtc.Add(TimeSpan.FromDays(365));
+                return
+                    Ok(new BearerTokenModel
+                    {
+                        Token = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket),
+                        Username = model.Username
+                    });
+            }
+            return BadRequest("User with specified credentials doesn't exist.");
+        }
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -82,6 +126,47 @@ namespace AndroidToolkit.Web.Api.Controllers
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("User/{username}")]
+        public async Task<IHttpActionResult> UserData(string username)
+        {
+            ApplicationUser user = await UserManager.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            List<UserLoginInfoViewModel> logins = user.Logins.Select(linkedAccount => new UserLoginInfoViewModel
+            {
+                LoginProvider = linkedAccount.LoginProvider,
+                ProviderKey = linkedAccount.ProviderKey
+            }).ToList();
+
+            if (user.PasswordHash != null)
+            {
+                logins.Add(new UserLoginInfoViewModel
+                {
+                    LoginProvider = LocalLoginProvider,
+                    ProviderKey = user.UserName,
+                });
+            }
+
+            return Ok(new ManageInfoViewModel
+            {
+                Name = user.Name,
+                Surname = user.Surname,
+                Email = user.Email,
+                ProfilePhoto = user.ProfilePhoto,
+                DateRegistered = user.DateRegistered,
+                LocalLoginProvider = LocalLoginProvider,
+                Username = user.UserName,
+                Logins = logins
+            });
+        }
+
+
 
         // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
         [Route("ManageInfo")]
@@ -315,11 +400,29 @@ namespace AndroidToolkit.Web.Api.Controllers
                 return BadRequest(ModelState);
             }
 
+            var tempUser = await UserManager.FindByEmailAsync(model.Email);
+            if (tempUser != null)
+            {
+                return BadRequest("Email is used.");
+            }
+
+            tempUser = await UserManager.FindByNameAsync(model.Username);
+            if (tempUser != null)
+            {
+                return BadRequest("Username is used.");
+            }
+
+
             var user = new ApplicationUser() { UserName = model.Username, Email = model.Email, DateRegistered = DateTime.Now, Name = model.Name, Surname = model.Surname, ProfilePhoto = model.ProfilePhoto };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
-            return !result.Succeeded ? GetErrorResult(result) : Ok();
+            if (result.Succeeded)
+            {
+                return Ok(user);
+            }
+
+            return InternalServerError();
         }
 
         // POST api/Account/RegisterExternal
@@ -349,6 +452,13 @@ namespace AndroidToolkit.Web.Api.Controllers
 
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             return !result.Succeeded ? GetErrorResult(result) : Ok();
+        }
+
+        private async Task<ApplicationUser> FindUser(string username, string password)
+        {
+            var context = new ApplicationDbContext();
+            string pwd = UserManager.PasswordHasher.HashPassword(password);
+            return await context.Users.FirstOrDefaultAsync(x => x.UserName == username && x.PasswordHash == password);
         }
 
         protected override void Dispose(bool disposing)

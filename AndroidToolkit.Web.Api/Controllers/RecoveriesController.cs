@@ -4,14 +4,17 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.OData;
 using AndroidToolkit.Data.Entities;
 using AndroidToolkit.Data.Logic;
 using AndroidToolkit.Web.Api.Models;
+using AndroidToolkit.Web.Api.Providers;
 using Ninject;
 
 namespace AndroidToolkit.Web.Api.Controllers
 {
+ [EnableCustomCors]
     [RoutePrefix("api/recoveries")]
     public class RecoveriesController : ApiController
     {

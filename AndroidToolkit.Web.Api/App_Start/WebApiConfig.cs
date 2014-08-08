@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Filters;
 using System.Web.Http.OData.Builder;
 using System.Web.Http.OData.Extensions;
@@ -39,6 +40,9 @@ namespace AndroidToolkit.Web.Api
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            //var cors = new EnableCorsAttribute("http://localhost:8080", "*", "*");
+            //config.EnableCors(cors);
+            //config.EnableCors();
         }
     }
 }

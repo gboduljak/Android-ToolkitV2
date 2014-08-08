@@ -5,15 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.OData;
 using AndroidToolkit.Data.Entities;
 using AndroidToolkit.Data.Logic;
 using AndroidToolkit.Web.Api.Models;
+using AndroidToolkit.Web.Api.Providers;
 using Ninject;
 
 namespace AndroidToolkit.Web.Api.Controllers
 {
     [RoutePrefix("api/devices")]
+    //[EnableCustomCors]
     public class DevicesController : ApiController
     {
         [Inject]
@@ -23,8 +26,10 @@ namespace AndroidToolkit.Web.Api.Controllers
             _repo2 = repo2;
         }
 
+       
+        [Authorize]
         [Route("get")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [EnableQuery]
         public async Task<List<ShowDeviceModel>> Get()
         {

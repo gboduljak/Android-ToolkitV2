@@ -46,7 +46,6 @@ namespace AndroidToolkit.Web.Api.Models
         [Display(Name = "Username")]
         public string Username { get; set; }
 
-        [Required]
         [Display(Name = "Profile Photo")]
         public string ProfilePhoto { get; set; }
 
@@ -73,10 +72,10 @@ namespace AndroidToolkit.Web.Api.Models
         [Display(Name = "Username")]
         public string Username { get; set; }
 
-        [EmailAddress]
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        //[EmailAddress]
+        //[Required]
+        //[Display(Name = "Email")]
+        //public string Email { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -115,5 +114,11 @@ namespace AndroidToolkit.Web.Api.Models
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class BearerTokenModel
+    {
+        public string Token { get; set; }
+        public string Username { get; set; }
     }
 }

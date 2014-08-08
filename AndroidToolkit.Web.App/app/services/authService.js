@@ -1,74 +1,147 @@
-﻿'use strict';
-app.factory('authService', ['$http', '$q', 'localStorageService', function ($http, $q, localStorageService) {
+﻿
+'use strict';
 
-   var serviceBase = 'http://localhost:26264/';
-    //var serviceBase = 'http://ngauthenticationapi.azurewebsites.net/';
-    var authServiceFactory = {};
+var serviceId = 'authService';
 
-    var authentication = {
-        isAuth: false,
-        userName : ""
+app.factory(serviceId, ['$http', '$location', '$rootScope', '$q', 'serviceBase', 'localStorageService', 'authData', authService]);
+
+function authService($http, $location, $rootScope, $q, serviceBase, localStorageService, authData) {
+
+    var service = {
+        register: register,
+        login: login,
+        logout: logout,
+        changePassword:changePassword,
+        getUserData: getUserData,
+        fillAuthData: fillAuthData,
+        getAuthData: getAuthData
     };
 
-    var saveRegistration = function (registration) {
+    return service;
 
-        logOut();
+    //#region Internal Methods    
 
-        return $http.post(serviceBase + 'api/account/register', registration).then(function (response) {
-            return response;
+    function register(user) {
+        var deffered = $q.defer();
+        var data = createRegisterData(user.name, user.surname, user.userName, user.password, user.confirmPassword, user.email, user.profilePhoto);
+        $http.post(serviceBase + 'api/account/register', data).success(function (response) {
+            deffered.resolve(response);
+        }).error(function (response) {
+            deffered.reject(response);
+        });
+        return deffered.promise;
+    }
+
+    function login(user) {
+
+        var deffered = $q.defer();
+
+        $http.post(serviceBase + 'api/account/login', createLoginData(user.userName, user.password), { headers: { 'Content-Type': 'application/json' } }).success(function (data) {
+            deffered.resolve(data);
+            setAuthData(user.userName, user.password, data.Token);
+            $rootScope.authData = authData;
+            $location.path('/index');
+
+        }).error(function (data) {
+            deffered.reject(data);
+            authData.loggedIn = false;
+            $rootScope.authData = authData;
         });
 
-    };
+        return deffered.promise;
+    }
 
-    var login = function (loginData) {
+    function logout() {
+        localStorageService.clearAll();
+        authData.loggedIn = false;
+        $location.path('/index');
+        toastr.success('You have been logged out successfully.');
+    }
 
-        var data = "grant_type=password&username=" + loginData.userName + "&password=" + loginData.password;
+    function getUserData(username) {
 
-        var deferred = $q.defer();
+        var deffered = $q.defer();
 
-        $http.post(serviceBase + 'token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).success(function (response) {
-
-            localStorageService.set('authorizationData', { token: response.access_token, userName: loginData.userName });
-
-            authentication.isAuth = true;
-            authentication.userName = loginData.userName;
-
-            deferred.resolve(response);
-
-        }).error(function (err, status) {
-            logOut();
-            deferred.reject(err);
+        $http.get(serviceBase + 'api/account/user/' + username).success(function (response) {
+            deffered.resolve(response);
+        }).error(function (reason) {
+            deffered.reject(reason);
         });
 
-        return deferred.promise;
-
-    };
-
-    var logOut = function () {
-
-        localStorageService.remove('authorizationData');
-
-        authentication.isAuth = false;
-        authentication.userName = "";
-
-    };
-
-    var fillAuthData = function () {
-
-        var authData = localStorageService.get('authorizationData');
-        if (authData)
-        {
-            authentication.isAuth = true;
-            authentication.userName = authData.userName;
-        }
+        return deffered.promise;
 
     }
 
-    authServiceFactory.saveRegistration = saveRegistration;
-    authServiceFactory.login = login;
-    authServiceFactory.logOut = logOut;
-    authServiceFactory.fillAuthData = fillAuthData;
-    authServiceFactory.authentication = authentication;
+    function changePassword(newPassword,confirmPassword) {
+        var deffered = $q.defer();
 
-    return authServiceFactory;
-}]);
+        $http.post(serviceBase + 'api/account/changepassword', createChangePasswordData(newPassword,confirmPassword)).success(
+            function (response) {
+                deffered.resolve(response);
+                logout();
+            }).error(function (reason) {
+                deffered.reject(reason);
+            });
+
+        return deffered.promise;
+    }
+
+    function createLoginData(username, password) {
+        var data = {
+            Username: username,
+            Password: password
+        };
+        return data;
+    }
+
+    function createChangePasswordData(newPassword,confirmPassword) {
+        var data = {
+            OldPassword: authData.password,
+            NewPassword: newPassword,
+            ConfirmPassword:confirmPassword
+        };
+        return data;
+    }
+
+    function createRegisterData(name, surname, username, password, confirmPassword, email, profilePhoto) {
+        var data = {
+            Name: name,
+            Surname: surname,
+            Email: email,
+            Username: username,
+            Password: password,
+            ConfirmPassword: confirmPassword,
+            ProfilePhoto: profilePhoto
+        };
+        //data.ProfilePhoto = $('profilePhotoCanvas').toDataURL();
+        data.ProfilePhoto = profilePhoto;
+        return data;
+    }
+
+    function setAuthData(username, password, token) {
+        localStorageService.clearAll();
+        localStorageService.set('username', username);
+        localStorageService.set('password', password);
+        localStorageService.set('token', token);
+        localStorageService.set('loggedIn', true);
+
+        authData.userName = username;
+        authData.password = password;
+        authData.token = token;
+        authData.loggedIn = true;
+    }
+
+    function fillAuthData() {
+        authData.userName = localStorageService.get('username');
+        authData.password = localStorageService.get('password');
+        authData.token = localStorageService.get('token');
+        authData.loggedIn = localStorageService.get('loggedIn');
+    }
+
+    function getAuthData() {
+        fillAuthData();
+        return authData;
+    }
+
+    //#endregion
+};

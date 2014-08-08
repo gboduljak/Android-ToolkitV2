@@ -1,52 +1,69 @@
-﻿(function () {
-    'use strict';
+﻿
+var app = angular.module('androidtoolkit', ['ngRoute', 'ngSanitize', 'ngAnimate', 'ngTouch', 'LocalStorageModule', 'angular-loading-bar']);
 
-    var id = 'app';
+app.config(function ($routeProvider) {
 
-    var app = angular.module('app', [
-        'ngAnimate',
-        'ngRoute',
-        'ngSanitize',
-        'angular-loading-bar',
-        'LocalStorageModule'
-    ]);
-
-    app.config(function ($routeProvider) {
-
-        $routeProvider.when("/home", {
-            controller: "homeController",
-            templateUrl: "/app/views/home.html"
-        });
-
-        $routeProvider.when("/login", {
-            controller: "loginController",
-            templateUrl: "/app/views/login.html"
-        });
-
-        $routeProvider.when("/signup", {
-            controller: "signupController",
-            templateUrl: "/app/views/signup.html"
-        });
-
-        $routeProvider.when("/orders", {
-            controller: "ordersController",
-            templateUrl: "/app/views/orders.html"
-        });
-
-        $routeProvider.otherwise({ redirectTo: "/home" });
-
+    $routeProvider.when("/index", {
+        controller: "indexCtrl",
+        templateUrl: "/app/views/home.html"
     });
 
-    app.config(function ($httpProvider) {
-        $httpProvider.interceptors.push('authInterceptorService');
+    //Account Routes
+
+    $routeProvider.when("/account/login", {
+        controller: "loginCtrl",
+        templateUrl: "/app/views/login.html"
     });
 
-    app.run(['authService', function (authService) {
-       
-    }]);
+    $routeProvider.when("/account/register", {
+        controller: "registerCtrl",
+        templateUrl: "/app/views/register.html"
+    });
 
-    app.run(['$q', '$rootScope','authService',
-        function ($q, $rootScope, authService) {
-            authService.fillAuthData();
-        }]);
-})();
+
+    $routeProvider.when("/account/manage/:userName?", {
+        controller: "manageUserCtrl",
+        templateUrl: "/app/views/manage-user.html"
+    });
+
+    //$routeProvider.when("/404", {
+    //    controller: "homeController",
+    //    templateUrl: "/app/views/home.html"
+    //});
+
+    $routeProvider.otherwise({ redirectTo: "/index" });
+
+});
+
+app.config(function ($httpProvider) {
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    $httpProvider.interceptors.push('authInterceptorService');
+
+});
+
+app.run(['$rootScope', 'authService', '$location', function ($rootScope, authService, $location) {
+    authService.fillAuthData();
+    $rootScope.authData = authService.getAuthData();
+
+    $rootScope.$on('$locationChangeStart', function (next, current) {
+        if (next.templateUrl == "/app/views/manage-user.html" && !$rootScope.authData.loggedIn) {
+            $location.path('/account/login');
+            toastr.info("You are trying to reach secured content. Please log in!");
+        }
+    });
+
+    $rootScope.logOut = function () {
+        authService.logout();
+    };
+}]);
+
+app.value('authData', {
+    userName: '',
+    password: '',
+    token: '',
+    loggedIn: false
+});
+
+app.constant('serviceBase', 'http://localhost:17171/');
+
+

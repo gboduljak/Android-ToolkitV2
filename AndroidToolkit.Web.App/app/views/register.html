@@ -1,0 +1,145 @@
+﻿<div class="page-header">
+    <h1 class="text-center">
+        <i class="fa fa-user"></i>
+        Register
+    </h1>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form class="form-register" role="form" name="userForm">
+            <div class="row">
+                <div class="col-md-8">
+                    <div ng-hide="message == ''" ng-class="(savedSuccessfully) ? 'alert alert-success' : 'alert alert-danger'">
+                        {{message}}
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && !userForm.name.$pristine }">
+                        <label>Name</label>
+                        <input type="text" name="name" class="form-control input-lg" ng-model="user.name" ng-minlength="3">
+                        <p ng-show="userForm.name.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Name is required.
+                        </p>
+                        <p ng-show="userForm.name.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Name is too short.
+                        </p>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.surname.$invalid && !userForm.surname.$pristine }">
+                        <label>Surname</label>
+                        <input type="text" name="surname" class="form-control input-lg" ng-model="user.surname" ng-minlength="3">
+                        <p ng-show="userForm.surname.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Surname is required.
+                        </p>
+                        <p ng-show="userForm.surname.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Surname is too short.
+                        </p>
+                    </div>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control" ng-model="user.email">
+                        <p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.username.$invalid && !userForm.username.$pristine }">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control input-lg" ng-model="user.userName" ng-minlength="3">
+                        <p ng-show="userForm.username.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Username is required.
+                        </p>
+                        <p ng-show="userForm.username.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Username is too short.
+                        </p>
+                    </div>
+
+
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine }">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control input-lg" ng-model="user.password" ng-minlength="6">
+                        <p ng-show="userForm.password.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Password is required.
+                        </p>
+                        <p ng-show="userForm.password.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Password is too short.
+                        </p>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error' : userForm.confirmPassword.$invalid && !userForm.confirmPassword.$pristine }">
+                        <label>Confirm Password</label>
+                        <input type="password" name="confirmPassword" class="form-control input-lg" ng-model="user.confirmPassword" ng-minlength="6" password-verify="user.password">
+                        <p ng-show="userForm.confirmPassword.$required" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Confirm  Password is required.
+                        </p>
+                        <p ng-show="userForm.confirmPassword.$error.minlength" class="help-block">
+                            <i class="fa fa-warning"></i>
+                            Confirm  Password is too short.
+                        </p>
+                        <p ng-show="userForm.confirmPassword.$error.passwordVerify" class="help-block">
+                            <i class="fa fa-warning"></i>    Password and Confirm Password have to be same.
+                        </p>
+                    </div>
+
+
+                    <button ng-disabled="userForm.$invalid || userForm.$pristine || isBusy" class="btn btn-lg btn-info btn-block" type="submit" ng-click="register()">
+                        <i class="fa fa-spinner fa-2x fa-spin" ng-show="isBusy"></i>
+                        <div ng-hide="isBusy">
+                            <i class="fa fa-check-square-o"></i>  Register
+                        </div>
+                    </button>
+                </div>
+
+                <div class="col-md-4">
+                    <h2>Profile photo</h2>
+                    <input name="profilePhoto" type="file" id="img" fileread="user.profilePhoto" />
+                    <br />
+                    <img class="img-thumbnail img-responsive" src="" id="profile_photo" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<div ng-include src="'/app/views/partials/footer.html'"></div>
+<!-- Image JS -->
+
+<script type="text/javascript">
+    // Handle file while select a new file
+    $('#img').change(function () {
+        handleFiles(this.files);
+    });
+
+
+    // handle files
+    function handleFiles(files) {
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var imageType = /image.*/;
+            if (!file.type.match(imageType)) {
+                continue;
+            }
+            var img = document.getElementById('profile_photo');
+            img.src = file;
+            img.width = 250;
+            img.height = 250;
+            var reader = new FileReader();
+            reader.onload = (function (aImg) {
+                return function (e) {
+                    aImg.src = e.target.result;
+                };
+            })(img);
+            reader.readAsDataURL(file);
+        }
+
+    }
+</script>
