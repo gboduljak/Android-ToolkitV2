@@ -51,7 +51,7 @@
                     </div>
                     <div class="form-group" ng-class="{ 'has-error' : userForm.oldPassword.$invalid && !userForm.oldPassword.$pristine }">
                         <label>Old Password</label>
-                        <input type="password" name="oldPassword" class="form-control input-lg" ng-model="user.oldPassword" ng-minlength="3" password-verify="authData.password">
+                        <input type="password" name="oldPassword" class="form-control input-lg" ng-model="user.oldPassword" ng-minlength="3" password-verify="authData.password" required>
                         <p ng-show="userForm.oldPassword.$required" class="help-block">
                             <i class="fa fa-warning"></i>
                             Old Password is required.
@@ -67,7 +67,7 @@
 
                     <div class="form-group" ng-class="{ 'has-error' : userForm.newPassword.$invalid && !userForm.newPassword.$pristine }">
                         <label>New Password</label>
-                        <input type="password" name="newPassword" class="form-control input-lg" ng-model="user.newPassword" ng-minlength="3">
+                        <input type="password" name="newPassword" class="form-control input-lg" ng-model="user.newPassword" ng-minlength="3" required>
                         <p ng-show="userForm.newPassword.$required" class="help-block">
                             <i class="fa fa-warning"></i>
                             New Password is required.
@@ -80,7 +80,7 @@
 
                     <div class="form-group" ng-class="{ 'has-error' : userForm.confirmPassword.$invalid && !userForm.confirmPassword.$pristine }">
                         <label>Confirm Password</label>
-                        <input type="password" name="confirmPassword" class="form-control input-lg" ng-model="user.confirmPassword" ng-minlength="6" password-verify="user.newPassword">
+                        <input type="password" name="confirmPassword" class="form-control input-lg" ng-model="user.confirmPassword" ng-minlength="6" password-verify="user.newPassword" required>
                         <p ng-show="userForm.confirmPassword.$required" class="help-block">
                             <i class="fa fa-warning"></i>
                             Confirm  Password is required.

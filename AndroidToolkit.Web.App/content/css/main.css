@@ -97,10 +97,11 @@ hr {
 }
 
 .btn-theme {
-    color: #ffffff;
-    background-color: #42C0FB;
+    color: #4e4e4e;
+    background-color: transparent;
     border-color: transparent;
 }
+
 
 .btn {
     padding: 10px 30px;

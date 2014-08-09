@@ -18,12 +18,22 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav ">
                 <li>
-                    <a ng-class="{ active: isActive('/')}" href="/">Home</a>
+                    <a class="btn btn-theme" ng-class="{ active: isActive('/')}" href="/">Home</a>
                 </li>
-                <li ng-class="{ active: isActive('/account/manage/{{authData.userName}}')}" data-ng-show="authData.loggedIn"><a href="#/account/manage/{{authData.userName}}">Welcome {{authData.userName}}</a></li>
-                <li data-ng-show="authData.loggedIn"><a href="" data-ng-click="logOut()">Logout</a></li>
-                <li ng-class="{ active: isActive('/account/login')}" data-ng-show="!authData.loggedIn"> <a href="#/account/login">Login</a></li>
-                <li ng-class="{ active: isActive('/account/register')}" data-ng-show="!authData.loggedIn"> <a href="#/account/register">Register</a></li>
+                <li ng-class="{ active: isActive('/account/manage/{{authData.userName}}')}" data-ng-show="authData.loggedIn"><a class="btn btn-default" href="#/account/manage/{{authData.userName}}">Welcome {{authData.userName}}</a></li>
+                <li data-ng-show="authData.loggedIn">
+                    <a class="btn btn-default" href="" data-ng-click="logOut()">
+                        <i class="glyphicon glyphicon-log-out"></i>
+                        Logout
+                    </a>
+                </li>
+                <li ng-class="{ active: isActive('/account/login')}" data-ng-show="!authData.loggedIn">
+                    <a class="btn btn-default" href="#/account/login">
+                        <i class="glyphicon glyphicon-log-in"></i>
+                        Login
+                    </a>
+                </li>
+                <li ng-class="{ active: isActive('/account/register')}" data-ng-show="!authData.loggedIn"> <a class="btn btn-default" href="#/account/register">Register</a></li>
             </ul>
             <!--<form class="navbar-form navbar-left" role="search">
                 <div class="form-group">

@@ -52,7 +52,11 @@ function authService($http, $location, $rootScope, $q, serviceBase, localStorage
     }
 
     function logout() {
-        localStorageService.clearAll();
+        localStorageService.remove('username');
+        localStorageService.remove('password');
+        localStorageService.remove('token');
+        localStorageService.remove('loggedIn');
+        localStorageService.set('loggedIn', false);
         authData.loggedIn = false;
         $location.path('/index');
         toastr.success('You have been logged out successfully.');
