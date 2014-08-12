@@ -20,7 +20,7 @@ namespace AndroidToolkit.Web.Api.App_Start
 
     public static class NinjectWebCommon
     {
-        private static readonly Bootstrapper bootstrapper = new Bootstrapper();
+        private static readonly Bootstrapper Bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application
@@ -29,7 +29,7 @@ namespace AndroidToolkit.Web.Api.App_Start
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
-            bootstrapper.Initialize(CreateKernel);
+            Bootstrapper.Initialize(CreateKernel);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace AndroidToolkit.Web.Api.App_Start
         /// </summary>
         public static void Stop()
         {
-            bootstrapper.ShutDown();
+            Bootstrapper.ShutDown();
         }
 
         /// <summary>
@@ -72,6 +72,10 @@ namespace AndroidToolkit.Web.Api.App_Start
             kernel.Bind<IDeviceRepository>().To<DeviceRepository>().WithConstructorArgument("db", kernel.Get<AndroidToolkitDB>());
             kernel.Bind<IRecoveriesRepository>().To<RecoveriesRepository>().WithConstructorArgument("db", kernel.Get<AndroidToolkitDB>());
             kernel.Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>();
+            kernel.Bind<IBlogRepository<Post>>().To<BlogRepository>().WithConstructorArgument("context", kernel.Get<AndroidToolkitDB>());
+            kernel.Bind<IReviewsRepository<Review>>().To<ReviewsRepository>().WithConstructorArgument("context", kernel.Get<AndroidToolkitDB>());
+            kernel.Bind<IHelpRepository<Help>>().To<HelpsRepository>().WithConstructorArgument("context", kernel.Get<AndroidToolkitDB>());
+            kernel.Bind<IBugReportsRepository<BugReport>>().To<BugReportsRepository>().WithConstructorArgument("context", kernel.Get<AndroidToolkitDB>());
             kernel.Bind<UserManager<ApplicationUser>>()
                 .ToSelf()
                 .WithConstructorArgument(kernel.Get<IUserStore<ApplicationUser>>());

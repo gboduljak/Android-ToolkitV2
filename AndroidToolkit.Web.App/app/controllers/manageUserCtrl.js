@@ -7,8 +7,8 @@ var controllerId = 'manageUserCtrl';
 app.controller(controllerId,
     ['$scope', '$rootScope', 'authService', 'authData', manageUserCtrl]);
 
-function manageUserCtrl($scope,$rootScope, authService, authData) {
-    $rootScope.title = 'Manage - '+authData.userName ;
+function manageUserCtrl($scope, $rootScope, authService, authData) {
+    $rootScope.title = 'Manage - ' + authData.userName;
     $scope.access_token = authData.token;
     $scope.pageClass = 'page-manage';
 
@@ -21,7 +21,7 @@ function manageUserCtrl($scope,$rootScope, authService, authData) {
     $scope.user = {
         oldPassword: '',
         newPassword: '',
-       confirmPassword: ''
+        confirmPassword: ''
     };
 
     $scope.$on('$viewContentLoaded', function () {

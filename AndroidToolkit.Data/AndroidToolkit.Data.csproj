@@ -102,10 +102,19 @@
       <DependentUpon>AndroidToolkitDb.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityBase.cs" />
+    <Compile Include="Logic\BlogRepository.cs" />
+    <Compile Include="Logic\BugReportsRepository.cs" />
     <Compile Include="Logic\DeviceRepository.cs" />
+    <Compile Include="Logic\GenericRepository.cs" />
+    <Compile Include="Logic\HelpsRepository.cs" />
+    <Compile Include="Logic\IBlogRepository.cs" />
+    <Compile Include="Logic\IBugReportsRepository.cs" />
     <Compile Include="Logic\IDeviceRepository.cs" />
+    <Compile Include="Logic\IHelpRepository.cs" />
     <Compile Include="Logic\IRecoveriesRepository.cs" />
+    <Compile Include="Logic\IReviewsRepository.cs" />
     <Compile Include="Logic\RecoveriesRepository.cs" />
+    <Compile Include="Logic\ReviewsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
